@@ -1,4 +1,4 @@
-import { SystemPool } from '../Database.js'
+import { SystemPool } from './pool.js'
 
 console.log('process env database url:', process.env.REACT_APP_DATABASE_URL)
 
