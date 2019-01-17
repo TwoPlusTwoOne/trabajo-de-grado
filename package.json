@@ -13,9 +13,6 @@
     "@types/react": "^16.7.18",
     "@types/react-dom": "^16.0.11",
     "@types/react-router-dom": "^4.3.1",
-<<<<<<< HEAD
-    "express": "^4.16.4",
-=======
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "9.0.0",
     "babel-jest": "23.6.0",
@@ -23,6 +20,7 @@
     "babel-plugin-named-asset-import": "^0.3.0",
     "babel-preset-react-app": "^7.0.0",
     "bfj": "6.1.1",
+    "body-parser": "^1.18.3",
     "case-sensitive-paths-webpack-plugin": "2.1.2",
     "chalk": "2.4.1",
     "css-loader": "1.0.0",
@@ -35,6 +33,7 @@
     "eslint-plugin-import": "2.14.0",
     "eslint-plugin-jsx-a11y": "6.1.2",
     "eslint-plugin-react": "7.11.1",
+    "express": "^4.16.4",
     "file-loader": "2.0.0",
     "fork-ts-checker-webpack-plugin-alt": "0.4.14",
     "fs-extra": "7.0.0",
@@ -45,7 +44,6 @@
     "jest-resolve": "23.6.0",
     "mini-css-extract-plugin": "0.4.3",
     "optimize-css-assets-webpack-plugin": "5.0.1",
->>>>>>> ba80cb97e51d18d9f2d017a0cc0206ae4f5ede66
     "pg": "^7.8.0",
     "pnp-webpack-plugin": "1.1.0",
     "postcss-flexbugs-fixes": "4.1.0",
