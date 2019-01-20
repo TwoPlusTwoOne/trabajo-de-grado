@@ -23,3 +23,22 @@ export const insertClient = async (pool: Pool, client: Client) => {
     clientDB.release()
     return result
 }
+
+export const getClientByID = async (pool: Pool, id: string) => {
+    const clientDB = await pool.connect()
+    const result: Promise<string> = clientDB.query(
+    `SELECT first_name, last_name, direction, dni, password, email, birthdate, seller_calification
+    FROM client_table  INNER JOIN user_table
+    ON client_table.user_id = user_table.id
+    WHERE client_table.id = ${id}`
+    ).then((res) => {
+            return res.rows[0]
+    }).catch(e => {
+        console.error(e.stack)
+        return ""
+    })
+    clientDB.release()
+    return result
+
+
+}

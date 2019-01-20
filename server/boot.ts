@@ -16,7 +16,7 @@ const client = new ClientBuilder()
                     .withDni("38955384")
                     .withDirection("Las Magnolias 2011")
                     .withPassword("peroni1994")
-                    .withSellerCalification("3")
+                    .withSellerCalification("0")
                     .withEmail("mperoni@gmail.com")
                     .build()
 
