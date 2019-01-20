@@ -2,6 +2,7 @@ import { UserBuilder } from './builders/UserBuilder'
 import { insertAdmin } from './dbModules/AdminModule';
 import { insertUser } from './dbModules/UsersModule'
 import { insertClient } from './dbModules/ClientModule'
+import { getAllProducts } from './dbModules/ProductModule'
 import { Request, Response } from 'express';
 import { Client } from './entities/Client'
 import { Admin } from './entities/Admin'
@@ -103,6 +104,12 @@ app.post('/client', async function (req: Request, res: Response) {
   const user = getClientFromRequest(req)
   const clientID: string = await insertClient(pool, user)
   res.send(JSON.stringify({ id: clientID }))
+});
+
+
+app.get('/product', async function (req: Request, res: Response) {
+  const results = await getAllProducts(pool)
+  res.send(results)
 });
 
 app.listen(3001, function () {
