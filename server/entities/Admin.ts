@@ -10,7 +10,7 @@ class Admin extends User{
     password: string
     email: string
     birthdate: Date
-    rol: Role
+    role: Role
     userID: string
 
     constructor(
@@ -22,10 +22,10 @@ class Admin extends User{
         password: string,
         email: string,
         birthdate: Date,
-        rol: Role,
+        role: Role,
         userID: string) {
         super(id, firstNma, lastName, direction, dni, password, email, birthdate)
-        this.rol = rol
+        this.role = role
         this.userID = userID
     }
 }

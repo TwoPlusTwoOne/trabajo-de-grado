@@ -20,5 +20,6 @@ export const insertClient = async (pool: Pool, client: Client) => {
             })
         return result
         })
+    clientDB.release()
     return result
 }

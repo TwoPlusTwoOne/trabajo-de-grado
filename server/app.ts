@@ -5,6 +5,7 @@ import { insertClient } from './dbModules/ClientModule'
 import { Request, Response } from 'express';
 import { Client } from './entities/Client'
 import { Admin } from './entities/Admin'
+import { boot } from './boot'
 
 var express = require('express');
 var app = express();
@@ -52,6 +53,11 @@ app.post('/login', async function (req: Request, res: Response) {
   res.send(result);
 });
 
+app.post('/boot', async function (req: Request, res: Response) {
+  boot(pool).then(() => {
+    res.sendStatus(200)
+  })
+});
 
 const getUserFromRequest = (req: Request) => {
   const firstName = req.body.firstName;

@@ -28,33 +28,38 @@ class UserBuilder {
         return this
     }
 
-    withLastName(name: string) {
-        this.lastName = name
+    withLastName(lastName: string) {
+        this.lastName = lastName
         return this
     }
 
-    withDirection(name: string) {
-        this.direction = name
+    withDirection(direction: string) {
+        this.direction = direction
         return this
     }
 
-    withDni(name: string) {
-        this.dni = name
+    withDni(dni: string) {
+        this.dni = dni
         return this
     }
 
-    withPassword(name: string) {
-        this.password = name
+    withPassword(password: string) {
+        this.password = password
         return this
     }
 
-    withEmail(name: string) {
-        this.email = name
+    withEmail(email: string) {
+        this.email = email
         return this
     }
 
-    withBirthDate(name: Date) {
-        this.birthdate = name
+    withBirthDate(birthdate: Date) {
+        this.birthdate = birthdate
+        return this
+    }
+
+    withID(id: string) {
+        this.id = id
         return this
     }
 
