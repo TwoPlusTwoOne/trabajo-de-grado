@@ -1,9 +1,10 @@
 import { UserBuilder } from './builders/UserBuilder'
-import { User } from './entities/User';
+import { insertAdmin } from './dbModules/AdminModule';
 import { insertUser } from './dbModules/UsersModule'
 import { insertClient } from './dbModules/ClientModule'
 import { Request, Response } from 'express';
 import { Client } from './entities/Client'
+import { Admin } from './entities/Admin'
 
 var express = require('express');
 var app = express();
@@ -85,6 +86,12 @@ app.post('/user', async function (req: Request, res: Response) {
   res.send(JSON.stringify({ id: userID }))
 });
 
+
+app.post('/admin', async function (req: Request, res: Response) {
+  const admin = <Admin> getUserFromRequest(req)
+  const userID: string = await insertAdmin(pool, admin)
+  res.send(JSON.stringify({ id: userID }))
+});
 
 app.post('/client', async function (req: Request, res: Response) {
   const user = getClientFromRequest(req)
