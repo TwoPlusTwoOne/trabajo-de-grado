@@ -1,12 +1,20 @@
 import { UserBuilder } from './UserBuilder'
 import { Client } from '../entities/Client'
 import { Cart } from '../entities/Cart'
+import { Product } from '../entities/Product';
 
 class ClientBuilder extends UserBuilder {
 
-    sellerCalification: string
-    userID: string
-    cart: Cart
+    private sellerCalification: string
+    private userID: string
+    private cart: Cart
+
+    constructor() {
+        super()
+        this.sellerCalification = ""
+        this.userID = ""
+        this.cart = null
+    }
 
     withSellerCalification (sellerCalification: string) {
         this.sellerCalification = sellerCalification

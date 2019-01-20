@@ -5,13 +5,13 @@ import { Review } from '../entities/Review';
 
 class ProductBuilder {
 
-    id: string
-    name: string
-    value: number
-    description: string
-    seller: Client
-    images: ProductImage[]
-    reviews: Review[]
+    private id: string
+    private name: string
+    private value: number
+    private description: string
+    private seller: Client
+    private images: ProductImage[]
+    private reviews: Review[]
 
     withName(name: string){
         this.name = name

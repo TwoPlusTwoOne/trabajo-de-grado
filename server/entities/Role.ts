@@ -1,13 +1,13 @@
 import { DBEntity } from './DBEntity'
 
-class Role extends DBEntity {
+class Role implements DBEntity {
 
     id: string
     name: string
     level: number
 
     constructor(id: string, name: string, level: number){
-        super(id)
+        this.id = id
         this.name = name
         this.level = level
     }

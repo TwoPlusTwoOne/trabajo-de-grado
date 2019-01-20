@@ -1,7 +1,7 @@
 import { DBEntity } from './DBEntity'
 import { Client } from './Client'
 
-class Review extends DBEntity{
+class Review implements DBEntity{
 
     id: string
     buyer: Client
@@ -9,7 +9,7 @@ class Review extends DBEntity{
     calification: number
 
     constructor(id: string, buyer: Client, description: string, calification: number) {
-        super(id)
+        this.id = id
         this.buyer = buyer
         this.description = description
         this.calification = calification

@@ -2,14 +2,14 @@ import { User } from '../entities/User'
 
 class UserBuilder {
 
-    id: string
-    firstName: string
-    lastName: string
-    direction: string
-    dni: string
-    password: string
-    email: string
-    birthdate: Date
+    protected id: string
+    protected firstName: string
+    protected lastName: string
+    protected direction: string
+    protected dni: string
+    protected password: string
+    protected email: string
+    protected birthdate: Date
 
     constructor () {
         this.id = ""
@@ -25,37 +25,37 @@ class UserBuilder {
 
     withFirstName(name: string) {
         this.firstName = name
-        this
+        return this
     }
 
     withLastName(name: string) {
         this.lastName = name
-        this
+        return this
     }
 
     withDirection(name: string) {
         this.direction = name
-        this
+        return this
     }
 
     withDni(name: string) {
         this.dni = name
-        this
+        return this
     }
 
     withPassword(name: string) {
         this.password = name
-        this
+        return this
     }
 
     withEmail(name: string) {
         this.email = name
-        this
+        return this
     }
 
     withBirthDate(name: Date) {
         this.birthdate = name
-        this
+        return this
     }
 
     build() {

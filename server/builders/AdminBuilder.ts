@@ -5,8 +5,14 @@ import { Role }  from '../entities/Role'
 
 class AdminBuilder extends UserBuilder {
 
-    role: Role
-    userID: string
+    private role: Role
+    private userID: string
+
+    constructor() {
+        super()
+        this.role = new Role("", "", 0)
+        this.userID = ""
+    }
 
     withRole (role: Role) {
         this.role = role

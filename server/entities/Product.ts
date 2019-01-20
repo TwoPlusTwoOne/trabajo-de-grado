@@ -3,7 +3,7 @@ import { Client } from './Client'
 import { ProductImage } from './ProductImage'
 import { Review } from './Review'
 
-class Product extends DBEntity {
+class Product implements DBEntity {
 
     id: string
     name: string
@@ -21,10 +21,10 @@ class Product extends DBEntity {
         seller: Client,
         images: ProductImage[],
         reviews: Review[]) {
-        super(id)
+        this.id = id
         this.name = name
-        this.value = value,
-        this.description = description,
+        this.value = value
+        this.description = description
         this.seller = seller
         this.images = images
         this.reviews = reviews

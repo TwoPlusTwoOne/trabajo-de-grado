@@ -1,13 +1,13 @@
 import { DBEntity } from './DBEntity'
 
-class ProductImage extends DBEntity {
+class ProductImage implements DBEntity {
 
     id: string
     image: string
     productID: string
 
     constructor(id: string, image: string, productID: string) {
-        super(id)
+        this.id = id
         this.image = image
         this.productID = productID
     }
