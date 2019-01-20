@@ -7,13 +7,11 @@ class ClientBuilder extends UserBuilder {
 
     private sellerCalification: string
     private userID: string
-    private cart: Cart
 
     constructor() {
         super()
         this.sellerCalification = ""
         this.userID = ""
-        this.cart = null
     }
 
     withSellerCalification (sellerCalification: string) {
@@ -23,11 +21,6 @@ class ClientBuilder extends UserBuilder {
 
     withUserId (userID: string) {
         this.userID = userID
-        return this
-    }
-
-    withCart (cart: Cart) {
-        this.cart = cart
         return this
     }
 
@@ -42,8 +35,7 @@ class ClientBuilder extends UserBuilder {
                             this.email,
                             this.birthdate,
                             this.sellerCalification,
-                            this.userID,
-                            this.cart
+                            this.userID
                         )
         return client
     }

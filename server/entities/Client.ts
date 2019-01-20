@@ -12,7 +12,6 @@ class Client extends User{
     birthdate: Date
     sellerCalification: string
     userID: string
-    cart: Cart
 
     constructor(
         id: string,
@@ -24,12 +23,10 @@ class Client extends User{
         email: string,
         birthdate: Date,
         sellerCalification: string,
-        userID: string,
-        cart: Cart) {
+        userID: string) {
         super(id, firstNma, lastName, direction, dni, password, email, birthdate)
         this.sellerCalification = sellerCalification
         this.userID = userID
-        this.cart = cart
     }
 }
 
