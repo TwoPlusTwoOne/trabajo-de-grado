@@ -47,7 +47,7 @@ export class Login extends React.PureComponent<Props, State> {
           placeholder={'Username'}
           variant={'outlined'}
           value={this.state.username}
-          onChange={this.handleChange.bind(null, 'userId')}
+          onChange={this.handleChange.bind(null, 'username')}
         />
         <TextField
           placeholder={'Password'}
