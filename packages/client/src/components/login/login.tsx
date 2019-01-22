@@ -2,7 +2,6 @@ import * as React from 'react'
 import { ChangeEvent } from 'react'
 import { TextField } from '@material-ui/core'
 import { getUserById, login } from '../../api/api'
-import { RegisterButton } from './registerButton'
 import { LoginButton } from './loginButton'
 import * as styles from './login.scss'
 import { Loader } from '../loader/loader'
@@ -67,8 +66,7 @@ export class Login extends React.PureComponent<Props, State> {
           isLoggingIn
             ? <Loader />
             : <div className={styles.buttonsDiv}>
-              <RegisterButton onClick={this.handleClickRegister} />
-              <LoginButton onClick={this.handleClickLogin} />
+            <LoginButton onClick={this.handleClickLogin} />
             </div>
         }
         <div />
