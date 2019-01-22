@@ -28,10 +28,10 @@ export const getAllProducts = async (pool: Pool) => {
             product_table.name, 
             product_table.value, 
             product_table.description, 
-            product_image_table.image
+            STRING_AGG(product_image_table.image, ', ')
         FROM product_image_table
         LEFT OUTER JOIN product_table on product_image_table.product_id = product_table.id
-        order by product_image_table.image
+        GROUP BY product_table.id
         `
         ).then((res) => {
             return res.rows
