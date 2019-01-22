@@ -38,20 +38,20 @@ const execQuery = async (query: string) => {
 
 
 app.get('/user', async (req: Request, res: Response) => {
-  const result = await execQuery('SELECT * FROM users_table')
+  const result = await execQuery('SELECT * FROM user_table')
   res.send(result);
 })
 
 app.get('/user/:userId', async function (req: Request, res: Response) {
   const userId = req.params.userId
-  const result = await execQuery(`SELECT * FROM users_table WHERE id = ${userId}`)
+  const result = await execQuery(`SELECT * FROM user_table WHERE id = ${userId}`)
   res.send(result);
 });
 
 app.post('/login', async function (req: Request, res: Response) {
   const userEmail = req.body.email;
   const userPassword = req.body.password;
-  const result = await execQuery(`SELECT * FROM users_table WHERE email = '${userEmail}' AND password = '${userPassword}'`)
+  const result = await execQuery(`SELECT * FROM user_table WHERE email = '${userEmail}' AND password = '${userPassword}'`)
   res.send(result);
 });
 
