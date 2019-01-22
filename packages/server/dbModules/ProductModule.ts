@@ -28,10 +28,58 @@ export const getAllProducts = async (pool: Pool) => {
             product_table.name, 
             product_table.value, 
             product_table.description, 
-            product_image_table.image
+            STRING_AGG(product_image_table.image, ', ')
         FROM product_image_table
         LEFT OUTER JOIN product_table on product_image_table.product_id = product_table.id
-        order by product_image_table.image
+        GROUP BY product_table.id
+        `
+        ).then((res) => {
+            return res.rows
+        }).catch(e => {
+            console.error(e.stack)
+            return JSON.stringify({ error: e.stack })
+        })
+    client.release()
+    return result
+}
+
+export const getSellerProducts = async (pool: Pool, sellerID: string) => {
+    const client = await pool.connect()
+    const result = client.query(
+        `SELECT 
+            product_table.id, 
+            product_table.name, 
+            product_table.value, 
+            product_table.description, 
+            STRING_AGG(product_image_table.image, ', ')
+        FROM product_image_table
+        LEFT OUTER JOIN product_table on product_image_table.product_id = product_table.id
+        WHERE product_table_.seller_id = ${sellerID}
+        GROUP BY product_table.id
+        `
+        ).then((res) => {
+            return res.rows
+        }).catch(e => {
+            console.error(e.stack)
+            return JSON.stringify({ error: e.stack })
+        })
+    client.release()
+    return result
+}
+
+export const getProductByID = async (pool: Pool, producrID: string) => {
+    const client = await pool.connect()
+    const result = client.query(
+        `SELECT 
+            product_table.id, 
+            product_table.name, 
+            product_table.value, 
+            product_table.description, 
+            STRING_AGG(product_image_table.image, ', ')
+        FROM product_image_table
+        LEFT OUTER JOIN product_table on product_image_table.product_id = product_table.id
+        WHERE product_table_.id = ${producrID}
+        GROUP BY product_table.id
         `
         ).then((res) => {
             return res.rows

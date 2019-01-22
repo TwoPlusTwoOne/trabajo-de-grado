@@ -1,11 +1,12 @@
 {
   "name": "root",
   "private": true,
-  "devDependencies": {
+  "dependencies": {
     "concurrently": "^4.1.0",
     "lerna": "^3.10.6"
   },
   "scripts": {
-    "start": "concurrently --kill-others \"npm start --prefix packages/server\" \"npm run start --prefix packages/client\""
+    "heroku-postbuild": "./build.sh",
+    "start": "concurrently --kill-others \"npm start --prefix packages/server\" \"PORT=8080 npm run start --prefix packages/client\""
   }
 }
