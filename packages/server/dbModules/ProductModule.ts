@@ -23,9 +23,16 @@ export const insertProduct = async (pool: Pool, product: Product) => {
 export const getAllProducts = async (pool: Pool) => {
     const client = await pool.connect()
     const result = client.query(
-        `SELECT product_table.id, product_table.name, product_table.value, product_table.description, product_image_table.image
+        `SELECT 
+            product_table.id, 
+            product_table.name, 
+            product_table.value, 
+            product_table.description, 
+            product_image_table.image
         FROM product_image_table
-        LEFT OUTER JOIN product_table on product_image_table.product_id = product_table.id`
+        LEFT OUTER JOIN product_table on product_image_table.product_id = product_table.id
+        order by product_image_table.image
+        `
         ).then((res) => {
             return res.rows
         }).catch(e => {

@@ -36,7 +36,7 @@ export const getCartByClientId = async (pool: Pool, cart: Cart) => {
         INNER JOIN client_table
         on client_table.id = product_table.seller_id
         INNER JOIN user_table
-        on user_table.id = client_table.user_id`
+        on user_table.id = client_table.user_id `
         ).then((res) => {
                 return res.rows
         }).catch(e => {

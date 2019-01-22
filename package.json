@@ -2,6 +2,10 @@
   "name": "root",
   "private": true,
   "devDependencies": {
+    "concurrently": "^4.1.0",
     "lerna": "^3.10.6"
+  },
+  "scripts": {
+    "start": "concurrently --kill-others \"npm start --prefix packages/server\" \"npm run start --prefix packages/client\""
   }
 }
