@@ -7,6 +7,7 @@
   },
   "scripts": {
     "heroku-postbuild": "./build.sh",
-    "start": "concurrently --kill-others \"npm start --prefix packages/server\" \"PORT=8080 npm run start --prefix packages/client\""
+    "start": "concurrently --kill-others \"npm start --prefix packages/server\" \"PORT=8080 npm run start --prefix packages/client\"",
+    "postinstall": "lerna bootstrap"
   }
 }
