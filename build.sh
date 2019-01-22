@@ -10,5 +10,3 @@ center "Installing server dependencies"
 npm i --prefix packages/server
 center "Installing client dependencies"
 npm i --prefix packages/client
-center "Runing project"
-concurrently --kill-others "npm start --prefix packages/server" "PORT=8080 npm run start --prefix packages/client"
