@@ -21,6 +21,7 @@ const webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
 const clearConsole = require('react-dev-utils/clearConsole');
 const checkRequiredFiles = require('react-dev-utils/checkRequiredFiles');
+const { atsmRun, atsmWatch } = require('./atsm')
 const {
   choosePort,
   createCompiler,
@@ -34,6 +35,11 @@ const createDevServerConfig = require('../config/webpackDevServer.config');
 
 const useYarn = fs.existsSync(paths.yarnLockFile);
 const isInteractive = process.stdout.isTTY;
+
+// Run atsm on start
+atsmRun()
+// Then it keeps running in parallel
+atsmWatch()
 
 // Warn and crash if required files are missing
 if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {

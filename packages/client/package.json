@@ -131,6 +131,7 @@
     ]
   },
   "devDependencies": {
-    "@types/express": "^4.16.0"
+    "@types/express": "^4.16.0",
+    "awesome-typed-sass-modules": "^1.1.5"
   }
 }

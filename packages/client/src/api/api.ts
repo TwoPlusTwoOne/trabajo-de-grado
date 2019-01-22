@@ -5,7 +5,6 @@ export const getAllUsers = () => {
 }
 
 export const getUserById = (id: string) => {
-  console.log('getUserById', id)
   return fetch(`${baseUri}/user/${id}`, { method: 'get' })
 }
 
@@ -16,8 +15,11 @@ export const getAllXss = () => {
 export const login = (info: { email: string, password: string }) => {
   const url = `${baseUri}/login`
 
-  const init = {
-    method: 'post',
+  const init: RequestInit = {
+    method: 'POST',
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify(info),
   }
 

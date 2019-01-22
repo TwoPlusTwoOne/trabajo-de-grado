@@ -464,6 +464,21 @@ module.exports = function(webpackEnv) {
             },
             // ** STOP ** Are you adding a new loader?
             // Make sure to add the new loader(s) before the "file" loader.
+            {
+              test: /\.scss$/,
+              use: [
+                require.resolve('style-loader'),
+                {
+                  loader: require.resolve('css-loader'),
+                  options: {
+                    modules: true,
+                    localIdentName: '[path][name]__[local]--[hash:base64:5]',
+                    camelCase: false,
+                  },
+                },
+                require.resolve('sass-loader'),
+              ],
+            },
           ],
         },
       ],

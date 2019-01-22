@@ -19,6 +19,7 @@ const path = require('path');
 const chalk = require('chalk');
 const fs = require('fs-extra');
 const webpack = require('webpack');
+const { atsmRun } = require('./atsm')
 const bfj = require('bfj');
 const configFactory = require('../config/webpack.config');
 const paths = require('../config/paths');
@@ -36,6 +37,9 @@ const useYarn = fs.existsSync(paths.yarnLockFile);
 // These sizes are pretty large. We'll warn for bundles exceeding them.
 const WARN_AFTER_BUNDLE_GZIP_SIZE = 512 * 1024;
 const WARN_AFTER_CHUNK_GZIP_SIZE = 1024 * 1024;
+
+// Run atsm
+atsmRun()
 
 const isInteractive = process.stdout.isTTY;
 
