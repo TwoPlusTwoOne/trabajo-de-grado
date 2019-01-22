@@ -6,7 +6,6 @@ export type Props = {}
 
 export class LoginView extends React.PureComponent<Props> {
   render() {
-    console.log('process env database url:', process.env.REACT_APP_DATABASE_URL)
 
     return (
       <div className={'login-view-container'}>
