@@ -6,7 +6,7 @@
     "lerna": "^3.10.6"
   },
   "scripts": {
-    "heroku-prebuild": "./build.sh",
+    "preinstall": "./build.sh",
     "start": "concurrently --kill-others \"npm start --prefix packages/server\" \"PORT=8080 npm run start --prefix packages/client\""
   }
 }
