@@ -42,7 +42,7 @@ export class Container extends React.PureComponent<Props, State> {
 
   render() {
     return (
-      <div>
+      <div className = {styles.container}>
         {
           
           this.state.products.map(p => {

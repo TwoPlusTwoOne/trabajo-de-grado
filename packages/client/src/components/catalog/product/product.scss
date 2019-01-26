@@ -1,20 +1,30 @@
 :local {
     .container {
-      width: 100%;
+      min-width: 120px;
+      max-width: 120px;
       display: flex;
       flex-direction: column;
-  
-      & > div:not(:last-child) {
-        margin-bottom: 15px;
+      justify-content: flex-start;
+      text-align: center;
+      font-weight: bold;
+      cursor: pointer;
+      overflow: hidden;
+      &:hover {
+        opacity: 0.4;
       }
+      
     }
-  
-    .buttonsDiv {
-      button {
-        width: 100%;
-      }
-  
-      display: flex;
-      justify-content: space-around;
+
+    
+
+    .img {
+      position: relative;
+      float: left;
+      width:  100%;
+      height: 70%;
+      background-position: 50% 50%;
+      background-repeat:   no-repeat;
+      background-size:     cover;
+      margin-bottom: 5%;
     }
   }

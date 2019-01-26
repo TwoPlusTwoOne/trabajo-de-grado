@@ -12,15 +12,14 @@ export class ProductComponent extends React.PureComponent<Props, State> {
 
     constructor(props: any) {
         super(props)
-        console.log("asdasdasd")
     }
 
   render() {
     const { product } = this.props
-    console.log(product)
     return (
       <div className={styles.container}>
-        <img src={product.images[0]}/>
+        <img className = {styles.img}  src={product.images[0]}/>
+        <label>{product.name}</label>
         <div />
       </div>
     )
