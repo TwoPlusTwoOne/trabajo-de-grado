@@ -19,7 +19,7 @@ export class ProductComponent extends React.PureComponent<Props, State> {
     return (
       <div className={styles.container}>
         <img className = {styles.img}  src={product.images[0]}/>
-        <label>{product.name}</label>
+        <label>${product.value}</label>
         <div />
       </div>
     )
