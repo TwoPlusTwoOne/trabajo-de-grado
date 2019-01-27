@@ -10,7 +10,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import { withStyles, createStyles, Theme } from '@material-ui/core/styles';
-import MenuIcon from '@material-ui/icons/Menu';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
@@ -140,7 +140,7 @@ class Topbar extends React.Component {
         <MenuItem>
           <IconButton color="inherit">
             <Badge badgeContent={4} color="secondary">
-              <MailIcon />
+              <ShoppingCartIcon />
             </Badge>
           </IconButton>
           <p>Messages</p>
@@ -166,11 +166,11 @@ class Topbar extends React.Component {
       <div className={classes.root}>
         <AppBar position="static">
           <Toolbar>
-            <IconButton className={classes.menuButton} color="inherit" aria-label="Open drawer">
+            {/* <IconButton className={classes.menuButton} color="inherit" aria-label="Open drawer">
               <MenuIcon />
-            </IconButton>
+            </IconButton> */}
             <Typography className={classes.title} variant="h6" color="inherit" noWrap>
-              Material-UI
+              Mercado No libre (claramente esto no es ML)
             </Typography>
             <div className={classes.search}>
               <div className={classes.searchIcon}>
@@ -188,7 +188,7 @@ class Topbar extends React.Component {
             <div className={classes.sectionDesktop}>
               <IconButton color="inherit">
                 <Badge badgeContent={4} color="secondary">
-                  <MailIcon />
+                  <ShoppingCartIcon />
                 </Badge>
               </IconButton>
               <IconButton color="inherit">
@@ -214,6 +214,7 @@ class Topbar extends React.Component {
         </AppBar>
         {renderMenu}
         {renderMobileMenu}
+        
       </div>
     );
   }

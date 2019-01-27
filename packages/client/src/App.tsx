@@ -8,7 +8,10 @@ import Topbar  from './components/topbar/tobar'
 const App = () => (
   <Router>
     <div>
-      <Route path="/" exact component={Topbar} />
+      <Topbar/>
+      <div className = "body-content">
+        <Route path="/" exact component={Container} />
+      </div>
     </div>
   </Router>
 )
