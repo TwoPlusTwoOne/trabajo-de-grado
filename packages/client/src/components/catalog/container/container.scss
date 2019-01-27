@@ -1,12 +1,13 @@
 :local {
     .container {
-      width: 50%;
+      width: 80%;
       margin-top: 2%;
       display: flex;
       overflow: auto;
       margin-left: 4.5%;
       justify-content: start;
       flex-direction: row;
+      padding: 1%;
       flex-wrap: wrap;
   
       & > div:not(:last-child) {
