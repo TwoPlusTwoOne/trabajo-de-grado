@@ -3,7 +3,7 @@ import './App.css'
 import { BrowserRouter as Router, Switch } from 'react-router-dom'
 import { SecuredRoute } from './components/secured-route/securedRoute'
 import { Home } from './components/home/home'
-import { LoginView } from './views/loginView'
+import { LoginView } from './views/login-view/loginView'
 import { UnsecuredRoute } from './components/unsecured-route/unsecuredRoute'
 
 const App = () => {
