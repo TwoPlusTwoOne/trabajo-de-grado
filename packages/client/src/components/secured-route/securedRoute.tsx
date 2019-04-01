@@ -1,12 +1,10 @@
 import * as React from 'react'
-import { auth } from '../../helpers/auth'
-import { RouteProps, Route, Redirect } from 'react-router-dom'
+import { Redirect, Route, RouteProps } from 'react-router'
+import { isLoggedIn } from '../../helpers/auth'
 
-export class SecuredRoute extends React.PureComponent<RouteProps> {
+export type Props = RouteProps & {}
 
-  render() {
-    if (auth.isLoggedIn()) return <Route {...this.props} />
-
-    return <Redirect to={'/login'} />
-  }
-}
+export const SecuredRoute = (props: Props) =>
+  isLoggedIn()
+    ? <Route {...props} />
+    : <Redirect to={'/login'} />

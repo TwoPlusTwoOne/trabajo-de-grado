@@ -1,11 +1,11 @@
 import * as React from 'react'
+import * as styles from './login.scss'
 import { ChangeEvent } from 'react'
 import { TextField } from '@material-ui/core'
 import { login } from '../../api/api'
 import { LoginButton } from './loginButton'
-import * as styles from './login.scss'
 import { Loader } from '../loader/loader'
-import { auth, User } from '../../helpers/auth'
+import { logIn, User } from '../../helpers/auth'
 import { Redirect } from 'react-router'
 
 export type Props = {}
@@ -27,7 +27,7 @@ export class Login extends React.PureComponent<Props, State> {
   }
 
   logInSuccess = (user: User) => {
-    auth.logIn(user)
+    logIn(user)
     this.setState({ redirect: '/' })
   }
 
@@ -35,7 +35,7 @@ export class Login extends React.PureComponent<Props, State> {
 
   handleLogIn = (response: { results: User[] }) => {
     const { results } = response
-    console.log({ results })
+
     if (results.length) {
       this.logInSuccess(results[0])
     } else {

@@ -9,18 +9,16 @@ export type User = {
   password: string
 }
 
-class Auth {
-  private loggedUser: User | null = null
+const logIn = (user: User) => sessionStorage.setItem('user', JSON.stringify(user))
 
-  logIn = (user: User) => this.loggedUser = user
+const logOut = () => sessionStorage.clear()
 
-  logOut = () => this.loggedUser = null
-
-  getLoggedUser = () => this.loggedUser
-
-  isLoggedIn = () => !!this.loggedUser
+const getLoggedUser = () => {
+  const item = sessionStorage.getItem('user')
+  if (item) return JSON.parse(item)
+  else throw Error('No user logged in.')
 }
 
-const auth = new Auth()
+const isLoggedIn = () => !!sessionStorage.getItem('user')
 
-export { auth }
+export { logIn, logOut, getLoggedUser, isLoggedIn }
