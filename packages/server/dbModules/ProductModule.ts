@@ -1,6 +1,8 @@
 import { Product } from '../entities/Product'
 import { Pool } from 'pg';
+import {insertImageProduct} from './ProductImageModule'
 import { json } from 'express';
+import { ProductImage } from '../entities/ProductImage';
 
 
 export const insertProduct = async (pool: Pool, product: Product) => {
@@ -10,6 +12,7 @@ export const insertProduct = async (pool: Pool, product: Product) => {
         VALUES ('${product.name}', '${product.value}', '${product.description}', '${product.seller.id}')
         RETURNING id`
         ).then((res) => {
+            product.images.forEach(i => insertImageProduct(pool, new ProductImage(i.id, i.image, res.rows[0].id)))
             return res.rows[0].id
         }).catch(e => {
             console.error(e.stack)
