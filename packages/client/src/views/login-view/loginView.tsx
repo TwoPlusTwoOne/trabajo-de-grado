@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Login } from '../components/login/login'
+import { Login } from '../../components/login/login'
 import { Paper } from '@material-ui/core'
 import * as styles from './loginView.scss'
 
