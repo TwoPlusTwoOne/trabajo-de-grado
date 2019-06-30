@@ -2,14 +2,19 @@ import React from 'react'
 import './App.css'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { LoginView } from './views/loginView'
-import { Container } from './components/catalog/container/container'
- 
+import { SuperComponent } from './components/superComponent'
+
+
+
 const App = () => (
-  <Router>
-    <div>
-      <Route path="/" exact component={Container} />
-    </div>
-  </Router>
-)
+  
+    <Router>
+      <div>
+        <Route path="/" exact component= {SuperComponent} />
+      </div>
+    </Router>
+  )
+
+
 
 export default App;

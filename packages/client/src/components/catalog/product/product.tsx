@@ -1,6 +1,6 @@
 import * as React from 'react'
 import * as styles from './product.scss'
-import { Product } from '../container/container'
+import { Product } from '../../../util/types'
 
 export type Props = {
     product: Product

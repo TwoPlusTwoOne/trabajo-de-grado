@@ -49,6 +49,7 @@
     "postcss-safe-parser": "4.0.1",
     "react": "^16.7.0",
     "react-app-polyfill": "^0.2.0",
+    "react-autocomplete": "^1.8.1",
     "react-dev-utils": "^7.0.1",
     "react-dom": "^16.7.0",
     "react-router-dom": "^4.3.1",
@@ -124,6 +125,7 @@
     ]
   },
   "devDependencies": {
+    "@types/react-autocomplete": "^1.8.5",
     "awesome-typed-sass-modules": "^1.1.5"
   }
 }
