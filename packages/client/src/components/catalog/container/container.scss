@@ -12,6 +12,10 @@
         margin-bottom: 2%;
         margin-right: 2%;
       }
+
+      & > div {
+        border-radius: 0.4em;
+      } 
     }
   
     .buttonsDiv {
