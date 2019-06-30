@@ -1,10 +1,12 @@
 import * as React from 'react'
+import * as styles from './login.scss'
 import { ChangeEvent } from 'react'
 import { TextField } from '@material-ui/core'
-import { getUserById, login } from '../../api/api'
+import { login } from '../../api/api'
 import { LoginButton } from './loginButton'
-import * as styles from './login.scss'
 import { Loader } from '../loader/loader'
+import { logIn, User } from '../../helpers/auth'
+import { Redirect } from 'react-router'
 
 export type Props = {}
 
@@ -12,6 +14,8 @@ export type State = {
   email: string
   password: string
   isLoggingIn: boolean
+  error: string
+  redirect?: string
 }
 
 export class Login extends React.PureComponent<Props, State> {
@@ -19,23 +23,40 @@ export class Login extends React.PureComponent<Props, State> {
     email: '',
     password: '',
     isLoggingIn: false,
+    error: '',
   }
 
-  handleClickRegister = () => {
-    getUserById(this.state.email)
-      .then(response => response.json())
-      .then(console.log)
-      .catch(console.log)
+  logInSuccess = (user: User) => {
+    logIn(user)
+    this.setState({ redirect: '/' })
   }
+
+  logInError = () => this.setState({ ...this.state, error: 'Invalid username/password' })
+
+  handleLogIn = (response: { results: User[] }) => {
+    const { results } = response
+
+    if (results.length) {
+      this.logInSuccess(results[0])
+    } else {
+      this.logInError()
+    }
+  }
+
+  handleError = () => this.setState({ ...this.state, error: 'There was a problem with the request' })
+
+  stopLoggingIn = () => this.setState({ ...this.state, isLoggingIn: false })
+
+  clearErrors = () => this.setState({ ...this.state, error: '' })
 
   handleClickLogin = () => {
     const { email, password } = this.state
-    this.setState({ ...this.state, isLoggingIn: true })
+    this.setState({ ...this.state, isLoggingIn: true }, this.clearErrors)
     login({ email, password })
       .then(response => response.json())
-      .then(console.log)
-      .catch(console.log)
-      .then(() => this.setState({ ...this.state, isLoggingIn: false }))
+      .then(this.handleLogIn)
+      .catch(this.handleError)
+      .then(this.stopLoggingIn)
   }
 
   handleChange = (field: string, e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -44,7 +65,10 @@ export class Login extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { isLoggingIn, email, password } = this.state
+    const { isLoggingIn, email, password, redirect, error } = this.state
+
+    if (redirect) return <Redirect to={redirect} />
+
     return (
       <div className={styles.container}>
         <TextField
@@ -63,10 +87,13 @@ export class Login extends React.PureComponent<Props, State> {
           onChange={this.handleChange.bind(null, 'password')}
         />
         {
+          error && <span className={styles.error}>{error}</span>
+        }
+        {
           isLoggingIn
             ? <Loader />
             : <div className={styles.buttonsDiv}>
-            <LoginButton onClick={this.handleClickLogin} />
+              <LoginButton onClick={this.handleClickLogin} />
             </div>
         }
         <div />
