@@ -10,8 +10,8 @@ class ProductBuilder {
     private value: number
     private description: string
     private seller: Client
-    private images: ProductImage[]
-    private reviews: Review[]
+    private images: ProductImage[] = []
+    private reviews: Review[] = []
 
     withName(name: string){
         this.name = name
@@ -40,6 +40,11 @@ class ProductBuilder {
 
     withReview(review: Review){
         this.reviews.push( review )
+        return this
+    }
+
+    withId(id: string) {
+        this.id = id
         return this
     }
 

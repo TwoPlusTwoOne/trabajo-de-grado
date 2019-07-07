@@ -25,3 +25,16 @@ export const login = (info: { email: string, password: string }) => {
 
   return fetch(url, init)
 }
+
+export const getProducts = () => {
+  const url = `${baseUri}/product`
+
+  const init: RequestInit = {
+    method: 'GET',
+    headers: {
+      "Content-Type": "application/json",
+    }
+  }
+
+  return fetch(url, init)
+}

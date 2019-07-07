@@ -3,7 +3,7 @@
   "private": true,
   "dependencies": {
     "concurrently": "^4.1.0",
-    "lerna": "^3.10.6"
+    "lerna": "^3.15.0"
   },
   "scripts": {
     "heroku-postbuild": "./build.sh",
