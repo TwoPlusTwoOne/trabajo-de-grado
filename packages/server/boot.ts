@@ -83,14 +83,14 @@ const products = [
 ]
 
 const questions = [
-    [new Question("", "", "Hola! es apata para piñas? Saludos!"), new Question("", "", "Hola es apta para sandias?"), new Question("", "", "Hola es apta para melo?")],
-    [new Question("", "", "Hola! es 1080????"), new Question("", "", "Hola! es smart?")],
-    [new Question("", "", "Hola! es ciclica la herladera???")]
+    [new Question("", "", "Hola! es apata para piñas? Saludos!", ""), new Question("", "", "Hola es apta para sandias?", ""), new Question("", "", "Hola es apta para melo?", "")],
+    [new Question("", "", "Hola! es 1080????", ""), new Question("", "", "Hola! es smart?", "")],
+    [new Question("", "", "Hola! es ciclica la herladera???", "")]
 ]
 const answers = [
-    [new Answer("", "", "Si, es apto para licuar piñas"), new Answer("", "", "Si, es apto para licuar sandia"), new Answer("", "", "Si, es apto para licuar melon")],
-    [new Answer("", "", "No, el producto tiene una resolucion de 720p no 1080p"), new Answer("", "", "No, el producto no es smart")],
-    [new Answer("", "", "Si, como indicamos en el nombre del producto la heladera es ciclica")]
+    [new Answer("", "", "Si, es apto para licuar piñas", ""), new Answer("", "", "Si, es apto para licuar sandia", ""), new Answer("", "", "Si, es apto para licuar melon", "")],
+    [new Answer("", "", "No, el producto tiene una resolucion de 720p no 1080p", ""), new Answer("", "", "No, el producto no es smart", "")],
+    [new Answer("", "", "Si, como indicamos en el nombre del producto la heladera es ciclica", "")]
 ]
 
 const userTableInsert = 
@@ -183,14 +183,16 @@ const questionTableInsert =
     `CREATE TABLE ${Question.tableName} (
         id serial PRIMARY KEY,
         "product_id" integer REFERENCES ${Product.tableName}(id),
-        "question" text
+        "question" text,
+        "user_id" integer REFERENCES ${User.tableName}(id)
     );`
 
 const answerTableInsert = 
     `CREATE TABLE ${Answer.tableName} (
         id serial PRIMARY KEY,
         "question_id" integer REFERENCES ${Question.tableName}(id),
-        "answer" text
+        "answer" text,
+        "user_id" integer REFERENCES ${User.tableName}(id)
     );`
 
 const tables = [
@@ -242,17 +244,19 @@ export const boot = async (pool: Pool) => {
         await insertAdmin(pool, admin)
         console.log("Admin created")
     })
-    await insertClient(pool, client)
+    const clientID =await insertClient(pool, client)
     console.log("Client created")
     const sellerID = await insertClient(pool, seller.build())
     console.log("Seller created")
     const sellerWithID = seller.withID(sellerID).build()
+    
     const productsWithSeller =  products.map(async (p, index) => {
         p.seller = sellerWithID
         await insertProduct(pool, p).then((pId) => {
-            var qs = questions[index].map(q => new Question(q.id, pId, q.question))
+            const qs = questions[index].map(q => new Question(q.id, pId, q.question, clientID))
+            const ans = answers[index].map(a => new Answer(a.id, a.questionId, a.answer, sellerID))
             qs.map(async (q, qIndex) => {
-                insertQustionAnswer(pool, q, answers[index][qIndex])
+                insertQustionAnswer(pool, q, ans[qIndex])
             })  
         })
     })

@@ -1,14 +1,13 @@
 import { Answer } from '../entities/Answer'
 import {Question} from '../entities/Question'
 import { Pool } from 'pg';
-import { json } from 'express';
 
 
 export const insertAnswer = async (pool: Pool, answer: Answer) => {
     const client = await pool.connect()
     const result: Promise<string> = client.query(
-        `INSERT INTO ${Answer.tableName} (answer, question_id) 
-        VALUES ('${answer.answer}', '${answer.questionId}')
+        `INSERT INTO ${Answer.tableName} (answer, question_id, user_id) 
+        VALUES ('${answer.answer}', '${answer.questionId}', '${answer.user}')
         RETURNING id`
         ).then((res) => {
             return res.rows[0].id
@@ -26,7 +25,8 @@ export const getQuestionAnswer = async (pool: Pool, questionId: string) => {
         `SELECT 
             ${Answer.tableName}.id, 
             ${Answer.tableName}.answer, 
-            ${Answer.tableName}.question_id,  
+            ${Answer.tableName}.question_id,
+            ${Answer.tableName}.user_id
         FROM ${Answer.tableName}
         LEFT OUTER JOIN ${Question.tableName} on ${Question}.tableName}.id = ${Answer.tableName}.question_id
         WHERE ${Question.tableName}.id = ${questionId}
@@ -48,7 +48,8 @@ export const getAnswer = async (pool: Pool, answerID: string) => {
         `SELECT 
             ${Answer.tableName}.id, 
             ${Answer.tableName}.answer, 
-            ${Answer.tableName}.question_id
+            ${Answer.tableName}.question_id,
+            ${Answer.tableName}.user_id
         FROM ${Answer.tableName}
         WHERE ${Answer.tableName}.id = ${answerID}
         `

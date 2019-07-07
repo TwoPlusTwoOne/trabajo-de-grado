@@ -10,6 +10,8 @@ export type Props = {
 type QuestionJson = {
     question_id: string,
     answer_id: string,
+    seller_id: string,
+    client_id: string,
     question: string,
     answer: string,
     product_id: string

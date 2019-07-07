@@ -11,6 +11,8 @@ export const getProductQuestionAnswer = async (pool: Pool, productId: string) =>
         `SELECT 
             ${Question.tableName}.id as question_id,
             ${Answer.tableName}.id as answer_id,
+            ${Question.tableName}.user_id as client_id,
+            ${Answer.tableName}.user_id as seller_id,
             ${Question.tableName}.question,
             ${Answer.tableName}.answer,
             ${Question.tableName}.product_id  
