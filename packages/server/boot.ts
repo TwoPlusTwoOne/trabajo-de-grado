@@ -83,14 +83,14 @@ const products = [
 ]
 
 const questions = [
-    new Question("", "", "Hola! es apata para piñas? Saludos!"),
-    new Question("", "", "Hola! es 1080????"),
-    new Question("", "", "Hola! es ciclica la herladera???")
+    [new Question("", "", "Hola! es apata para piñas? Saludos!"), new Question("", "", "Hola es apta para sandias?"), new Question("", "", "Hola es apta para melo?")],
+    [new Question("", "", "Hola! es 1080????"), new Question("", "", "Hola! es smart?")],
+    [new Question("", "", "Hola! es ciclica la herladera???")]
 ]
 const answers = [
-    new Answer("", "", "Si, es apto para licuar piñas"),
-    new Answer("", "", "No, el producto tiene una resolucion de 720p no 1080p"),
-    new Answer("", "", "Si, como indicamos en el nombre del producto la heladera es ciclica")
+    [new Answer("", "", "Si, es apto para licuar piñas"), new Answer("", "", "Si, es apto para licuar sandia"), new Answer("", "", "Si, es apto para licuar melon")],
+    [new Answer("", "", "No, el producto tiene una resolucion de 720p no 1080p"), new Answer("", "", "No, el producto no es smart")],
+    [new Answer("", "", "Si, como indicamos en el nombre del producto la heladera es ciclica")]
 ]
 
 const userTableInsert = 
@@ -250,9 +250,10 @@ export const boot = async (pool: Pool) => {
     const productsWithSeller =  products.map(async (p, index) => {
         p.seller = sellerWithID
         await insertProduct(pool, p).then((pId) => {
-            var question = questions[index]
-            question.productId = pId
-            insertQustionAnswer(pool, question, answers[index])
+            var qs = questions[index].map(q => new Question(q.id, pId, q.question))
+            qs.map(async (q, qIndex) => {
+                insertQustionAnswer(pool, q, answers[index][qIndex])
+            })  
         })
     })
     Promise.all(productsWithSeller).then(() => { 
