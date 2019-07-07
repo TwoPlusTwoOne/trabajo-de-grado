@@ -13,6 +13,8 @@ class Admin extends User{
     role: Role
     userID: string
 
+    static readonly tableName = "admin_table"
+
     constructor(
         id: string,
         firstNma: string,
@@ -29,5 +31,7 @@ class Admin extends User{
         this.userID = userID
     }
 }
+
+
 
 export { Admin }

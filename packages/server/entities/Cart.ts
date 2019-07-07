@@ -6,6 +6,9 @@ class Cart implements DBEntity {
     id: string
     clientID: string
     product: Product
+    tableName: string
+
+    static readonly tableName = "cart_table"
 
     constructor(id: string, clientID: string, product: Product) {
         this.id = id

@@ -8,6 +8,8 @@ import { Client } from './entities/Client'
 import { Admin } from './entities/Admin'
 import { boot } from './boot'
 import { getCartByClientId } from './dbModules/CartModule'
+import {getProductQuestionAnswer}  from './dbModules/QuestionAnswerModule'
+
 
 var express = require('express');
 var app = express();
@@ -128,6 +130,14 @@ app.get('/client/cart/:clientId', async function (req: Request, res: Response) {
 app.get('/product', async function (req: Request, res: Response) {
   const results = await getAllProducts(pool)
   res.send(results)
+});
+
+
+app.get('/qa/:productId', async function (req: Request, res: Response) {
+  const productId = req.params.productId
+  console.log(`Product id: ${productId}`)
+  const client = await getProductQuestionAnswer(pool, productId)
+  res.send(client)
 });
 
 app.listen(3001, function () {

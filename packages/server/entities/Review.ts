@@ -8,6 +8,8 @@ class Review implements DBEntity{
     description: string
     calification: number
 
+    static readonly tableName = "review_table"
+
     constructor(id: string, buyer: Client, description: string, calification: number) {
         this.id = id
         this.buyer = buyer
