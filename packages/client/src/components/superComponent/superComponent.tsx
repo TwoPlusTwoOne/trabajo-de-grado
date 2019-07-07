@@ -25,7 +25,6 @@ export class SuperComponent extends React.PureComponent<Props, State> {
 
     constructor(props: any) {
         super(props)
-    
         this.notifySearch = this.notifySearch.bind(this)
       }
 

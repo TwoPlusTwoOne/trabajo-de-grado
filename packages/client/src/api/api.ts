@@ -38,3 +38,17 @@ export const getProducts = () => {
 
   return fetch(url, init)
 }
+
+export const getQuestionsForProduct = (productId: string) => {
+  
+  const url = `${baseUri}/qa/${productId}`
+
+  const init: RequestInit = {
+    method: 'GET',
+    headers: {
+      "Content-Type": "application/json",
+    }
+  }
+
+  return fetch(url, init)
+}
