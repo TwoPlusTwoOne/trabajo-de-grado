@@ -11,6 +11,8 @@ class User implements DBEntity{
     email: string
     birthdate: Date
 
+    static tableName = "user_table"
+
     constructor(
         id: string,
         firstName: string,

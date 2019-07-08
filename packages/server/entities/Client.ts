@@ -1,7 +1,6 @@
 import { User } from './User'
-import { Cart } from './Cart'
 
-class Client extends User{
+class Client extends User {
     id: string
     firstNma: string 
     lastName: string
@@ -12,6 +11,8 @@ class Client extends User{
     birthdate: Date
     sellerCalification: string
     userID: string
+
+    static readonly tableName = "client_table"
 
     constructor(
         id: string,

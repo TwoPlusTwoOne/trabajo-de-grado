@@ -38,3 +38,30 @@ export const getProducts = () => {
 
   return fetch(url, init)
 }
+
+export const getQuestionsForProduct = (productId: string) => {
+  
+  const url = `${baseUri}/qa/${productId}`
+
+  const init: RequestInit = {
+    method: 'GET',
+    headers: {
+      "Content-Type": "application/json",
+    }
+  }
+
+  return fetch(url, init)
+}
+
+export const postQuestion = (info: { question: string, userId: string, productId: string }) => {
+  const url = `${baseUri}/question`
+  const init: RequestInit = {
+    method: 'POST',
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(info),
+  }
+
+  return fetch(url, init)
+}
