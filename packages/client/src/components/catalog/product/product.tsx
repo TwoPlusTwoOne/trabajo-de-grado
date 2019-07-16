@@ -3,25 +3,15 @@ import * as styles from './product.scss'
 import { Product } from '../../../util/types'
 
 export type Props = {
-    product: Product
+  product: Product
+  onClick: (product: Product) => void
 }
 
-export type State = {}
-
-export class ProductComponent extends React.PureComponent<Props, State> {
-
-    constructor(props: any) {
-        super(props)
-    }
-
-  render() {
-    const { product } = this.props
-    return (
-      <div className={styles.container}>
-        <img className = {styles.img}  src={product.images[0]}/>
-        <label>${product.value}</label>
-        <div />
-      </div>
-    )
-  }
+export const ProductComponent = (props: Props) => {
+  const { product, onClick } = props
+  return <div onClick={() => onClick(product)} className={styles.container}>
+    <img alt={product.name} className={styles.img} src={product.images[0]} />
+    <label>${product.value}</label>
+    <div />
+  </div>
 }
