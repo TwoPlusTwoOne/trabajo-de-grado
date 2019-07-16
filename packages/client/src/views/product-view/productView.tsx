@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { getProductById } from '../../api/api'
-import { ProductType } from '../../components/product/product'
+import { Product, ProductType } from '../../components/product/product'
+import { Loader } from '../../components/loader/loader'
 
 export type Props = {
   match: {
@@ -26,12 +27,22 @@ export class ProductView extends React.PureComponent<Props, State> {
 
 
   componentDidMount(): void {
-    // TODO after fetching product, set state for active product
-    getProductById(this.props.match.params.productId).then(console.log)
+    const id = parseInt(this.props.match.params.productId)
+    if (!isNaN(id)) {
+      getProductById(id)
+        .then(product => {
+          this.setState({ product })
+        })
+    }
   }
 
   render() {
-    console.log('props: ', this.props)
-    return <div />
+    const product = this.state.product
+
+    if (!product) return <Loader />
+
+    return <div>
+      <Product product={product} />
+    </div>
   }
 }
