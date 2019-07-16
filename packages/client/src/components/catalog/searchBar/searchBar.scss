@@ -1,17 +1,29 @@
-:local(.searchBar){ 
+:local {
+  .searchBar {
     display: flex;
     justify-content: center;
     width: 100%;
-}
+  }
 
-:local(.suggestionMenu) {
+  .suggestionMenu {
     background-color: white;
     position: absolute;
     z-index: 2;
     width: 100%;
-}
+  }
 
-:local(.autocompleteInput){
-    height: 100%;
-    width: 100%;
+  .autocompleteInput {
+    //height: 100%;
+    //width: 100%;
+  }
+
+  .renderItem {
+    color: black;
+    padding: 5px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, .1)
+    }
+  }
 }

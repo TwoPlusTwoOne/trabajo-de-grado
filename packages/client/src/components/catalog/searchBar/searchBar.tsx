@@ -1,81 +1,70 @@
 import * as React from 'react'
+import classNames from 'classnames'
 import Autocomplete from 'react-autocomplete'
 import { Product } from '../../../util/types'
 import styles from './searchBar.scss'
 
 export type Props = {
-    products: Product[],
-    notifySearch: (s:string) => void,
-    searchText: string
+  products: Product[],
+  onSelectItem: (product: Product) => void
 }
 export type State = {
-    productsNames: [],
-    searchText: string
+  query: String
 }
 
+const matchesQuery = (item: Product, value: string) => item.name.indexOf(value) > -1
 
-        
+const SearchResultItem = (props: { highlighted: boolean, item: any }) => <div
+  className={classNames(styles.renderItem, 'item', props.highlighted && 'item-highlighted')}
+
+>{props.item.name}</div>
 
 export class SearchBar extends React.PureComponent<Props, State> {
 
-    state: State = {
-        productsNames: [],
-        searchText: ""
-      }
-    
-      constructor(props: any) {
-        super(props)
-        const products = props.products
-        const prodNames = products.map((p:Product) => p.name)
-        this.setState({ ...this.state, productsNames: prodNames, searchText: props.searchText })
-      }
+  state: State = {
+    query: ''
+  }
 
-    matchStateToTerm(state: Product, value: string) {
-        return (
-            value === "" ||
-            state.name.toLowerCase().indexOf(value.toLowerCase()) !== -1
-        )
-    }
+  constructor(props: any) {
+    super(props)
 
-    changeValue(event:any, newValue: string) {
-        console.log(newValue)
-        if(newValue === ""){
-            this.props.notifySearch(newValue)
-        }
-        this.setState({ ...this.state, searchText: newValue })
-    }
+    this.state = { query: '' }
+  }
 
-    
+  handleQueryChange = (e: any, query: String) => this.setState({ query })
 
-    render() {
-        return (
-          <div className={styles.searchBar}>
-            <Autocomplete
-              value={this.state.searchText}
-              inputProps={{ className: styles.autocompleteInput}}
-              wrapperStyle={{position: 'relative', display: 'inline-block', width: '100%'}}
-              items={this.props.products}
-              shouldItemRender={this.matchStateToTerm}
-              getItemValue={(item) => item.name}
-              onChange={(event, newvalue) => this.changeValue(event, newvalue)}
-              onSelect={newvalue => this.props.notifySearch(newvalue)}
-              renderMenu={(items, value) => (
-                <div className={styles.suggestionMenu}>
-                  {value === '' ? (
-                    <div className="item">Ingrese el nombre de un producto</div>
-                  ) : items.length === 0 ? (
-                    <div className="item">No se encontraron resultados para: {value}</div>
-                  ) : items}
-                </div>
-              )}
-              renderItem={(item, isHighlighted) => (
-                <div
-                  className={`item ${isHighlighted ? 'item-highlighted' : ''}`}
-                  key={item.id}
-                >{item.name}</div>
-              )}
-            />
+  handleSelect = (value: string, item: Product) => {
+    this.setState({ query: value })
+    this.props.onSelectItem(item)
+  }
+
+  render() {
+    const { query } = this.state
+    return (
+      <div className={styles.searchBar}>
+        <Autocomplete
+          value={query}
+          // inputProps={{ className: styles.autocompleteInput }}
+          wrapperStyle={{ position: 'relative', display: 'inline-block' }}
+          items={this.props.products}
+          shouldItemRender={matchesQuery}
+          getItemValue={(item) => item.name}
+          onChange={this.handleQueryChange}
+          onSelect={this.handleSelect}
+          renderMenu={(items, value) => (
+            <div className={styles.suggestionMenu}>
+              {value === '' ? (
+                <div className="item">Ingrese el nombre de un producto</div>
+              ) : items.length === 0 ? (
+                <div className="item">No se encontraron resultados para: {value}</div>
+              ) : items}
             </div>
-        )
-    }
+          )}
+          renderItem={(item, isHighlighted) => <SearchResultItem
+            highlighted={isHighlighted} key={item.id}
+            item={item} />}
+        />
+      </div>
+    )
+  }
 }

@@ -8,7 +8,7 @@ import styles from './superComponent.scss'
 import logo from '../../mercado-livre-logo.png'
 
 export type Props = {}
-  
+
   export type State = {
     products: Product[],
     searchedProducts: Product[],
@@ -39,7 +39,7 @@ export class SuperComponent extends React.PureComponent<Props, State> {
             name: p.name,
             value: p.value
         }
-        }))    
+        }))
         .then(prods => this.setState({ ...this.state, products: prods, searchedProducts: prods, currentSearch: ""}))
     }
 
@@ -47,7 +47,7 @@ export class SuperComponent extends React.PureComponent<Props, State> {
         if(search === ""){
             this.setState({ ...this.state, searchedProducts: this.state.products, currentSearch: search})
         } else {
-        const matchingProducts = this.state.products.filter((p: Product) => 
+        const matchingProducts = this.state.products.filter((p: Product) =>
             p.name.toLowerCase().indexOf(search.toLowerCase()) !== -1
         )
         this.setState({ ...this.state, searchedProducts: matchingProducts, currentSearch: search})
@@ -56,18 +56,17 @@ export class SuperComponent extends React.PureComponent<Props, State> {
 
     loadBody() {
         if (this.state.products.length === 0) {
-            return <Loader/>     
+            return <Loader/>
         }else {
             return <Container products= {this.state.searchedProducts}/>
         }
     }
 
-    render() { 
+    render() {
         return (
             <div>
                 <div className = {styles.searchBar}>
                     <img className = {styles.logoImage} src={logo} />
-                    {<SearchBar products = {this.state.products} notifySearch = {this.notifySearch} searchText = {this.state.currentSearch}/>}
                 </div>
             {this.loadBody()}
             </div>
