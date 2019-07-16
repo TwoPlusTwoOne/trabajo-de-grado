@@ -1,0 +1,29 @@
+:local {
+    .container {
+      width: 100%;
+      display: flex;
+      overflow: auto;
+      margin-left: 4.5%;
+      justify-content: start;
+      flex-direction: row;
+      flex-wrap: wrap;
+  
+      & > div:not(:last-child) {
+        margin-bottom: 2%;
+        margin-right: 2%;
+      }
+
+      & > div {
+        border-radius: 0.4em;
+      } 
+    }
+  
+    .buttonsDiv {
+      button {
+        width: 100%;
+      }
+  
+      display: flex;
+      justify-content: space-around;
+    }
+  }

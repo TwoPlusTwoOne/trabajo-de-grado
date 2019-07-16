@@ -13,6 +13,8 @@ class Product implements DBEntity {
     images: ProductImage[]
     reviews: Review[]
 
+    static readonly tableName = "product_table"
+
     constructor (
         id: string,
         name: string,

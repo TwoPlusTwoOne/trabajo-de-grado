@@ -8,6 +8,10 @@ import { Client } from './entities/Client'
 import { Admin } from './entities/Admin'
 import { boot } from './boot'
 import { getCartByClientId } from './dbModules/CartModule'
+import {getProductQuestionAnswer}  from './dbModules/QuestionAnswerModule'
+import { Question } from './entities/Question';
+import { insertQuestion } from './dbModules/QuestionsModule';
+
 
 var express = require('express');
 var app = express();
@@ -130,6 +134,23 @@ app.get('/product', async function (req: Request, res: Response) {
   res.send(results)
 });
 
+
+app.get('/qa/:productId', async function (req: Request, res: Response) {
+  const productId = req.params.productId
+  console.log(`Product id: ${productId}`)
+  const client = await getProductQuestionAnswer(pool, productId)
+  res.send(client)
+});
+
+const getQuestionFromRequest = (req: Request) => {
+  return new Question("", req.body.productId, req.body.question, req.body.userId)
+}
+
+app.post('/question', async function (req: Request, res: Response) {
+  const question = getQuestionFromRequest(req)
+  const questionId: string = await insertQuestion(pool, question)
+  res.send(JSON.stringify({ id: questionId }))
+});
 app.listen(3001, function () {
   console.log('Server started');
 });

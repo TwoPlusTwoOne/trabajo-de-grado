@@ -6,10 +6,12 @@ class ProductImage implements DBEntity {
     image: string
     productID: string
 
+    static readonly tableName = "product_image_table"
+
     constructor(id: string, image: string, productID: string) {
         this.id = id
         this.image = image
-        this.productID = productID
+        this.productID = productID 
     }
 }
 

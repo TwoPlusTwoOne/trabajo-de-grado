@@ -1,6 +1,8 @@
 import { Product } from '../entities/Product'
 import { Pool } from 'pg';
+import {insertImageProduct} from './ProductImageModule'
 import { json } from 'express';
+import { ProductImage } from '../entities/ProductImage';
 
 
 export const insertProduct = async (pool: Pool, product: Product) => {
@@ -10,6 +12,7 @@ export const insertProduct = async (pool: Pool, product: Product) => {
         VALUES ('${product.name}', '${product.value}', '${product.description}', '${product.seller.id}')
         RETURNING id`
         ).then((res) => {
+            product.images.forEach(i => insertImageProduct(pool, new ProductImage(i.id, i.image, res.rows[0].id)))
             return res.rows[0].id
         }).catch(e => {
             console.error(e.stack)
@@ -28,7 +31,7 @@ export const getAllProducts = async (pool: Pool) => {
             product_table.name, 
             product_table.value, 
             product_table.description, 
-            STRING_AGG(product_image_table.image, ', ')
+            STRING_AGG(product_image_table.image, ', ') as images
         FROM product_image_table
         LEFT OUTER JOIN product_table on product_image_table.product_id = product_table.id
         GROUP BY product_table.id
@@ -51,7 +54,7 @@ export const getSellerProducts = async (pool: Pool, sellerID: string) => {
             product_table.name, 
             product_table.value, 
             product_table.description, 
-            STRING_AGG(product_image_table.image, ', ')
+            STRING_AGG(product_image_table.image, ', ') as images
         FROM product_image_table
         LEFT OUTER JOIN product_table on product_image_table.product_id = product_table.id
         WHERE product_table_.seller_id = ${sellerID}
@@ -75,7 +78,7 @@ export const getProductByID = async (pool: Pool, producrID: string) => {
             product_table.name, 
             product_table.value, 
             product_table.description, 
-            STRING_AGG(product_image_table.image, ', ')
+            STRING_AGG(product_image_table.image, ', ') as images
         FROM product_image_table
         LEFT OUTER JOIN product_table on product_image_table.product_id = product_table.id
         WHERE product_table_.id = ${producrID}
