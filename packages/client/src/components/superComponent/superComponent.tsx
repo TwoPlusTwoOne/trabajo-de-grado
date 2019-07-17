@@ -6,12 +6,13 @@ import { Loader } from '../loader/loader'
 import { SearchBar } from '../catalog/searchBar/searchBar'
 import styles from './superComponent.scss'
 import logo from '../../mercado-livre-logo.png'
-
+import { Cart } from "../cart/cart";
 export type Props = {}
   
   export type State = {
     products: Product[],
     searchedProducts: Product[],
+    cart: Product[],
     currentSearch: string
   }
 
@@ -20,6 +21,7 @@ export class SuperComponent extends React.PureComponent<Props, State> {
     state: State = {
         products: [],
         searchedProducts: [],
+        cart:[],
         currentSearch: ""
     }
 
@@ -61,13 +63,22 @@ export class SuperComponent extends React.PureComponent<Props, State> {
             return <Container products= {this.state.searchedProducts}/>
         }
     }
+    
+    onCartClick(){
+        alert("Cart clicked!")
+    }
 
     render() { 
         return (
             <div>
-                <div className = {styles.searchBar}>
+                <div className = {styles.topBar}>
                     <img className = {styles.logoImage} src={logo} />
-                    {<SearchBar products = {this.state.products} notifySearch = {this.notifySearch} searchText = {this.state.currentSearch}/>}
+                    <div className = {styles.searchBar}>
+                        <SearchBar products = {this.state.products} notifySearch = {this.notifySearch} searchText = {this.state.currentSearch}/>
+                    </div>
+                    <div className = {styles.cart}>
+                        <Cart products={this.state.cart} notifyClick={this.onCartClick}/>
+                    </div>
                 </div>
             {this.loadBody()}
             </div>

@@ -1,15 +1,22 @@
-:local(.searchBar) {
+:local(.topBar) {
     background-color: rgb(254, 239, 102);
     display: flex;
     height: 90px;
     margin-bottom: 5%;
-    & > div > div {
-     width: 40%;
-     height: 30px;
-     margin-top: 2%;
-     margin-left: 20%;
-     margin-right: 30%;   
-    }
+}
+
+:local(.searchBar) {
+    width: 40%;
+    height: 30%;
+    margin-top: 2%;
+    margin-left: 13%;
+}
+
+:local(.cart) {
+    margin-top: 2.2%;
+    margin-left: 6%;
+    width: 4%;
+    height: 30%;
 }
 
 :local(.logoImage) {
