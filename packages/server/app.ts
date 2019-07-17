@@ -46,31 +46,6 @@ const execQuery = async (query: string) => {
   }
 }
 
-
-app.get('/user', async (req: Request, res: Response) => {
-  const result = await execQuery('SELECT * FROM user_table')
-  res.send(result);
-})
-
-app.get('/user/:userId', async function (req: Request, res: Response) {
-  const userId = req.params.userId
-  const result = await execQuery(`SELECT * FROM user_table WHERE id = ${userId}`)
-  res.send(result);
-});
-
-app.post('/login', async function (req: Request, res: Response) {
-  const userEmail = req.body.email;
-  const userPassword = req.body.password;
-  const result = await execQuery(`SELECT * FROM user_table WHERE email = '${userEmail}' AND password = '${userPassword}'`)
-  res.send(result);
-});
-
-app.post('/boot', async function (req: Request, res: Response) {
-  boot(pool).then(() => {
-    res.sendStatus(200)
-  })
-});
-
 const getUserFromRequest = (req: Request) => {
   const firstName = req.body.firstName;
   const lastName = req.body.lastName
@@ -97,6 +72,35 @@ const getClientFromRequest = (req: Request) => {
   client.sellerCalification = sellerCalification
   return client
 }
+
+const getQuestionFromRequest = (req: Request) => {
+  return new Question("", req.body.productId, req.body.question, req.body.userId)
+}
+
+
+app.get('/user', async (req: Request, res: Response) => {
+  const result = await execQuery('SELECT * FROM user_table')
+  res.send(result);
+})
+
+app.get('/user/:userId', async function (req: Request, res: Response) {
+  const userId = req.params.userId
+  const result = await execQuery(`SELECT * FROM user_table WHERE id = ${userId}`)
+  res.send(result);
+});
+
+app.post('/login', async function (req: Request, res: Response) {
+  const userEmail = req.body.email;
+  const userPassword = req.body.password;
+  const result = await execQuery(`SELECT * FROM user_table WHERE email = '${userEmail}' AND password = '${userPassword}'`)
+  res.send(result);
+});
+
+app.post('/boot', async function (req: Request, res: Response) {
+  boot(pool).then(() => {
+    res.sendStatus(200)
+  })
+});
 
 app.post('/user', async function (req: Request, res: Response) {
   const user = getUserFromRequest(req)
@@ -141,10 +145,6 @@ app.get('/qa/:productId', async function (req: Request, res: Response) {
   const client = await getProductQuestionAnswer(pool, productId)
   res.send(client)
 });
-
-const getQuestionFromRequest = (req: Request) => {
-  return new Question("", req.body.productId, req.body.question, req.body.userId)
-}
 
 app.post('/question', async function (req: Request, res: Response) {
   const question = getQuestionFromRequest(req)

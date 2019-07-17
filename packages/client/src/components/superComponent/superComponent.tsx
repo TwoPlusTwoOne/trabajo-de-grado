@@ -1,20 +1,23 @@
 import * as React from 'react'
 import { Container } from '../catalog/container/container'
-import { getProducts } from '../../api/api'
+import { getProducts, getCart } from '../../api/api'
 import { Product } from '../../util/types'
 import { Loader } from '../loader/loader'
 import { SearchBar } from '../catalog/searchBar/searchBar'
 import styles from './superComponent.scss'
 import logo from '../../mercado-livre-logo.png'
 import { Cart } from "../cart/cart";
-export type Props = {}
-  
-  export type State = {
+
+    export type Props = {
+        clientId:string
+    }
+
+    export type State = {
     products: Product[],
     searchedProducts: Product[],
     cart: Product[],
     currentSearch: string
-  }
+    }
 
 export class SuperComponent extends React.PureComponent<Props, State> {
 
@@ -43,6 +46,17 @@ export class SuperComponent extends React.PureComponent<Props, State> {
         }
         }))    
         .then(prods => this.setState({ ...this.state, products: prods, searchedProducts: prods, currentSearch: ""}))
+
+        getCart(this.props.clientId).then(json => json.map((p:Product) =>  {
+            return {
+                id: p.id,
+                description: p.description,
+                images: p.images.split(','),
+                name: p.name,
+                value: p.value
+            }
+            }))    
+    
     }
 
     notifySearch(search: string) {

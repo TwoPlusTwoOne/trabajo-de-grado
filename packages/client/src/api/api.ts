@@ -65,3 +65,16 @@ export const postQuestion = (info: { question: string, userId: string, productId
 
   return fetch(url, init)
 }
+
+export const getCart = (clientId: string) => {
+  const url = `${baseUri}/client/cart/${clientId}`
+
+  const init: RequestInit = {
+    method: 'GET',
+    headers: {
+      "Content-Type": "application/json",
+    }
+  }
+
+  return fetch(url, init)
+}
