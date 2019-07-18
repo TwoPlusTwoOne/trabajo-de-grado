@@ -54,7 +54,7 @@ export class SuperComponent extends React.PureComponent<Props, State> {
         getCart(this.props.clientId)
         .then(response => response.json() as Promise<CartObject>)
         .then(cart => this.setState({ ...this.state, cart: cart}))
-    
+
     }
 
     notifySearch(search: string) {
@@ -75,7 +75,7 @@ export class SuperComponent extends React.PureComponent<Props, State> {
             return <Container products= {this.state.searchedProducts}/>
         }
     }
-    
+
     onCartClick(){
         alert("Cart clicked!")
     }
@@ -84,10 +84,6 @@ export class SuperComponent extends React.PureComponent<Props, State> {
         return (
             <div>
                 <div className = {styles.topBar}>
-                    <img className = {styles.logoImage} src={logo} />
-                    <div className = {styles.searchBar}>
-                        <SearchBar products = {this.state.products} notifySearch = {this.notifySearch} searchText = {this.state.currentSearch}/>
-                    </div>
                     <div className = {styles.cart}>
                         <Cart products={this.state.cart.products} notifyClick={this.onCartClick}/>
                     </div>
