@@ -14,7 +14,6 @@ import { Cart } from "../cart/cart";
 
     export type State = {
     products: Product[],
-    clientId:string
     searchedProducts: Product[],
     cart: CartObject,
     currentSearch: string
@@ -24,7 +23,6 @@ export class SuperComponent extends React.PureComponent<Props, State> {
 
     state: State = {
         products: [],
-        clientId: "1",
         searchedProducts: [],
         cart: {
             id: "",
@@ -50,10 +48,10 @@ export class SuperComponent extends React.PureComponent<Props, State> {
             name: p.name,
             value: p.value
         }
-        }))    
+        }))
         .then(prods => this.setState({ ...this.state, products: prods, searchedProducts: prods, currentSearch: ""}))
 
-        getCart(this.state.clientId)
+        getCart(this.props.clientId)
         .then(response => response.json() as Promise<CartObject>)
         .then(cart => this.setState({ ...this.state, cart: cart}))
     
@@ -63,7 +61,7 @@ export class SuperComponent extends React.PureComponent<Props, State> {
         if(search === ""){
             this.setState({ ...this.state, searchedProducts: this.state.products, currentSearch: search})
         } else {
-        const matchingProducts = this.state.products.filter((p: Product) => 
+        const matchingProducts = this.state.products.filter((p: Product) =>
             p.name.toLowerCase().indexOf(search.toLowerCase()) !== -1
         )
         this.setState({ ...this.state, searchedProducts: matchingProducts, currentSearch: search})
@@ -72,7 +70,7 @@ export class SuperComponent extends React.PureComponent<Props, State> {
 
     loadBody() {
         if (this.state.products.length === 0) {
-            return <Loader/>     
+            return <Loader/>
         }else {
             return <Container products= {this.state.searchedProducts}/>
         }
@@ -82,7 +80,7 @@ export class SuperComponent extends React.PureComponent<Props, State> {
         alert("Cart clicked!")
     }
 
-    render() { 
+    render() {
         return (
             <div>
                 <div className = {styles.topBar}>

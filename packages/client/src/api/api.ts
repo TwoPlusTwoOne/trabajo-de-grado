@@ -1,3 +1,5 @@
+import { ProductType } from '../components/product/product'
+
 const baseUri = 'http://localhost:3001'
 
 export const getAllUsers = () => {
@@ -12,13 +14,23 @@ export const getAllXss = () => {
   return fetch(`${baseUri}/xss`, { method: 'get' })
 }
 
+export const getAllProducts = () => {
+  return fetch(`${baseUri}/product`, { method: 'get' })
+}
+
+export const getProductById = (id: number) => {
+  return fetch(`${baseUri}/product`, { method: 'get' })
+    .then(response => response.json())
+    .then(body => body.find((p: ProductType) => p.id === id))
+}
+
 export const login = (info: { email: string, password: string }) => {
   const url = `${baseUri}/login`
 
   const init: RequestInit = {
     method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(info),
   }
@@ -32,7 +44,7 @@ export const getProducts = () => {
   const init: RequestInit = {
     method: 'GET',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     }
   }
 
@@ -40,13 +52,13 @@ export const getProducts = () => {
 }
 
 export const getQuestionsForProduct = (productId: string) => {
-  
+
   const url = `${baseUri}/qa/${productId}`
 
   const init: RequestInit = {
     method: 'GET',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     }
   }
 
@@ -58,7 +70,7 @@ export const postQuestion = (info: { question: string, userId: string, productId
   const init: RequestInit = {
     method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(info),
   }

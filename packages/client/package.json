@@ -25,6 +25,7 @@
     "body-parser": "^1.18.3",
     "case-sensitive-paths-webpack-plugin": "2.1.2",
     "chalk": "2.4.1",
+    "classnames": "^2.2.6",
     "css-loader": "1.0.0",
     "dotenv": "6.0.0",
     "dotenv-expand": "4.2.0",
@@ -129,6 +130,7 @@
     ]
   },
   "devDependencies": {
+    "@types/classnames": "^2.2.9",
     "@types/react-autocomplete": "^1.8.5",
     "awesome-typed-sass-modules": "^1.1.5"
   }

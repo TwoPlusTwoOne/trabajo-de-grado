@@ -6,17 +6,19 @@ import { Home } from './components/home/home'
 import { LoginView } from './views/login-view/loginView'
 import { UnsecuredRoute } from './components/unsecured-route/unsecuredRoute'
 import { SuperComponent } from './components/superComponent/superComponent'
+import { ProductView } from './views/product-view/productView'
+import { Base } from './components/base/base'
 
 const App = () => {
   return (
     <Router>
-      <div>
+      <Base>
         <Switch>
+          <UnsecuredRoute exact path="/login" component={LoginView} />
           <SecuredRoute exact path="/" component={Home} />
-          <UnsecuredRoute path="/login" exact component={LoginView} />
-          <SecuredRoute path="/catalog" exact component={SuperComponent} />
+          <SecuredRoute exact path="/products/:productId" component={ProductView} />
         </Switch>
-      </div>
+      </Base>
     </Router>
   )
 }
