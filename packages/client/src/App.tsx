@@ -12,14 +12,14 @@ import { Base } from './components/base/base'
 const App = () => {
   return (
     <Router>
-      <Base>
-        <Switch>
+      <Switch>
+        <Base>
           <UnsecuredRoute exact path="/login" component={LoginView} />
           <SecuredRoute exact path="/" component={Home} />
           <SecuredRoute exact path="/catalog" component={SuperComponent} />
           <SecuredRoute exact path="/products/:productId" component={ProductView} />
-        </Switch>
-      </Base>
+        </Base>
+      </Switch>
     </Router>
   )
 }
