@@ -5,3 +5,9 @@ export type Product = {
     name: string
     value: number
   }
+
+export type Cart = {
+  id: string
+  clientId: string
+  products: Product[]
+}

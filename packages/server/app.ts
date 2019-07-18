@@ -7,10 +7,14 @@ import { Request, Response } from 'express';
 import { Client } from './entities/Client'
 import { Admin } from './entities/Admin'
 import { boot } from './boot'
-import { getCartByClientId } from './dbModules/CartModule'
+import { getCartByClientId, insertCart } from './dbModules/CartModule'
 import {getProductQuestionAnswer}  from './dbModules/QuestionAnswerModule'
 import { Question } from './entities/Question';
 import { insertQuestion } from './dbModules/QuestionsModule';
+import { Cart } from './entities/Cart';
+import { Product } from './entities/Product';
+import {ProductImage} from './entities/ProductImage'
+import { Review } from './entities/Review';
 
 
 var express = require('express');
@@ -32,7 +36,6 @@ const pool = new Pool({
   ssl: true
 })
 
-
 const execQuery = async (query: string) => {
   try {
     const client = await pool.connect()
@@ -46,6 +49,60 @@ const execQuery = async (query: string) => {
   }
 }
 
+const getUserFromRequest = (json: any) => {
+  const firstName = json.firstName;
+  const lastName = json.lastName
+  const direction = json.direction
+  const dni = json.dni
+  const password = json.password
+  const email = json.email
+  const birthdate = json.birthdate
+  const id = json.id === undefined ?   "" : json.id
+
+  const user = new UserBuilder()
+    .withFirstName(firstName)
+    .withLastName(lastName)
+    .withDirection(direction)
+    .withDni(dni)
+    .withPassword(password)
+    .withEmail(email)
+    .withBirthDate(birthdate)
+    .withID(id)
+    .build()
+  return user
+}
+
+const getClientFromRequest = (json: any) => {
+  const sellerCalification = json.sellerCalification;
+  const client = <Client> getUserFromRequest(json)
+  client.sellerCalification = sellerCalification
+  return client
+}
+
+
+const getQuestionFromRequest = (json: any) => {
+  return new Question("", json.productId, json.question, json.userId)
+}
+
+const getImagesFromRequest = (json: any) => {
+  return json.map(i => new ProductImage(i.id, i.image, i.productId))
+}
+
+const getReviewsFromRequest = (json: any) => {
+  return json.map(r => new Review(r.id, getClientFromRequest(r.buyer), r.description, r.calification))
+}
+
+const getProductFromRequest = (json: any) => {
+  const client = getClientFromRequest(json.client)
+  const images = getImagesFromRequest(json.images)
+  const reviews = getReviewsFromRequest(json.reviews)
+  return new Product(json.id, json.name, json.value, json.description, client, images, reviews)
+}
+
+const getCartFromRequest = (json: any) => {
+  const products = json.products.map(p => getProductFromRequest(p)); 
+  return new Cart(json.id, json.clientId, products)
+}
 
 app.get('/user', async (req: Request, res: Response) => {
   const result = await execQuery('SELECT * FROM user_table')
@@ -71,48 +128,29 @@ app.post('/boot', async function (req: Request, res: Response) {
   })
 });
 
-const getUserFromRequest = (req: Request) => {
-  const firstName = req.body.firstName;
-  const lastName = req.body.lastName
-  const direction = req.body.direction
-  const dni = req.body.dni
-  const password = req.body.password
-  const email = req.body.email
-  const birthdate = req.body.birthdate
-  const user = new UserBuilder()
-    .withFirstName(firstName)
-    .withLastName(lastName)
-    .withDirection(direction)
-    .withDni(dni)
-    .withPassword(password)
-    .withEmail(email)
-    .withBirthDate(birthdate)
-    .build()
-  return user
-}
-
-const getClientFromRequest = (req: Request) => {
-  const sellerCalification = req.body.sellerCalification;
-  const client = <Client> getUserFromRequest(req)
-  client.sellerCalification = sellerCalification
-  return client
-}
+app.delete('/all', async function (req: Request, res: Response) {
+  const client = await pool.connect()
+  client.query(
+    `DROP SCHEMA public CASCADE;
+    CREATE SCHEMA public;`
+    ).then((r) => res.send(r))
+});
 
 app.post('/user', async function (req: Request, res: Response) {
-  const user = getUserFromRequest(req)
+  const user = getUserFromRequest(req.body)
   const userID: string = await insertUser(pool, user)
   res.send(JSON.stringify({ id: userID }))
 });
 
 
 app.post('/admin', async function (req: Request, res: Response) {
-  const admin = <Admin> getUserFromRequest(req)
+  const admin = <Admin> getUserFromRequest(req.body)
   const userID: string = await insertAdmin(pool, admin)
   res.send(JSON.stringify({ id: userID }))
 });
 
 app.post('/client', async function (req: Request, res: Response) {
-  const user = getClientFromRequest(req)
+  const user = getClientFromRequest(req.body)
   const clientID: string = await insertClient(pool, user)
   res.send(JSON.stringify({ id: clientID }))
 });
@@ -123,10 +161,16 @@ app.get('/client/:clientId', async function (req: Request, res: Response) {
   res.send(client)
 });
 
-app.get('/client/cart/:clientId', async function (req: Request, res: Response) {
+app.get('/cart/:clientId', async function (req: Request, res: Response) {
   const clientId = req.params.clientId
-  const client = await getCartByClientId(pool, clientId)
-  res.send(client)
+  const cart = await getCartByClientId(pool, clientId)
+  res.send(cart)
+});
+
+app.post('/cart', async function (req: Request, res: Response) {
+  const cart = getCartFromRequest(req.body)
+  const cartId: string = await insertCart(pool, cart)
+  res.send(JSON.stringify({ id: cartId }))
 });
 
 app.get('/product', async function (req: Request, res: Response) {
@@ -141,10 +185,6 @@ app.get('/qa/:productId', async function (req: Request, res: Response) {
   const client = await getProductQuestionAnswer(pool, productId)
   res.send(client)
 });
-
-const getQuestionFromRequest = (req: Request) => {
-  return new Question("", req.body.productId, req.body.question, req.body.userId)
-}
 
 app.post('/question', async function (req: Request, res: Response) {
   const question = getQuestionFromRequest(req)

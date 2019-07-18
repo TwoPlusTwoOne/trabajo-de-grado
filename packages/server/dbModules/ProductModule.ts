@@ -57,7 +57,7 @@ export const getSellerProducts = async (pool: Pool, sellerID: string) => {
             STRING_AGG(product_image_table.image, ', ') as images
         FROM product_image_table
         LEFT OUTER JOIN product_table on product_image_table.product_id = product_table.id
-        WHERE product_table_.seller_id = ${sellerID}
+        WHERE product_table.seller_id = ${sellerID}
         GROUP BY product_table.id
         `
         ).then((res) => {
@@ -81,7 +81,7 @@ export const getProductByID = async (pool: Pool, producrID: string) => {
             STRING_AGG(product_image_table.image, ', ') as images
         FROM product_image_table
         LEFT OUTER JOIN product_table on product_image_table.product_id = product_table.id
-        WHERE product_table_.id = ${producrID}
+        WHERE product_table.id = ${producrID}
         GROUP BY product_table.id
         `
         ).then((res) => {

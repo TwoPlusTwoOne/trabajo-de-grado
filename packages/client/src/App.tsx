@@ -16,7 +16,6 @@ const App = () => {
         <Base>
           <UnsecuredRoute exact path="/login" component={LoginView} />
           <SecuredRoute exact path="/" component={Home} />
-          <SecuredRoute exact path="/catalog" component={SuperComponent} />
           <SecuredRoute exact path="/products/:productId" component={ProductView} />
         </Base>
       </Switch>

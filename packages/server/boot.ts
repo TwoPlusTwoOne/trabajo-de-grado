@@ -24,9 +24,9 @@ const client = new ClientBuilder()
                     .withBirthDate(new Date(1994,6,6))
                     .withDni("38955384")
                     .withDirection("Las Magnolias 2011")
-                    .withPassword("peroni1994")
+                    .withPassword("123")
                     .withSellerCalification("0")
-                    .withEmail("mperoni@gmail.com")
+                    .withEmail("123@gmail.com")
                     .build()
 
 const seller = new ClientBuilder()
@@ -131,8 +131,14 @@ const productTableInsert =
 const cartTableInsert = 
     `CREATE TABLE ${Cart.tableName} (
         id serial PRIMARY KEY,
-        client_id integer REFERENCES ${Client.tableName}(id),
-        product_id integer REFERENCES ${Product.tableName}(id)
+        client_id integer REFERENCES ${Client.tableName}(id)
+    );`
+
+const cartProductInsert = 
+    `CREATE TABLE cart_product_table (
+        id serial PRIMARY KEY,
+        "cart_id" integer REFERENCES ${Cart.tableName}(id),
+        "product_id" integer REFERENCES ${Product.tableName}(id)
     );`
 
 const favouritesTableInsert = 
@@ -196,14 +202,15 @@ const answerTableInsert =
     );`
 
 const tables = [
+    cartProductInsert,
     saleTableInsert,
     productReviewTableInsert,
     reviewTableInsert,
-    productImageTableInsert,
     favouritesTableInsert,
-    cartTableInsert,
     answerTableInsert,
     questionTableInsert,
+    productImageTableInsert,
+    cartTableInsert,
     productTableInsert,
     clientTableInsert,
     adminTableInsert,
