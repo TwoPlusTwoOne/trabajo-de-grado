@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Container } from '../catalog/container/container'
 import { getProducts, getCart } from '../../api/api'
-import { Product } from '../../util/types'
+import { Product, Cart as CartObject } from '../../util/types'
 import { Loader } from '../loader/loader'
 import { SearchBar } from '../catalog/searchBar/searchBar'
 import styles from './superComponent.scss'
@@ -14,8 +14,9 @@ import { Cart } from "../cart/cart";
 
     export type State = {
     products: Product[],
+    clientId:string
     searchedProducts: Product[],
-    cart: Product[],
+    cart: CartObject,
     currentSearch: string
     }
 
@@ -23,8 +24,13 @@ export class SuperComponent extends React.PureComponent<Props, State> {
 
     state: State = {
         products: [],
+        clientId: "1",
         searchedProducts: [],
-        cart:[],
+        cart: {
+            id: "",
+            clientId: "",
+            products: []
+        },
         currentSearch: ""
     }
 
@@ -47,15 +53,9 @@ export class SuperComponent extends React.PureComponent<Props, State> {
         }))    
         .then(prods => this.setState({ ...this.state, products: prods, searchedProducts: prods, currentSearch: ""}))
 
-        getCart(this.props.clientId).then(json => json.map((p:Product) =>  {
-            return {
-                id: p.id,
-                description: p.description,
-                images: p.images.split(','),
-                name: p.name,
-                value: p.value
-            }
-            }))    
+        getCart(this.state.clientId)
+        .then(response => response.json() as Promise<CartObject>)
+        .then(cart => this.setState({ ...this.state, cart: cart}))
     
     }
 
@@ -91,7 +91,7 @@ export class SuperComponent extends React.PureComponent<Props, State> {
                         <SearchBar products = {this.state.products} notifySearch = {this.notifySearch} searchText = {this.state.currentSearch}/>
                     </div>
                     <div className = {styles.cart}>
-                        <Cart products={this.state.cart} notifyClick={this.onCartClick}/>
+                        <Cart products={this.state.cart.products} notifyClick={this.onCartClick}/>
                     </div>
                 </div>
             {this.loadBody()}

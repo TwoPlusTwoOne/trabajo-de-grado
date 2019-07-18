@@ -67,7 +67,7 @@ export const postQuestion = (info: { question: string, userId: string, productId
 }
 
 export const getCart = (clientId: string) => {
-  const url = `${baseUri}/client/cart/${clientId}`
+  const url = `${baseUri}/cart/${clientId}`
 
   const init: RequestInit = {
     method: 'GET',

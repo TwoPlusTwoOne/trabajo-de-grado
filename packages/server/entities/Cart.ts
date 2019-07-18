@@ -5,15 +5,15 @@ class Cart implements DBEntity {
 
     id: string
     clientID: string
-    product: Product
+    products: Product[]
     tableName: string
 
     static readonly tableName = "cart_table"
 
-    constructor(id: string, clientID: string, product: Product) {
+    constructor(id: string, clientID: string, products: Product[]) {
         this.id = id
         this.clientID = clientID
-        this.product = product
+        this.products = products
     }
 }
 
