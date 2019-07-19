@@ -1,0 +1,12 @@
+:local {
+  .container {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .iconButton {
+    svg {
+      fill: white;
+    }
+  }
+}
