@@ -9,6 +9,11 @@ export type User = {
   password: string
 }
 
+export type AuthState = {
+  logIn: (user: User) => void
+  logOut: () => void
+}
+
 const logIn = (user: User) => sessionStorage.setItem('user', JSON.stringify(user))
 
 const logOut = () => sessionStorage.clear()

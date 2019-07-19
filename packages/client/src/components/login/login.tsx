@@ -5,10 +5,12 @@ import { TextField } from '@material-ui/core'
 import { login } from '../../api/api'
 import { LoginButton } from './loginButton'
 import { Loader } from '../loader/loader'
-import { logIn, User } from '../../helpers/auth'
+import { User } from '../../helpers/auth'
 import { Redirect } from 'react-router'
 
-export type Props = {}
+export type Props = {
+  logIn: (user: User) => void
+}
 
 export type State = {
   email: string
@@ -27,7 +29,7 @@ export class Login extends React.PureComponent<Props, State> {
   }
 
   logInSuccess = (user: User) => {
-    logIn(user)
+    this.props.logIn(user)
     this.setState({ redirect: '/' })
   }
 

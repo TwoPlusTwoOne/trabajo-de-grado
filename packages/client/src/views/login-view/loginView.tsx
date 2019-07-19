@@ -2,18 +2,19 @@ import * as React from 'react'
 import { Login } from '../../components/login/login'
 import { Paper } from '@material-ui/core'
 import * as styles from './loginView.scss'
+import { AuthContext } from '../../App'
+import { AuthState } from '../../helpers/auth'
 
 export type Props = {}
 
-export class LoginView extends React.PureComponent<Props> {
-  render() {
-
-    return (
-      <Paper className={styles.container}>
-          <div className={styles.loginComponent}>
-            <Login />
-          </div>
-      </Paper>
-    )
-  }
-}
+export const LoginView = () => (
+  <Paper className={styles.container}>
+    <div className={styles.loginComponent}>
+      <AuthContext.Consumer>
+        {
+          (auth: AuthState) => <Login logIn={auth.logIn} />
+        }
+      </AuthContext.Consumer>
+    </div>
+  </Paper>
+)

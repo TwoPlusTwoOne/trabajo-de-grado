@@ -48,7 +48,7 @@ export class SearchBar extends React.PureComponent<Props, State> {
           <SearchIcon />
           <Autocomplete
             value={query}
-            inputProps={{ className: styles.input }}
+            inputProps={{ className: styles.input, placeholder: 'Search...' }}
             wrapperStyle={{ position: 'relative', display: 'inline-block', width: '100%' }}
             items={this.props.products}
             shouldItemRender={matchesQuery}
@@ -56,14 +56,18 @@ export class SearchBar extends React.PureComponent<Props, State> {
             onChange={this.handleQueryChange}
             onSelect={this.handleSelect}
             renderMenu={(items, value) => {
-              console.log({ items })
+              console.log({ items, value })
+              const hasNoQuery = !value
+              const noItems = items.length === 0
               return (
                 <Paper className={styles.suggestionMenu}>
-                  {value === '' ? (
-                    <div className="item">Ingrese el nombre de un producto</div>
-                  ) : items.length === 0 ? (
-                    <div className="item">No se encontraron resultados para: {value}</div>
-                  ) : items}
+                  {
+                    hasNoQuery
+                      ? null
+                      : noItems
+                      ? <div className={classNames(styles.renderItem, styles.emptyStateMessage)}>No results found for search query</div>
+                      : items
+                  }
                 </Paper>
               )
             }}
