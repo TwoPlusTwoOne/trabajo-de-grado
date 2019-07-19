@@ -10,12 +10,19 @@
 
   .toolbar {
     align-items: center;
+    justify-content: space-between;
 
-    .searchBar {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    > div {
+      width: 33%;
+    }
+
+    .loggedInArea {
+      .searchBar {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
     }
   }
 }
