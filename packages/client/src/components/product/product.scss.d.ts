@@ -5,3 +5,5 @@ export const nameAndPrice: string;
 export const name: string;
 export const price: string;
 export const description: string;
+export const questionsAndAnswers: string;
+export const title: string;

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as styles from './productView.scss'
-import { getProductById } from '../../api/api'
-import { Product, ProductType } from '../../components/product/product'
+import { getProductById, getQuestionsForProduct } from '../../api/api'
+import { Product, ProductQnA, ProductWithQnAType } from '../../components/product/product'
 import { Loader } from '../../components/loader/loader'
 import Paper from '@material-ui/core/Paper/Paper'
 
@@ -14,7 +14,7 @@ export type Props = {
 }
 
 export type State = {
-  product: ProductType | null
+  product: ProductWithQnAType | null
   isLoading: boolean
 }
 
@@ -46,7 +46,11 @@ export class ProductView extends React.PureComponent<Props, State> {
     if (!isNaN(id)) {
       getProductById(id)
         .then(product => {
-          this.setState({ product, isLoading: false })
+          getQuestionsForProduct(product.id)
+            .then(response => response.json())
+            .then((qa: ProductQnA) => {
+              this.setState({ product: { ...product, qa }, isLoading: false })
+            })
         })
         .catch(() => this.setState({ isLoading: false }))
     }
