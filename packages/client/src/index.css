@@ -4,6 +4,10 @@ html, body {
     background-color: rgb(235, 235, 235);
 }
 
+#root {
+    height: 100%;
+}
+
 body {
     margin: 0;
     padding: 0;

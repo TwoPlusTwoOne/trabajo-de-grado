@@ -12,7 +12,7 @@ export class Base extends React.PureComponent<Props> {
   render() {
     const isUserLoggedIn = isLoggedIn()
     return (
-      <div>
+      <div className={styles.container}>
         <AppBar position="fixed">
           <Toolbar className={styles.toolbar}>
             <Typography variant="h6" color="inherit">

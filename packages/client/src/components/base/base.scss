@@ -1,6 +1,11 @@
 :local {
+  .container {
+    height: 100%;
+  }
+
   .content {
     margin-top: 64px;
+    height: 100%;
   }
 
   .toolbar {

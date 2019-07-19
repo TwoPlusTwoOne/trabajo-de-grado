@@ -9,13 +9,11 @@ export class LoginView extends React.PureComponent<Props> {
   render() {
 
     return (
-      <div className={styles.container}>
-        <Paper>
+      <Paper className={styles.container}>
           <div className={styles.loginComponent}>
             <Login />
           </div>
-        </Paper>
-      </div>
+      </Paper>
     )
   }
 }
