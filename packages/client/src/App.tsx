@@ -12,12 +12,12 @@ const App = () => {
   return (
     <Base>
       <Router>
-      <Switch>
-        <UnsecuredRoute exact path="/login" component={LoginView} />
-        <SecuredRoute exact path="/" component={Home} />
-        <SecuredRoute exact path="/products/:productId" component={ProductView} />
-      </Switch>
-    </Router>
+        <Switch>
+          <UnsecuredRoute exact path="/login" component={LoginView} />
+          <SecuredRoute exact path="/" component={Home} />
+          <SecuredRoute exact path="/products/:productId" component={ProductView} />
+        </Switch>
+      </Router>
     </Base>
   )
 }
