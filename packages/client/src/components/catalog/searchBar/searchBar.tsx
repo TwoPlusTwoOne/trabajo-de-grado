@@ -56,7 +56,6 @@ export class SearchBar extends React.PureComponent<Props, State> {
             onChange={this.handleQueryChange}
             onSelect={this.handleSelect}
             renderMenu={(items, value) => {
-              console.log({ items, value })
               const hasNoQuery = !value
               const noItems = items.length === 0
               return (
@@ -65,16 +64,17 @@ export class SearchBar extends React.PureComponent<Props, State> {
                     hasNoQuery
                       ? null
                       : noItems
-                      ? <div className={classNames(styles.renderItem, styles.emptyStateMessage)}>No results found for search query</div>
+                      ? <div className={classNames(styles.renderItem, styles.emptyStateMessage)}>No results found for
+                        search query</div>
                       : items
                   }
                 </Paper>
               )
             }}
             renderItem={(item, isHighlighted) =>
-              <div style={{ width: '100%;' }}>
+              <div style={{ width: '100%' }} key={item.id}>
                 <SearchResultItem
-                  highlighted={isHighlighted} key={item.id}
+                  highlighted={isHighlighted}
                   item={item} />
               </div>}
           />

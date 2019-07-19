@@ -6,23 +6,28 @@ import Typography from '@material-ui/core/Typography/Typography'
 import { User } from '../../helpers/auth'
 import { SearchBarContainer } from '../../views/searchBarContainer/searchBarContainer'
 import { Profile } from '../profile/profile'
+import { RouteComponentProps, withRouter } from 'react-router'
 
-export type Props = {
+export type ExternalProps = {
   loggedUser: User | null
 }
+export type Props = ExternalProps & RouteComponentProps
 
 export type State = {}
 
-export class Base extends React.PureComponent<Props, State> {
+class Base extends React.Component<Props, State> {
+
+  navigateToHome = () => this.props.history.push('/')
+
   render() {
     const { loggedUser, children } = this.props
 
     return <div className={styles.container}>
       <AppBar position="fixed">
         <Toolbar className={styles.toolbar}>
-          <div>
-            <Typography variant="h6" color="inherit">
-              FreeMarket
+          <div className={styles.logo}>
+            <Typography variant="h6" color="inherit" onClick={this.navigateToHome} className={styles.logoText}>
+              <div>FreeMarket</div>
             </Typography>
           </div>
 
@@ -41,3 +46,6 @@ export class Base extends React.PureComponent<Props, State> {
     </div>
   }
 }
+
+const wrapped = withRouter(Base)
+export { wrapped as Base }

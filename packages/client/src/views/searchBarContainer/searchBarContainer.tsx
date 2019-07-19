@@ -2,14 +2,17 @@ import * as React from 'react'
 import { SearchBar } from '../../components/catalog/searchBar/searchBar'
 import { Product } from '../../util/types'
 import { getProducts } from '../../api/api'
+import { RouteComponentProps, withRouter } from 'react-router'
 
-export type Props = {}
+export type ExternalProps = {}
 
 export type State = {
   products: Product[]
 }
 
-export class SearchBarContainer extends React.PureComponent<Props, State> {
+export type Props = ExternalProps & RouteComponentProps
+
+class SearchBarContainer extends React.PureComponent<Props, State> {
 
   constructor(props: Props) {
     super(props)
@@ -24,13 +27,11 @@ export class SearchBarContainer extends React.PureComponent<Props, State> {
   }
 
   handleClickItem = (product: Product) => {
-    console.log('select item ', { product })
+    this.props.history.push(`/products/${product.id}`)
   }
 
   render() {
     const { products } = this.state
-
-    console.log({ products })
 
     return (
       <div>
@@ -42,3 +43,6 @@ export class SearchBarContainer extends React.PureComponent<Props, State> {
     )
   }
 }
+
+const wrapped = withRouter(SearchBarContainer)
+export { wrapped as SearchBarContainer }

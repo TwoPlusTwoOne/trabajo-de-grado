@@ -54,15 +54,15 @@ class App extends PureComponent<{}, State> {
 
     return (
       <AuthContext.Provider value={authContext}>
-        <Base loggedUser={this.state.auth.loggedUser}>
-          <Router>
+        <Router>
+          <Base loggedUser={this.state.auth.loggedUser}>
             <Switch>
               <UnsecuredRoute exact path="/login" component={LoginView} />
               <SecuredRoute exact path="/" component={Home} />
               <SecuredRoute exact path="/products/:productId" component={ProductView} />
             </Switch>
-          </Router>
-        </Base>
+          </Base>
+        </Router>
       </AuthContext.Provider>
     )
   }
