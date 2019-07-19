@@ -18,14 +18,19 @@ export class Product extends React.PureComponent<Props> {
   render() {
     const { product } = this.props
     const { description, name, value, images } = product
-    const image = product.images.split(',')[0] || ''
+    const image = images.split(',')[0] || ''
+
     return (
       <div className={styles.product}>
-        <div className={styles.image}>
-          <img src={image} alt={name} />
+        <div className={styles.mainInfo}>
+          <div className={styles.image}>
+            <img src={image} alt={name} />
+          </div>
+          <div className={styles.nameAndPrice}>
+            <div className={styles.name}>{name}</div>
+            <div className={styles.price}>$ {value}</div>
+          </div>
         </div>
-        <div className={styles.name}>{name}</div>
-        <div className={styles.price}>{value}</div>
         <div
           className={styles.description}
           dangerouslySetInnerHTML={{ __html: description }}

@@ -1,7 +1,9 @@
 import * as React from 'react'
+import * as styles from './productView.scss'
 import { getProductById } from '../../api/api'
 import { Product, ProductType } from '../../components/product/product'
 import { Loader } from '../../components/loader/loader'
+import Paper from '@material-ui/core/Paper/Paper'
 
 export type Props = {
   match: {
@@ -55,8 +57,10 @@ export class ProductView extends React.PureComponent<Props, State> {
 
     if (isLoading || !product) return <Loader />
 
-    return <div>
-      <Product product={product} />
+    return <div className={styles.productContainer}>
+      <Paper className={styles.product}>
+        <Product product={product} />
+      </Paper>
     </div>
   }
 }

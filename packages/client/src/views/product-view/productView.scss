@@ -1,0 +1,12 @@
+:local {
+  .productContainer {
+    display: flex;
+    justify-content: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
+
+    .product {
+      width: 60%;
+    }
+  }
+}
