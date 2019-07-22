@@ -18,7 +18,6 @@ import {Cart}  from './entities/Cart'
 import {Answer}  from './entities/Answer'
 import {Question}  from './entities/Question'
 import {Review}  from './entities/Review'
-import {insertQustionAnswer}  from './dbModules/QuestionAnswerModule'
 import { insertPublication } from './dbModules/PublicationModule';
 
 const client = new ClientBuilder()
@@ -41,7 +40,7 @@ const seller = new ClientBuilder()
                     .withPassword("pilares1996")
                     .withSellerCalification("5")
                     .withEmail("fpilares@gmail.com")
-                    
+
 
 const roles = [
     new Role("", "1", 1),
@@ -61,7 +60,7 @@ const admin = new AdminBuilder()
                     .withEmail("jsanchez@gmail.com")
                     .build()
 
-                    
+
 const products = [
     new ProductBuilder()
     .withName("Licuadora Oster Brly07-z00-354")
@@ -107,7 +106,7 @@ const answers = [
     [new Answer("", "", "Si, como indicamos en el nombre del producto la heladera es ciclica", "")]
 ]
 
-const userTableInsert = 
+const userTableInsert =
     `CREATE TABLE ${User.tableName} (
         id serial PRIMARY KEY,
         first_name text,
@@ -119,7 +118,7 @@ const userTableInsert =
         birthdate date 
     );`
 
-const clientTableInsert = 
+const clientTableInsert =
     `CREATE TABLE ${Client.tableName} (
         id serial PRIMARY KEY,
         seller_calification text,
@@ -149,34 +148,34 @@ const publicationTableInsert =
         seller_id integer REFERENCES ${Client.tableName}(id) 
     );`
 
-const cartTableInsert = 
+const cartTableInsert =
     `CREATE TABLE ${Cart.tableName} (
         id serial PRIMARY KEY,
         client_id integer REFERENCES ${Client.tableName}(id)
     );`
 
-const cartProductInsert = 
+const cartProductInsert =
     `CREATE TABLE cart_product_table (
         id serial PRIMARY KEY,
         "cart_id" integer REFERENCES ${Cart.tableName}(id),
         "product_id" integer REFERENCES ${Product.tableName}(id)
     );`
 
-const favouritesTableInsert = 
+const favouritesTableInsert =
     `CREATE TABLE favourites_table (
         id serial PRIMARY KEY,
         "client_id" integer REFERENCES ${Client.tableName}(id),
         "product_id" integer REFERENCES ${Product.tableName}(id)
     );`
 
-const publicationImageTableInsert = 
+const publicationImageTableInsert =
     `CREATE TABLE ${PublicationImage.tableName}(
         id serial PRIMARY KEY,
         image text,
         publication_id integer REFERENCES ${Publication.tableName}(id)
-    );`    
+    );`
 
-const reviewTableInsert = 
+const reviewTableInsert =
     `CREATE TABLE ${Review.tableName} (
         id serial PRIMARY KEY,
         buyer_id integer REFERENCES ${Client.tableName}(id),
@@ -184,21 +183,21 @@ const reviewTableInsert =
         calification integer
     );`
 
-const productReviewTableInsert = 
+const productReviewTableInsert =
     `CREATE TABLE product_review_table (
         id serial PRIMARY KEY,
         "product_id" integer REFERENCES ${Product.tableName}(id),
         "review_id" integer REFERENCES ${Review.tableName}(id)
     );`
 
-const roleTableInsert = 
+const roleTableInsert =
     `CREATE TABLE ${Role.tableName} (
         id serial PRIMARY KEY,
         name text,
         level text
     );`
 
-const saleTableInsert = 
+const saleTableInsert =
     `CREATE TABLE sale_table (
         id serial PRIMARY KEY,
         "product_id" integer REFERENCES ${Product.tableName}(id),
@@ -206,7 +205,7 @@ const saleTableInsert =
         "review_id" integer REFERENCES ${Review.tableName}(id)
     );`
 
-const questionTableInsert = 
+const questionTableInsert =
     `CREATE TABLE ${Question.tableName} (
         id serial PRIMARY KEY,
         "product_id" integer REFERENCES ${Product.tableName}(id),
@@ -214,7 +213,7 @@ const questionTableInsert =
         "user_id" integer REFERENCES ${User.tableName}(id)
     );`
 
-const answerTableInsert = 
+const answerTableInsert =
     `CREATE TABLE ${Answer.tableName} (
         id serial PRIMARY KEY,
         "question_id" integer REFERENCES ${Question.tableName}(id),
@@ -261,7 +260,7 @@ const createTables = async (querys: string[], pool: Pool) => {
             }
         }
     }
-} 
+}
 
 export const boot = async (pool: Pool) => {
     await createTables(tables, pool)
@@ -269,7 +268,7 @@ export const boot = async (pool: Pool) => {
     const futureRoles = roles.map(r => insertRole(pool, r))
     Promise.all(futureRoles).then( async (roleIDs) => {
         console.log("Roles created")
-        admin.role = new Role(roleIDs[5], "", 0)  
+        admin.role = new Role(roleIDs[5], "", 0)
         await insertAdmin(pool, admin)
         console.log("Admin created")
     })
@@ -293,7 +292,7 @@ export const boot = async (pool: Pool) => {
         console.log("Products created")
         return Promise.resolve()
     })
-    
+
     // const productsWithSeller =  products.map(async (p, index) => {
     //     p.seller = sellerWithID
     //     await insertProduct(pool, p).then((pId) => {
@@ -301,10 +300,10 @@ export const boot = async (pool: Pool) => {
     //         const ans = answers[index].map(a => new Answer(a.id, a.questionId, a.answer, sellerID))
     //         qs.map(async (q, qIndex) => {
     //             insertQustionAnswer(pool, q, ans[qIndex])
-    //         })  
+    //         })
     //     })
     // })
-    // Promise.all(productsWithSeller).then(() => { 
+    // Promise.all(productsWithSeller).then(() => {
     //     console.log("Products created")
     //     return Promise.resolve()
     // })

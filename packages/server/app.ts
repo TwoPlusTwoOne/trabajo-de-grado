@@ -97,7 +97,7 @@ const getProductFromRequest = (json: any) => {
   const client = getClientFromRequest(json.client)
   const images = getImagesFromRequest(json.images)
   const reviews = getReviewsFromRequest(json.reviews)
-  return new Product(json.id, json.name, json.value, json.description)
+  return new Product(json.id, json.name, json.value)
 }
 
 const getCartFromRequest = (json: any) => {

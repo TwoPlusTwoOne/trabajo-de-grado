@@ -11,6 +11,7 @@ class Publication implements DBEntity {
     seller: Client
     images: PublicationImage[]
     product: Product
+    description: string
 
     static readonly tableName = "publication_table"
 
@@ -20,13 +21,15 @@ class Publication implements DBEntity {
         value: number,
         seller: Client,
         images: PublicationImage[],
-        product: Product) {
+        product: Product,
+        description: string) {
         this.id = id
         this.name = name
         this.value = value
         this.seller = seller
         this.images = images
         this.product = product
+        this.description = description
     }
 }
 

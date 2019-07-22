@@ -63,7 +63,7 @@ export const getPublicationByID = async (pool: Pool, publicationID: string) => {
             return getImagesForPublication(pool, publicationID).then((images: PublicationImage[]) => {
                 return getProductByID(pool, productId).then((p: Product) => {
                     return getClientByID(pool, result.seller_id).then((client: Client) => {
-                        return new Publication(result.id, result.name, result.value, client, images, p)
+                        return new Publication(result.id, result.name, result.value, client, images, p, result.description)
                     })
                 })
             })

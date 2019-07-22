@@ -11,6 +11,7 @@ class PublicationBuilder {
     private product: Product
     private seller: Client
     private images: PublicationImage[] = []
+    private description: string
 
     withName(name: string){
         this.name = name
@@ -50,7 +51,8 @@ class PublicationBuilder {
                             this.value,
                             this.seller,
                             this.images,
-                            this.product
+                            this.product,
+                            this.description
                         )
         return product
     }

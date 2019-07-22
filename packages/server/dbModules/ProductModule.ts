@@ -1,10 +1,7 @@
 import { Product } from '../entities/Product'
 import { Pool } from 'pg';
 import {insertReview, getReviewsForProduct} from './ReviewModule'
-import { json } from 'express';
 import { Review } from '../entities/Review';
-import { Client } from '../entities/Client';
-import { ClientBuilder } from '../builders/ClientBuilder';
 import { ProductBuilder } from '../builders/ProductBuilder';
 
 
@@ -12,7 +9,7 @@ export const insertProduct = async (pool: Pool, product: Product) => {
     const client = await pool.connect()
     const result: Promise<Product> = client.query(
         `INSERT INTO ${Product.tableName} (name, description) 
-        VALUES ('${product.name}', '${product.description}')
+        VALUES ('${product.name}')
         RETURNING id`
         ).then((res) => {
             const productId = res.rows[0]
@@ -21,7 +18,7 @@ export const insertProduct = async (pool: Pool, product: Product) => {
                 ).then((reviewIds) => {
                 return Promise.all(reviewIds.map(reviewId => insertProductReview(pool, productId, reviewId))
                 )})
-                .then((x) => {return productId})
+                .then(() => {return productId})
         }).catch(e => {
             console.error(e.stack)
             return new ProductBuilder().build()
@@ -56,7 +53,7 @@ export const getAllProducts = async (pool: Pool) => {
         ).then((r) => {
             const ids = r.rows.map(r => r.id)
             return Promise.all(ids.map(id => getProductByID(pool, id)))
-        }).catch(e => {
+        }).catch(() => {
             return [new ProductBuilder().build()]
         })
     client.release()
@@ -77,7 +74,7 @@ export const getProductByID = async (pool: Pool, productId: string) => {
         ).then((r) => {
             const result =  r.rows[0]
             return getReviewsForProduct(pool, productId).then((reviews: Review[]) => {
-                return  new Product(result.id, result.name, result.description, reviews)
+                return  new Product(result.id, result.name, reviews)
             })
         }).catch(e => {
             console.error(e.stack)

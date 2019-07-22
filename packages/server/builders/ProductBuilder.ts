@@ -5,7 +5,6 @@ class ProductBuilder {
 
     private id: string
     private name: string
-    private description: string
     private reviews: Review[] = []
 
     withName(name: string){
@@ -33,7 +32,6 @@ class ProductBuilder {
         const product = new Product (
                             this.id,
                             this.name,
-                            this.description,
                             this.reviews
                         )
         return product
