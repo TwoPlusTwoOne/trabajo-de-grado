@@ -1,8 +1,8 @@
 import { UserBuilder } from './builders/UserBuilder'
-import { insertAdmin } from './dbModules/AdminModule';
+import { insertAdmin, getAdminByID } from './dbModules/AdminModule';
 import { insertUser } from './dbModules/UsersModule'
 import { insertClient, getClientByID } from './dbModules/ClientModule'
-import { getAllProducts } from './dbModules/ProductModule'
+import { getAllProducts, getProductByID } from './dbModules/ProductModule'
 import { Request, Response } from 'express';
 import { Client } from './entities/Client'
 import { Admin } from './entities/Admin'
@@ -13,7 +13,7 @@ import { Question } from './entities/Question';
 import { insertQuestion } from './dbModules/QuestionsModule';
 import { Cart } from './entities/Cart';
 import { Product } from './entities/Product';
-import {ProductImage} from './entities/ProductImage'
+import {PublicationImage} from './entities/PublicationImage'
 import { Review } from './entities/Review';
 
 
@@ -85,7 +85,7 @@ const getQuestionFromRequest = (json: any) => {
 }
 
 const getImagesFromRequest = (json: any) => {
-  return json.map(i => new ProductImage(i.id, i.image, i.productId))
+  return json.map(i => new PublicationImage(i.id, i.image, i.productId))
 }
 
 const getReviewsFromRequest = (json: any) => {
@@ -96,11 +96,11 @@ const getProductFromRequest = (json: any) => {
   const client = getClientFromRequest(json.client)
   const images = getImagesFromRequest(json.images)
   const reviews = getReviewsFromRequest(json.reviews)
-  return new Product(json.id, json.name, json.value, json.description, client, images, reviews)
+  return new Product(json.id, json.name, json.value, json.description)
 }
 
 const getCartFromRequest = (json: any) => {
-  const products = json.products.map(p => getProductFromRequest(p)); 
+  const products = json.products.map(p => getProductFromRequest(p));
   return new Cart(json.id, json.clientId, products)
 }
 
@@ -161,6 +161,13 @@ app.get('/client/:clientId', async function (req: Request, res: Response) {
   res.send(client)
 });
 
+app.get('/admin/:adminId', async function (req: Request, res: Response) {
+  const adminId = req.params.adminId
+  const client = await getAdminByID(pool, adminId)
+  res.send(client)
+});
+
+
 app.get('/cart/:clientId', async function (req: Request, res: Response) {
   const clientId = req.params.clientId
   const cart = await getCartByClientId(pool, clientId)
@@ -174,14 +181,16 @@ app.post('/cart', async function (req: Request, res: Response) {
 });
 
 app.get('/product', async function (req: Request, res: Response) {
-  const results = await getAllProducts(pool)
-  res.send(results)
+  getAllProducts(pool).then((result) => res.send(result))
 });
 
+app.get('/product/:productId', async function (req: Request, res: Response) {
+  const productId = req.params.productId
+  getProductByID(pool, productId).then((result) => res.send(result))
+});
 
 app.get('/qa/:productId', async function (req: Request, res: Response) {
   const productId = req.params.productId
-  console.log(`Product id: ${productId}`)
   const client = await getProductQuestionAnswer(pool, productId)
   res.send(client)
 });

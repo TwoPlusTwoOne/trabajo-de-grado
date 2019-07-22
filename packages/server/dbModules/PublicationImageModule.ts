@@ -1,12 +1,12 @@
-import { ProductImage } from '../entities/ProductImage'
+import { PublicationImage } from '../entities/PublicationImage'
 import { Pool } from 'pg';
 
 
-export const insertImageProduct = async (pool: Pool, productImage: ProductImage) => {
+export const insertImagePublication = async (pool: Pool, publicationImage: PublicationImage) => {
     const client = await pool.connect()
     const result: Promise<string> = client.query(
-        `INSERT INTO product_image_table (image, product_id) 
-        VALUES ('${productImage.image}', '${productImage.productID}')
+        `INSERT INTO ${PublicationImage.tableName} (image, publication_id) 
+        VALUES ('${publicationImage.image}', '${publicationImage.publicationID}')
         RETURNING id`
         ).then((res) => {
                 return res.rows[0].id

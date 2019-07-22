@@ -1,12 +1,13 @@
 import { User } from '../entities/User'
 import { Pool } from 'pg';
 
+const md5 = require('md5');
 
 export const insertUser = async (pool: Pool, user: User) => {
     const client = await pool.connect()
     const result: Promise<string> = client.query(
         `INSERT INTO user_table (first_name, last_name, direction, dni, password, email, birthdate) 
-        VALUES ('${user.firstName}', '${user.lastName}', '${user.direction}', '${user.dni}', '${user.password}', '${user.email}', '${user.birthdate.toISOString()}')
+        VALUES ('${user.firstName}', '${user.lastName}', '${user.direction}', '${user.dni}', '${md5(user.password)}', '${user.email}', '${user.birthdate.toISOString()}')
         RETURNING id`
         ).then((res) => {
                 return res.rows[0].id

@@ -1,18 +1,43 @@
 import { Product } from '../entities/Product'
 import { Pool } from 'pg';
-import {insertImageProduct} from './ProductImageModule'
+import {insertReview, getReviewsForProduct} from './ReviewModule'
 import { json } from 'express';
-import { ProductImage } from '../entities/ProductImage';
+import { Review } from '../entities/Review';
+import { Client } from '../entities/Client';
+import { ClientBuilder } from '../builders/ClientBuilder';
+import { ProductBuilder } from '../builders/ProductBuilder';
 
 
 export const insertProduct = async (pool: Pool, product: Product) => {
     const client = await pool.connect()
-    const result: Promise<string> = client.query(
-        `INSERT INTO product_table (name, value, description, seller_id) 
-        VALUES ('${product.name}', '${product.value}', '${product.description}', '${product.seller.id}')
+    const result: Promise<Product> = client.query(
+        `INSERT INTO ${Product.tableName} (name, description) 
+        VALUES ('${product.name}', '${product.description}')
         RETURNING id`
         ).then((res) => {
-            product.images.forEach(i => insertImageProduct(pool, new ProductImage(i.id, i.image, res.rows[0].id)))
+            const productId = res.rows[0]
+            return Promise.all(
+                product.reviews.map(i => insertReview(pool, new Review(i.id, i.buyer, i.description, i.calification)))
+                ).then((reviewIds) => {
+                return Promise.all(reviewIds.map(reviewId => insertProductReview(pool, productId, reviewId))
+                )})
+                .then((x) => {return productId})
+        }).catch(e => {
+            console.error(e.stack)
+            return new ProductBuilder().build()
+        })
+    client.release()
+    return result
+}
+
+
+export const insertProductReview = async (pool: Pool, productId: string, reviewId: string) => {
+    const client = await pool.connect()
+    const result: Promise<string> = client.query(
+        `INSERT INTO product_review_table (product_id, review_id) 
+        VALUES ('${productId}', '${reviewId}')
+        RETURNING id`
+        ).then((res) => {
             return res.rows[0].id
         }).catch(e => {
             console.error(e.stack)
@@ -22,73 +47,41 @@ export const insertProduct = async (pool: Pool, product: Product) => {
     return result
 }
 
-
 export const getAllProducts = async (pool: Pool) => {
     const client = await pool.connect()
     const result = client.query(
-        `SELECT 
-            product_table.id, 
-            product_table.name, 
-            product_table.value, 
-            product_table.description, 
-            STRING_AGG(product_image_table.image, ', ') as images
-        FROM product_image_table
-        LEFT OUTER JOIN product_table on product_image_table.product_id = product_table.id
-        GROUP BY product_table.id
+        `SELECT id
+        FROM ${Product.tableName}
         `
-        ).then((res) => {
-            return res.rows
+        ).then((r) => {
+            const ids = r.rows.map(r => r.id)
+            return Promise.all(ids.map(id => getProductByID(pool, id)))
         }).catch(e => {
-            console.error(e.stack)
-            return JSON.stringify({ error: e.stack })
+            return [new ProductBuilder().build()]
         })
     client.release()
     return result
 }
 
-export const getSellerProducts = async (pool: Pool, sellerID: string) => {
+export const getProductByID = async (pool: Pool, productId: string) => {
     const client = await pool.connect()
-    const result = client.query(
+    const result: Promise<Product> = client.query(
         `SELECT 
-            product_table.id, 
-            product_table.name, 
-            product_table.value, 
-            product_table.description, 
-            STRING_AGG(product_image_table.image, ', ') as images
-        FROM product_image_table
-        LEFT OUTER JOIN product_table on product_image_table.product_id = product_table.id
-        WHERE product_table.seller_id = ${sellerID}
-        GROUP BY product_table.id
+        ${Product.tableName}.id, 
+            ${Product.tableName}.name,  
+            ${Product.tableName}.description
+        FROM ${Product.tableName}
+        WHERE ${Product.tableName}.id = ${productId}
+        GROUP BY ${Product.tableName}.id
         `
-        ).then((res) => {
-            return res.rows
+        ).then((r) => {
+            const result =  r.rows[0]
+            return getReviewsForProduct(pool, productId).then((reviews: Review[]) => {
+                return  new Product(result.id, result.name, result.description, reviews)
+            })
         }).catch(e => {
             console.error(e.stack)
-            return JSON.stringify({ error: e.stack })
-        })
-    client.release()
-    return result
-}
-
-export const getProductByID = async (pool: Pool, producrID: string) => {
-    const client = await pool.connect()
-    const result = client.query(
-        `SELECT 
-            product_table.id, 
-            product_table.name, 
-            product_table.value, 
-            product_table.description, 
-            STRING_AGG(product_image_table.image, ', ') as images
-        FROM product_image_table
-        LEFT OUTER JOIN product_table on product_image_table.product_id = product_table.id
-        WHERE product_table.id = ${producrID}
-        GROUP BY product_table.id
-        `
-        ).then((res) => {
-            return res.rows
-        }).catch(e => {
-            console.error(e.stack)
-            return JSON.stringify({ error: e.stack })
+            return new ProductBuilder().build()
         })
     client.release()
     return result
