@@ -174,7 +174,7 @@ app.post('/admin/login', async function (req: Request, res: Response) {
   loginAdmin(pool, email, password).then((r) => {
     if(r.id !== null && r.id !== ""){
     res.send(r)
-    } else{
+    } else {
       res.sendStatus(401)
     }
   })})
