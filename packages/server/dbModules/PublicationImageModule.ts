@@ -17,3 +17,24 @@ export const insertImagePublication = async (pool: Pool, publicationImage: Publi
     client.release()
     return result
 }
+
+export const getImagesForPublication = async (pool: Pool, publicationId: string) => {
+    const client = await pool.connect()
+    const result: Promise<PublicationImage[]> = client.query(
+        `SELECT
+            ${PublicationImage.tableName}.id,
+            ${PublicationImage.tableName}.image,
+            ${PublicationImage.tableName}.publication_id
+        FROM ${PublicationImage.tableName}
+        WHERE ${PublicationImage.tableName}.publication_id = ${publicationId}`
+        ).then((res) => {
+                return res.rows.map(p => {
+                    return new PublicationImage(p.id, p.image, p.publication_id)
+                })
+        }).catch(e => {
+            console.error(e.stack)
+            return [new PublicationImage("", "", "")]
+        })
+    client.release()
+    return result
+}

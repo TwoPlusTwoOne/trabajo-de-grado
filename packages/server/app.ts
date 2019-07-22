@@ -1,7 +1,7 @@
 import { UserBuilder } from './builders/UserBuilder'
-import { insertAdmin, getAdminByID } from './dbModules/AdminModule';
+import { insertAdmin, getAdminByID, loginAdmin } from './dbModules/AdminModule';
 import { insertUser } from './dbModules/UsersModule'
-import { insertClient, getClientByID } from './dbModules/ClientModule'
+import { insertClient, getClientByID, loginClient } from './dbModules/ClientModule'
 import { getAllProducts, getProductByID } from './dbModules/ProductModule'
 import { Request, Response } from 'express';
 import { Client } from './entities/Client'
@@ -15,6 +15,7 @@ import { Cart } from './entities/Cart';
 import { Product } from './entities/Product';
 import {PublicationImage} from './entities/PublicationImage'
 import { Review } from './entities/Review';
+import { getPublicationByID, getAllPublications } from './dbModules/PublicationModule';
 
 
 var express = require('express');
@@ -167,6 +168,27 @@ app.get('/admin/:adminId', async function (req: Request, res: Response) {
   res.send(client)
 });
 
+app.post('/admin/login', async function (req: Request, res: Response) {
+  const email = req.body.email
+  const password = req.body.password
+  loginAdmin(pool, email, password).then((r) => {
+    if(r.id !== null && r.id !== ""){
+    res.send(r)
+    } else{
+      res.sendStatus(401)
+    }
+  })})
+
+app.post('/client/login', async function (req: Request, res: Response) {
+  const email = req.body.email
+  const password = req.body.password
+  loginClient(pool, email, password).then((r) => {
+    if(r.id !== null && r.id !== ""){
+    res.send(r)
+    } else{
+      res.sendStatus(401)
+    }
+  })})
 
 app.get('/cart/:clientId', async function (req: Request, res: Response) {
   const clientId = req.params.clientId
@@ -187,6 +209,15 @@ app.get('/product', async function (req: Request, res: Response) {
 app.get('/product/:productId', async function (req: Request, res: Response) {
   const productId = req.params.productId
   getProductByID(pool, productId).then((result) => res.send(result))
+});
+
+app.get('/publication', async function (req: Request, res: Response) {
+  getAllPublications(pool).then((result) => res.send(result))
+});
+
+app.get('/publication/:publicationId', async function (req: Request, res: Response) {
+  const publicationId = req.params.publicationId
+  getPublicationByID(pool, publicationId).then((result) => res.send(result))
 });
 
 app.get('/qa/:productId', async function (req: Request, res: Response) {

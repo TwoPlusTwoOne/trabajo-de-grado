@@ -1,6 +1,6 @@
 import { Publication } from '../entities/Pubilcation'
 import { Pool } from 'pg';
-import {insertImagePublication} from './PublicationImageModule'
+import {insertImagePublication, getImagesForPublication} from './PublicationImageModule'
 import {getProductByID} from './ProductModule'
 import { PublicationImage } from '../entities/PublicationImage';
 import { Product } from '../entities/Product';
@@ -47,28 +47,24 @@ export const getAllPublications = async (pool: Pool) => {
 
 export const getPublicationByID = async (pool: Pool, publicationID: string) => {
     const client = await pool.connect()
-    const result = client.query(
+    const result: Promise<Publication> = client.query(
         `SELECT 
             ${Publication.tableName}.id, 
             ${Publication.tableName}.name, 
             ${Publication.tableName}.value, 
             ${Publication.tableName}.product_id, 
-            ${Publication.tableName}.seller_id,
-            STRING_AGG(${PublicationImage.tableName}.image, ', ') as images
+            ${Publication.tableName}.seller_id
         FROM ${Publication.tableName}
-        LEFT OUTER JOIN ${PublicationImage.tableName} on ${PublicationImage.tableName}.product_id = ${Publication.tableName}.id
         WHERE ${Publication.tableName}.id = ${publicationID}
-        GROUP BY ${Publication.tableName}.id
         `
         ).then((r) => {
             const result = r.rows[0]
             const productId = result.product_id
-            const images = result.images.map((image) => new PublicationImage("", image, productId))
-            console.log("About to get product")
-            console.log(result)
-            getProductByID(pool, productId).then((p: Product) => {
-                getClientByID(pool, result.seller_id).then((client: Client) => {
-                    return new Publication(result.id, result.name, result.value, client, images,p)
+            return getImagesForPublication(pool, publicationID).then((images: PublicationImage[]) => {
+                return getProductByID(pool, productId).then((p: Product) => {
+                    return getClientByID(pool, result.seller_id).then((client: Client) => {
+                        return new Publication(result.id, result.name, result.value, client, images, p)
+                    })
                 })
             })
         }).catch(e => {

@@ -283,12 +283,9 @@ export const boot = async (pool: Pool) => {
     .then((products: Product[]) => {
         Promise.all(
             products.map((product, i) => {
-                console.log(`Product #${i}: ${JSON.stringify(product)}`)
                 const publication = publications[i]
                 .withSeller(sellerWithID)
                 .withProduct(product).build()
-                console.log(`Product: ${JSON.stringify(product)}`)
-                console.log(`Publication: ${JSON.stringify(publication)}`)
                 insertPublication(pool, publication)
             })
         )
