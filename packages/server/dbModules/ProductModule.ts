@@ -8,7 +8,7 @@ import { ProductBuilder } from '../builders/ProductBuilder';
 export const insertProduct = async (pool: Pool, product: Product) => {
     const client = await pool.connect()
     const result: Promise<Product> = client.query(
-        `INSERT INTO ${Product.tableName} (name, description) 
+        `INSERT INTO ${Product.tableName} (name) 
         VALUES ('${product.name}')
         RETURNING id`
         ).then((res) => {

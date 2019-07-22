@@ -12,8 +12,8 @@ import { PublicationBuilder } from '../builders/PublicationBuilder';
 export const insertPublication = async (pool: Pool, publication: Publication) => {
     const client = await pool.connect()
     const result: Promise<string> = client.query(
-        `INSERT INTO ${Publication.tableName} (name, value, seller_id, product_id) 
-        VALUES ('${publication.name}', '${publication.value}', '${publication.seller.id}', '${publication.product.id}')
+        `INSERT INTO ${Publication.tableName} (name, value, description, seller_id, product_id) 
+        VALUES ('${publication.name}', '${publication.value}', '${publication.description}', '${publication.seller.id}', '${publication.product.id}')
         RETURNING id`
         ).then((res) => {
             publication.images.forEach(i => insertImagePublication(pool, new PublicationImage(i.id, i.image, res.rows[0].id)))
@@ -52,7 +52,8 @@ export const getPublicationByID = async (pool: Pool, publicationID: string) => {
             ${Publication.tableName}.id, 
             ${Publication.tableName}.name, 
             ${Publication.tableName}.value, 
-            ${Publication.tableName}.product_id, 
+            ${Publication.tableName}.product_id,
+            ${Publication.tableName}.description, 
             ${Publication.tableName}.seller_id
         FROM ${Publication.tableName}
         WHERE ${Publication.tableName}.id = ${publicationID}

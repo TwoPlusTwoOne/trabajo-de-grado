@@ -33,6 +33,11 @@ class PublicationBuilder {
         return this
     }
 
+    withDescription(description: string){
+        this.description = description
+        return this
+    }
+    
     withImage(image: PublicationImage){
         this.images.push( image )
         return this

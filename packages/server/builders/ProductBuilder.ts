@@ -12,10 +12,6 @@ class ProductBuilder {
         return this
     }
 
-    withDescription(description: string){
-        this.description = description
-        return this
-    }
 
     withReview(review: Review){
         this.reviews.push( review )
