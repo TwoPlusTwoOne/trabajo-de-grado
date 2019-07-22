@@ -7,7 +7,7 @@ import SearchIcon from '@material-ui/icons/Search'
 import Paper from '@material-ui/core/Paper/Paper'
 
 export type Props = {
-  products: Product[],
+  publications: Publication[],
   onSelectItem: (product: Product) => void
 }
 export type State = {
@@ -50,12 +50,13 @@ export class SearchBar extends React.PureComponent<Props, State> {
             value={query}
             inputProps={{ className: styles.input, placeholder: 'Search...' }}
             wrapperStyle={{ position: 'relative', display: 'inline-block', width: '100%' }}
-            items={this.props.products}
+            items={this.props.publications}
             shouldItemRender={matchesQuery}
             getItemValue={(item) => item.name}
             onChange={this.handleQueryChange}
             onSelect={this.handleSelect}
             renderMenu={(items, value) => {
+              console.log({ items })
               const hasNoQuery = !value
               const noItems = items.length === 0
               return (

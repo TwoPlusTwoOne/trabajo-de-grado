@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as styles from './productView.scss'
 import { getProductById, getQuestionsForProduct } from '../../api/api'
-import { Product, ProductQnA, ProductWithQnAType } from '../../components/product/product'
+import { PublicationComponent, PublicationWithQnA } from '../../components/product/publicationComponent'
 import { Loader } from '../../components/loader/loader'
 import Paper from '@material-ui/core/Paper/Paper'
 
@@ -14,7 +14,7 @@ export type Props = {
 }
 
 export type State = {
-  product: ProductWithQnAType | null
+  product: PublicationWithQnA | null
   isLoading: boolean
 }
 
@@ -47,8 +47,7 @@ export class ProductView extends React.PureComponent<Props, State> {
       getProductById(id)
         .then(product => {
           getQuestionsForProduct(product.id)
-            .then(response => response.json())
-            .then((qa: ProductQnA) => {
+            .then((qa: PublicationQnA[]) => {
               this.setState({ product: { ...product, qa }, isLoading: false })
             })
         })
@@ -63,7 +62,7 @@ export class ProductView extends React.PureComponent<Props, State> {
 
     return <div className={styles.productContainer}>
       <Paper className={styles.product}>
-        <Product product={product} />
+        <PublicationComponent publication={product} />
       </Paper>
     </div>
   }

@@ -1,11 +1,10 @@
 import * as React from 'react'
-import { ProductQnA } from '../product/product'
 
 export type Props = {
-  data: ProductQnA[]
+  data: PublicationQnA[]
 }
 
-const toQnA = (qa: ProductQnA) => {
+const toQnA = (qa: PublicationQnA) => {
   return <div key={qa.question_id.toString()}>
     <div>{qa.question}</div>
     <div>{qa.answer}</div>

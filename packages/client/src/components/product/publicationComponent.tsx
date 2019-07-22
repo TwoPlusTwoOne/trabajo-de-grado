@@ -2,44 +2,24 @@ import * as React from 'react'
 import * as styles from './product.scss'
 import { QuestionsAndAnswers } from '../questionsAndAnswers/questionsAndAnswers'
 
-export type ProductType = {
-  id: number
-  name: string
-  value: string
-  description: string
-  sellerId: string
-  images: string
-}
-
-export type ProductWithQnAType = ProductType & {
-  qa: ProductQnA[]
-}
-
-export type ProductQnA = {
-  answer: string
-  answer_id: number
-  client_id: number
-  product_id: number
-  question: string
-  question_id: number
-  seller_id: number
+export type PublicationWithQnA = Publication & {
+  qa: PublicationQnA[]
 }
 
 export type Props = {
-  product: ProductWithQnAType
+  publication: PublicationWithQnA
 }
 
-export class Product extends React.PureComponent<Props> {
+export class PublicationComponent extends React.PureComponent<Props> {
   render() {
-    const { product } = this.props
-    const { description, name, value, images, qa } = product
-    const image = images.split(',')[0] || ''
+    const { publication } = this.props
+    const { qa, product, id, value, name, description, images, seller } = publication
 
     return (
       <div className={styles.product}>
         <div className={styles.mainInfo}>
           <div className={styles.image}>
-            <img src={image} alt={name} />
+            {images.map(image => <img src={image.image} alt={image.id.toString()} key={image.id} />)}
           </div>
           <div className={styles.nameAndPrice}>
             <div className={styles.name}>{name}</div>

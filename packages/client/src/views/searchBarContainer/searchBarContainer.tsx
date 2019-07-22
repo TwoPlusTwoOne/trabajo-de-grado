@@ -1,13 +1,13 @@
 import * as React from 'react'
 import { SearchBar } from '../../components/catalog/searchBar/searchBar'
 import { Product } from '../../util/types'
-import { getProducts } from '../../api/api'
+import { getPublications } from '../../api/api'
 import { RouteComponentProps, withRouter } from 'react-router'
 
 export type ExternalProps = {}
 
 export type State = {
-  products: Product[]
+  publications: Publication[]
 }
 
 export type Props = ExternalProps & RouteComponentProps
@@ -17,13 +17,15 @@ class SearchBarContainer extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props)
 
-    this.state = { products: [] }
+    this.state = { publications: [] }
   }
 
   componentDidMount(): void {
-    getProducts()
-      .then(response => response.json())
-      .then(body => this.setState({ products: body }))
+    getPublications()
+      .then(body => {
+        this.setState({ publications: body })
+      })
+      .catch()
   }
 
   handleClickItem = (product: Product) => {
@@ -31,12 +33,12 @@ class SearchBarContainer extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { products } = this.state
+    const { publications } = this.state
 
     return (
       <div>
         <SearchBar
-          products={products}
+          publications={publications}
           onSelectItem={this.handleClickItem}
         />
       </div>

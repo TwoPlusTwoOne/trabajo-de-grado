@@ -1,5 +1,3 @@
-import { ProductType } from '../components/product/product'
-
 const baseUri = 'http://localhost:3001'
 
 export const getAllUsers = () => {
@@ -14,14 +12,10 @@ export const getAllXss = () => {
   return fetch(`${baseUri}/xss`, { method: 'get' })
 }
 
-export const getAllProducts = () => {
-  return fetch(`${baseUri}/product`, { method: 'get' })
-}
-
 export const getProductById = (id: number) => {
   return fetch(`${baseUri}/product`, { method: 'get' })
     .then(response => response.json())
-    .then(body => body.find((p: ProductType) => p.id === id))
+    .then(body => body.find((p: Product) => p.id === id))
 }
 
 export const login = (info: { email: string, password: string }) => {
@@ -38,7 +32,7 @@ export const login = (info: { email: string, password: string }) => {
   return fetch(url, init)
 }
 
-export const getProducts = () => {
+export const getProducts = (): Promise<Product[]> => {
   const url = `${baseUri}/product`
 
   const init: RequestInit = {
@@ -48,10 +42,36 @@ export const getProducts = () => {
     }
   }
 
-  return fetch(url, init)
+  return fetch(url, init).then(response => response.json())
 }
 
-export const getQuestionsForProduct = (productId: string) => {
+export const getPublications = (): Promise<Publication[]> => {
+  const url = `${baseUri}/publication`
+
+  const init: RequestInit = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  }
+
+  return fetch(url, init).then(response => response.json())
+}
+
+export const getPublicationById = (publicationId: string): Promise<Publication> => {
+  const url = `${baseUri}/publication/${publicationId}`
+
+  const init: RequestInit = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  }
+
+  return fetch(url, init).then(response => response.json())
+}
+
+export const getQuestionsForProduct = (productId: string): Promise<PublicationQnA[]> => {
 
   const url = `${baseUri}/qa/${productId}`
 
@@ -62,7 +82,7 @@ export const getQuestionsForProduct = (productId: string) => {
     }
   }
 
-  return fetch(url, init)
+  return fetch(url, init).then(response => response.json())
 }
 
 export const postQuestion = (info: { question: string, userId: string, productId: string }) => {
@@ -84,7 +104,7 @@ export const getCart = (clientId: string) => {
   const init: RequestInit = {
     method: 'GET',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     }
   }
 
