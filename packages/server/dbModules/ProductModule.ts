@@ -65,8 +65,7 @@ export const getProductByID = async (pool: Pool, productId: string) => {
     const result: Promise<Product> = client.query(
         `SELECT 
         ${Product.tableName}.id, 
-            ${Product.tableName}.name,  
-            ${Product.tableName}.description
+        ${Product.tableName}.name  
         FROM ${Product.tableName}
         WHERE ${Product.tableName}.id = ${productId}
         GROUP BY ${Product.tableName}.id
