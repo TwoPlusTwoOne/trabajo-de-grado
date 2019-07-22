@@ -5,57 +5,55 @@ import { PublicationImage } from '../entities/PublicationImage';
 
 class PublicationBuilder {
 
-    private id: string
-    private name: string
-    private value: number
-    private product: Product
-    private seller: Client
-    private images: PublicationImage[] = []
-    private description: string
+  private id: string
+  private name: string
+  private value: number
+  private product: Product
+  private seller: Client
+  private images: PublicationImage[] = []
 
-    withName(name: string){
-        this.name = name
-        return this
-    }
+  withName(name: string){
+    this.name = name
+    return this
+  }
 
-    withValue(value: number){
-        this.value = value
-        return this
-    }
+  withValue(value: number){
+    this.value = value
+    return this
+  }
 
-    withProduct(product: Product){
-        this.product = product
-        return this
-    }
+  withProduct(product: Product){
+    this.product = product
+    return this
+  }
 
-    withSeller(seller: Client){
-        this.seller = seller
-        return this
-    }
+  withSeller(seller: Client){
+    this.seller = seller
+    return this
+  }
 
-    withImage(image: PublicationImage){
-        this.images.push( image )
-        return this
-    }
+  withImage(image: PublicationImage){
+    this.images.push( image )
+    return this
+  }
 
-    withId(id: string) {
-        this.id = id
-        return this
-    }
+  withId(id: string) {
+    this.id = id
+    return this
+  }
 
 
-    build() {
-        const product = new Publication (
-                            this.id,
-                            this.name,
-                            this.value,
-                            this.seller,
-                            this.images,
-                            this.product,
-                            this.description
-                        )
-        return product
-    }
+  build() {
+    const product = new Publication (
+      this.id,
+      this.name,
+      this.value,
+      this.seller,
+      this.images,
+      this.product
+    )
+    return product
+  }
 
 }
 

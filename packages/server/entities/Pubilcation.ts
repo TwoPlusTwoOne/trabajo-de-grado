@@ -1,36 +1,33 @@
 import { DBEntity } from './DBEntity'
 import { Client } from './Client'
 import { PublicationImage } from './PublicationImage'
-import {Product} from './Product'
+import { Product } from './Product'
 
 class Publication implements DBEntity {
 
-    id: string
-    name: string
-    value: number
-    seller: Client
-    images: PublicationImage[]
-    product: Product
-    description: string
+  id: string
+  name: string
+  value: number
+  seller: Client
+  images: PublicationImage[]
+  product: Product
 
-    static readonly tableName = "publication_table"
+  static readonly tableName = 'publication_table'
 
-    constructor (
-        id: string,
-        name: string,
-        value: number,
-        seller: Client,
-        images: PublicationImage[],
-        product: Product,
-        description: string) {
-        this.id = id
-        this.name = name
-        this.value = value
-        this.seller = seller
-        this.images = images
-        this.product = product
-        this.description = description
-    }
+  constructor(
+    id: string,
+    name: string,
+    value: number,
+    seller: Client,
+    images: PublicationImage[],
+    product: Product) {
+    this.id = id
+    this.name = name
+    this.value = value
+    this.seller = seller
+    this.images = images
+    this.product = product
+  }
 }
 
 export { Publication }

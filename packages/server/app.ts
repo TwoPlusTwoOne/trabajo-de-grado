@@ -97,7 +97,7 @@ const getProductFromRequest = (json: any) => {
   const client = getClientFromRequest(json.client)
   const images = getImagesFromRequest(json.images)
   const reviews = getReviewsFromRequest(json.reviews)
-  return new Product(json.id, json.name, json.value)
+  return new Product(json.id, json.name, json.value, json.description)
 }
 
 const getCartFromRequest = (json: any) => {
@@ -134,7 +134,7 @@ app.delete('/all', async function (req: Request, res: Response) {
   client.query(
     `DROP SCHEMA public CASCADE;
     CREATE SCHEMA public;`
-    ).then((r) => res.send(r))
+  ).then((r) => res.send(r))
 });
 
 app.post('/user', async function (req: Request, res: Response) {
@@ -173,7 +173,7 @@ app.post('/admin/login', async function (req: Request, res: Response) {
   const password = req.body.password
   loginAdmin(pool, email, password).then((r) => {
     if(r.id !== null && r.id !== ""){
-    res.send(r)
+      res.send(r)
     } else {
       res.sendStatus(401)
     }
@@ -184,7 +184,7 @@ app.post('/client/login', async function (req: Request, res: Response) {
   const password = req.body.password
   loginClient(pool, email, password).then((r) => {
     if(r.id !== null && r.id !== ""){
-    res.send(r)
+      res.send(r)
     } else{
       res.sendStatus(401)
     }
