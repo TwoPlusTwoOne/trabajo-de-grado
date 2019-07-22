@@ -6,6 +6,7 @@ import IconButton from '@material-ui/core/IconButton/IconButton'
 import { AccountCircle } from '@material-ui/icons'
 import Menu from '@material-ui/core/Menu/Menu'
 import { AuthContext } from '../../App'
+import Typography from '@material-ui/core/Typography/Typography'
 
 export type ExternalProps = {
   user: User
@@ -58,8 +59,11 @@ class Profile extends React.PureComponent<Props, State> {
   render() {
     return (
       <div className={styles.container}>
-        <div>
-          <MenuItem onClick={this.handleProfileMenuOpen}>
+        <div className={styles.profileWrapper}>
+          <div>
+            <Typography color={"inherit"} variant={"subtitle1"}>Welcome, {this.props.user.first_name}!</Typography>
+          </div>
+          <MenuItem className={styles.profileIcon} onClick={this.handleProfileMenuOpen}>
             <IconButton
               aria-label="Account of current user"
               aria-controls="primary-search-account-menu"

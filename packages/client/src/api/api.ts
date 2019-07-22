@@ -71,7 +71,7 @@ export const getPublicationById = (publicationId: string): Promise<Publication> 
   return fetch(url, init).then(response => response.json())
 }
 
-export const getQuestionsForProduct = (productId: string): Promise<PublicationQnA[]> => {
+export const getQuestionsForPublication = (productId: string): Promise<PublicationQnA[]> => {
 
   const url = `${baseUri}/qa/${productId}`
 

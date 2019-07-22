@@ -11,7 +11,7 @@ declare type Seller = {
 }
 
 declare type Publication = {
-  id: 1
+  id: number
   name: string
   value: string
   seller: Seller

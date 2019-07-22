@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { getQuestionsForProduct } from '../../../api/api'
+import { getQuestionsForPublication } from '../../../api/api'
 import { Question } from '../question/question'
 import { QuestionInput } from '../questionInput/questionInput'
 import styles from './questionBox.scss'
@@ -20,7 +20,7 @@ export class QuestionBox extends React.PureComponent<Props, State> {
   }
 
   componentDidMount() {
-    getQuestionsForProduct(this.props.productId)
+    getQuestionsForPublication(this.props.productId)
       .then(q => this.setState({ ...this.state, questions: q }))
   }
 

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import * as styles from './productView.scss'
-import { getProductById, getQuestionsForProduct } from '../../api/api'
+import { getProductById, getPublicationById, getQuestionsForPublication } from '../../api/api'
 import { PublicationComponent, PublicationWithQnA } from '../../components/product/publicationComponent'
 import { Loader } from '../../components/loader/loader'
 import Paper from '@material-ui/core/Paper/Paper'
@@ -44,11 +44,11 @@ export class ProductView extends React.PureComponent<Props, State> {
     this.setState({ isLoading: true })
     const id = parseInt(this.props.match.params.productId)
     if (!isNaN(id)) {
-      getProductById(id)
-        .then(product => {
-          getQuestionsForProduct(product.id)
+      getPublicationById(id.toString())
+        .then((publication: Publication) => {
+          getQuestionsForPublication(publication.id.toString())
             .then((qa: PublicationQnA[]) => {
-              this.setState({ product: { ...product, qa }, isLoading: false })
+              this.setState({ product: { ...publication, qa }, isLoading: false })
             })
         })
         .catch(() => this.setState({ isLoading: false }))
