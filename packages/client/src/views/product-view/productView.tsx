@@ -1,6 +1,6 @@
 import * as React from 'react'
 import * as styles from './productView.scss'
-import { getProductById, getPublicationById, getQuestionsForPublication } from '../../api/api'
+import { getPublicationById, getQuestionsForPublication } from '../../api/api'
 import { PublicationComponent, PublicationWithQnA } from '../../components/product/publicationComponent'
 import { Loader } from '../../components/loader/loader'
 import Paper from '@material-ui/core/Paper/Paper'
@@ -46,7 +46,7 @@ export class ProductView extends React.PureComponent<Props, State> {
     if (!isNaN(id)) {
       getPublicationById(id.toString())
         .then((publication: Publication) => {
-          getQuestionsForPublication(publication.id.toString())
+          getQuestionsForPublication(publication.id)
             .then((qa: PublicationQnA[]) => {
               this.setState({ product: { ...publication, qa }, isLoading: false })
             })

@@ -18,7 +18,7 @@ const logIn = (user: User) => sessionStorage.setItem('user', JSON.stringify(user
 
 const logOut = () => sessionStorage.clear()
 
-const getLoggedUser = () => {
+const getLoggedUser = (): User => {
   const item = sessionStorage.getItem('user')
   if (item) return JSON.parse(item)
   else throw Error('No user logged in.')

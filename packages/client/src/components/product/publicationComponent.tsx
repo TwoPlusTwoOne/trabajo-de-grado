@@ -1,6 +1,6 @@
 import * as React from 'react'
 import * as styles from './product.scss'
-import { QuestionsAndAnswers } from '../questionsAndAnswers/questionsAndAnswers'
+import { QuestionsAndAnswersContainer } from '../questionsAndAnswers/questionsAndAnswersContainer'
 
 export type PublicationWithQnA = Publication & {
   qa: PublicationQnA[]
@@ -36,7 +36,7 @@ export class PublicationComponent extends React.PureComponent<Props> {
           <div className={styles.title}>
             Questions & Answers
           </div>
-          <QuestionsAndAnswers data={qa} />
+          <QuestionsAndAnswersContainer publicationId={id} data={qa} />
         </div>
       </div>
     )
