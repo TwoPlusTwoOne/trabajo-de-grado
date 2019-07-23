@@ -7,8 +7,7 @@ export const insertQuestion = async (pool: Pool, question: Question) => {
     const client = await pool.connect()
     const result: Promise<string> = client.query(
         `INSERT INTO ${Question.tableName} (question, product_id, user_id) 
-        VALUES ('${question.question}', '${question.productId}', '${question.userId}')
-        RETURNING id`
+        VALUES ('${question.question}', '${question.productId}', '${question.userId}') RETURNING id`
         ).then((res) => {
             return res.rows[0].id
         }).catch(e => {
