@@ -3,11 +3,17 @@ import { getQuestionsForPublication } from '../../../api/api'
 import { Question } from '../question/question'
 import { QuestionInput } from '../questionInput/questionInput'
 import styles from './questionBox.scss'
+import { AnswerInput } from '../answerInput/answerInput'
 
 export type Props = {
   publicationId: number
+  sellerId: number
   userId: number
+  isSendingQuestion: boolean
+  isSendingAnswer: { [questionId: string]: boolean }
   questionsAndAnswers: PublicationQnA[]
+  onAskQuestion: (question: string) => void
+  onAnswerQuestion: (answer: string, questionId: number) => void
 }
 
 export type State = {}
@@ -22,20 +28,41 @@ export class QuestionBox extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { userId, publicationId, questionsAndAnswers } = this.props
+    const { userId, publicationId, sellerId, questionsAndAnswers, onAnswerQuestion, onAskQuestion, isSendingQuestion, isSendingAnswer } = this.props
+
+    const isLoggedUserSeller = userId === sellerId
 
     return (
       <div className={styles.questionBox}>
-        <div className={styles.questionInput2}>
-          <QuestionInput clientId={userId} publicationId={publicationId} />
-        </div>
+        {
+          !isLoggedUserSeller &&
+          <div className={styles.questionInput2}>
+            <QuestionInput
+              onSubmit={onAskQuestion}
+              clientId={userId}
+              publicationId={publicationId}
+              isSendingQuestion={isSendingQuestion}
+            />
+          </div>
+        }
         <div className={styles.questions2}>
           {
-            questionsAndAnswers.map(qna => <Question
-              key={qna.question_id}
-              question={qna.question}
-              answer={qna.answer}
-            />)
+            questionsAndAnswers.map(qna => {
+              const { question, answer, question_id } = qna
+              return <div key={question_id}>
+                <Question question={question} answer={answer} />
+                {
+                  isLoggedUserSeller && !answer &&
+                  <AnswerInput
+                    questionId={question_id}
+                    onSubmit={onAnswerQuestion}
+                    publicationId={publicationId}
+                    clientId={userId}
+                    isSendingAnswer={isSendingAnswer[question_id]}
+                  />
+                }
+              </div>
+            })
           }
         </div>
       </div>

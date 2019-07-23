@@ -1,26 +1,69 @@
 import * as React from 'react'
 import { QuestionBox } from '../question-answer/questionBox/questionBox'
 import { getLoggedUser } from '../../helpers/auth'
+import { postAnswer, postQuestion } from '../../api/api'
 
 export type Props = {
   data: PublicationQnA[]
   publicationId: number
+  sellerId: number
 }
 
-const toQnA = (qa: PublicationQnA) => {
-  return <div key={qa.question_id.toString()}>
-    <div>{qa.question}</div>
-    <div>{qa.answer}</div>
-  </div>
+export type State = {
+  isSendingQuestion: boolean
+  isSendingAnswer: { [questionId: string]: boolean }
 }
 
-export class QuestionsAndAnswersContainer extends React.PureComponent<Props> {
+export class QuestionsAndAnswersContainer extends React.PureComponent<Props, State> {
+
+  constructor(props: Props) {
+    super(props)
+
+    this.state = { isSendingAnswer: {}, isSendingQuestion: false }
+  }
+
+
+  handleAskQuestion = (question: string) => {
+    const user = getLoggedUser()
+    const userId = user.id
+    const { publicationId } = this.props
+
+    this.setState({ isSendingQuestion: true })
+
+    postQuestion({ question, userId, publicationId })
+      .then(response => response.json())
+      .then(body => {
+        this.setState({ isSendingQuestion: false })
+        console.log(body)
+      })
+      .catch(console.log)
+  }
+
+  handleAnswerQuestion = (answer: string, questionId: number) => {
+    const user = getLoggedUser()
+    const userId = user.id
+    const { publicationId } = this.props
+
+    this.setState({ isSendingAnswer: { ...this.state.isSendingAnswer, [questionId]: true } })
+    // postAnswer()
+  }
+
   render() {
-    const { data, publicationId } = this.props
-    const userId = getLoggedUser()
+    const { data, publicationId, sellerId } = this.props
+    const { isSendingAnswer, isSendingQuestion } = this.state
+    const user = getLoggedUser()
     return (
       <div>
-        <QuestionBox questionsAndAnswers={data} publicationId={publicationId} userId={userId.id} />
+        <QuestionBox
+          isSendingQuestion={isSendingQuestion}
+          isSendingAnswer={isSendingAnswer}
+          sellerId={sellerId}
+          questionsAndAnswers={data}
+          publicationId={publicationId}
+          userId={user.id}
+          onAskQuestion={this.handleAskQuestion}
+          onAnswerQuestion={this.handleAnswerQuestion}
+        />
       </div>
     )
   }

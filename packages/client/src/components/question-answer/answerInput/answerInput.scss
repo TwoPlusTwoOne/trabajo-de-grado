@@ -1,0 +1,37 @@
+:local {
+
+  .answerInput {
+    display: flex;
+    justify-content: space-between;
+
+    .textAreaWrapper {
+      width: 70%;
+      height: 100%;
+      display: flex;
+      min-height: 22px;
+
+      textarea {
+        min-height: inherit;
+        width: 100%;
+        margin-right: 4%;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+        padding: 14px 16px;
+        font-size: 14px;
+        color: #333;
+      }
+
+      textarea:focus {
+        border-color: rgb(57, 134, 246);
+      }
+    }
+
+    .buttonWrapper {
+      width: 30%;
+
+      .sendAnswerButton {
+        font-size: 16px;
+      }
+    }
+  }
+}

@@ -85,7 +85,20 @@ export const getQuestionsForPublication = (productId: number): Promise<Publicati
   return fetch(url, init).then(response => response.json())
 }
 
-export const postQuestion = (info: { question: string, userId: number, productId: number }) => {
+export const postQuestion = (info: { question: string, userId: number, publicationId: number }) => {
+  const url = `${baseUri}/question`
+  const init: RequestInit = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(info),
+  }
+
+  return fetch(url, init)
+}
+
+export const postAnswer = (info: { answer: string, questionId: number, userId: number, publicationId: number }) => {
   const url = `${baseUri}/question`
   const init: RequestInit = {
     method: 'POST',

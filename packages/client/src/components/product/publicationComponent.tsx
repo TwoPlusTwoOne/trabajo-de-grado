@@ -36,7 +36,7 @@ export class PublicationComponent extends React.PureComponent<Props> {
           <div className={styles.title}>
             Questions & Answers
           </div>
-          <QuestionsAndAnswersContainer publicationId={id} data={qa} />
+          <QuestionsAndAnswersContainer sellerId={seller.id} publicationId={id} data={qa} />
         </div>
       </div>
     )
