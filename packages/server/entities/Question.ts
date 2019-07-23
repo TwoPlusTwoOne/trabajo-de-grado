@@ -5,15 +5,15 @@ class Question implements DBEntity {
     id: string
     productId: string
     question: string
-    user: string
+    userId: string
 
     static readonly tableName = "question_table"
 
-    constructor(id: string, productId: string, question: string, user: string) {
+    constructor(id: string, productId: string, question: string, userId: string) {
         this.id = id
         this.productId = productId
         this.question = question
-        this.user = user
+        this.userId = userId
     }
 }
 

@@ -232,7 +232,7 @@ app.get('/qa/:productId', async function (req: Request, res: Response) {
 });
 
 app.post('/question', async function (req: Request, res: Response) {
-  const question = getQuestionFromRequest(req)
+  const question = getQuestionFromRequest(req.body)
   const questionId: string = await insertQuestion(pool, question)
   res.send(JSON.stringify({ id: questionId }))
 });
