@@ -7,19 +7,12 @@ import styles from './questionBox.scss'
 export type Props = {
   publicationId: number
   userId: number
-}
-
-export type State = {
   questionsAndAnswers: PublicationQnA[]
 }
 
+export type State = {}
+
 export class QuestionBox extends React.PureComponent<Props, State> {
-
-  constructor(props: Props) {
-    super(props)
-
-    this.state = { questionsAndAnswers: [] }
-  }
 
   componentDidMount() {
     const { publicationId } = this.props
@@ -29,16 +22,21 @@ export class QuestionBox extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { userId, publicationId } = this.props
-    const { questionsAndAnswers } = this.state
+    const { userId, publicationId, questionsAndAnswers } = this.props
 
     return (
       <div className={styles.questionBox}>
         <div className={styles.questionInput2}>
-          <QuestionInput clientId={userId} productId={publicationId} />
+          <QuestionInput clientId={userId} publicationId={publicationId} />
         </div>
         <div className={styles.questions2}>
-          {questionsAndAnswers.map(qna => <Question question={qna.question} answer={qna.answer} />)}
+          {
+            questionsAndAnswers.map(qna => <Question
+              key={qna.question_id}
+              question={qna.question}
+              answer={qna.answer}
+            />)
+          }
         </div>
       </div>
     )

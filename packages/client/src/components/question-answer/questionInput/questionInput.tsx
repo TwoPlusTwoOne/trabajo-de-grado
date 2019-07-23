@@ -5,7 +5,7 @@ import { Button } from '../../button/button'
 
 export type Props = {
   clientId: number
-  productId: number
+  publicationId: number
 }
 export type State = {
   question: string
@@ -30,7 +30,7 @@ export class QuestionInput extends React.PureComponent<Props, State> {
   sendQuestion() {
     const question = this.state.question
     const userId = this.props.clientId
-    const productId = this.props.productId
+    const productId = this.props.publicationId
     postQuestion({ question, userId, productId })
       .then(response => response.json())
       .then(console.log)

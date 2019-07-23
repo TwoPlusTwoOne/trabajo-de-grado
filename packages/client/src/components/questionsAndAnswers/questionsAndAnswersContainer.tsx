@@ -20,8 +20,7 @@ export class QuestionsAndAnswersContainer extends React.PureComponent<Props> {
     const userId = getLoggedUser()
     return (
       <div>
-        {data.map(toQnA)}
-        <QuestionBox publicationId={publicationId} userId={userId.id} />
+        <QuestionBox questionsAndAnswers={data} publicationId={publicationId} userId={userId.id} />
       </div>
     )
   }
