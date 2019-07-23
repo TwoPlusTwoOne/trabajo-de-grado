@@ -9,7 +9,7 @@ export const insertUser = async (pool: Pool, user: User) => {
     const password = md5(user.password)
     const result: Promise<string> = client.query(
         `INSERT INTO user_table (first_name, last_name, direction, dni, password, email, birthdate) 
-        VALUES ('${user.firstName}', '${user.lastName}', '${user.direction}', '${user.dni}', '${password}', '${user.email}', '${user.birthdate.toISOString()}')
+        VALUES ('${user.first_name}', '${user.last_name}', '${user.direction}', '${user.dni}', '${password}', '${user.email}', '${user.birthdate.toISOString()}')
         RETURNING id`
         ).then((res) => {
                 return res.rows[0].id
@@ -28,7 +28,7 @@ export const loginUser = async (pool: Pool, email:string, password: string) => {
         `SELECT * FROM ${User.tableName} WHERE ${User.tableName}.email = '${email}' AND ${User.tableName}.password = '${md5Password}'`
         ).then((r) => {
                 const result = r.rows[0]
-                return new User(result.id, result.firstName, result.lastName, result.direction, result.dni, result.password, result.email, result.birthdate)
+                return new User(result.id, result.first_name, result.last_name, result.direction, result.dni, result.password, result.email, result.birthdate)
         }).catch(e => {
             console.error(e.stack)
             return new UserBuilder().build()

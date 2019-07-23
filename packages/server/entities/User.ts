@@ -3,8 +3,8 @@ import { DBEntity } from "./DBEntity";
 class User implements DBEntity{
 
     id: string
-    firstName: string
-    lastName: string
+    first_name: string
+    last_name: string
     direction: string
     dni: string
     password: string
@@ -23,8 +23,8 @@ class User implements DBEntity{
         email: string,
         birthdate: Date) {
         this.id = id
-        this.firstName = firstName
-        this.lastName = lastName
+        this.first_name = firstName
+        this.last_name = lastName
         this.direction = direction
         this.dni = dni
         this.password = password

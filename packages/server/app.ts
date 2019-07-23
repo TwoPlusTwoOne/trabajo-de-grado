@@ -1,6 +1,6 @@
 import { UserBuilder } from './builders/UserBuilder'
 import { insertAdmin, getAdminByID, loginAdmin } from './dbModules/AdminModule';
-import { insertUser } from './dbModules/UsersModule'
+import { insertUser, loginUser } from './dbModules/UsersModule'
 import { insertClient, getClientByID, loginClient } from './dbModules/ClientModule'
 import { getAllProducts, getProductByID } from './dbModules/ProductModule'
 import { Request, Response } from 'express';
@@ -16,6 +16,7 @@ import { Product } from './entities/Product';
 import {PublicationImage} from './entities/PublicationImage'
 import { Review } from './entities/Review';
 import { getPublicationByID, getAllPublications } from './dbModules/PublicationModule';
+import { emit } from 'cluster';
 
 
 var express = require('express');
@@ -97,7 +98,7 @@ const getProductFromRequest = (json: any) => {
   const client = getClientFromRequest(json.client)
   const images = getImagesFromRequest(json.images)
   const reviews = getReviewsFromRequest(json.reviews)
-  return new Product(json.id, json.name, json.value, json.description)
+  return new Product(json.id, json.name, json.value)
 }
 
 const getCartFromRequest = (json: any) => {
@@ -119,9 +120,13 @@ app.get('/user/:userId', async function (req: Request, res: Response) {
 app.post('/login', async function (req: Request, res: Response) {
   const userEmail = req.body.email;
   const userPassword = req.body.password;
-  const result = await execQuery(`SELECT * FROM user_table WHERE email = '${userEmail}' AND password = '${userPassword}'`)
-  res.send(result);
-});
+  loginUser(pool, userEmail, userPassword).then((r) => {
+    if(r.id !== null && r.id !== ""){
+      res.send(r)
+    } else {
+      res.sendStatus(401)
+    }
+  })})
 
 app.post('/boot', async function (req: Request, res: Response) {
   boot(pool).then(() => {

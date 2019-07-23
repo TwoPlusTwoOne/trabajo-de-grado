@@ -35,13 +35,14 @@ export class Login extends React.PureComponent<Props, State> {
 
   logInError = () => this.setState({ ...this.state, error: 'Invalid username/password' })
 
-  handleLogIn = (response: { results: User[] }) => {
-    const { results } = response
-
-    if (results.length) {
-      this.logInSuccess(results[0])
-    } else {
+  handleLogIn = (response: any) => {
+    if (response.status === 401) {
       this.logInError()
+    } else {
+      response.json().then( (user: User) => {
+      console.log(user)
+      this.logInSuccess(user)
+      })
     }
   }
 
@@ -55,7 +56,6 @@ export class Login extends React.PureComponent<Props, State> {
     const { email, password } = this.state
     this.setState({ ...this.state, isLoggingIn: true }, this.clearErrors)
     login({ email, password })
-      .then(response => response.json())
       .then(this.handleLogIn)
       .catch(this.handleError)
       .then(this.stopLoggingIn)
