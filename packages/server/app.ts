@@ -7,7 +7,7 @@ import { Request, Response } from 'express';
 import { Client } from './entities/Client'
 import { Admin } from './entities/Admin'
 import { boot } from './boot'
-import { getCartByClientId, insertCart, addProductToCart, removeProductFromCart} from './dbModules/CartModule'
+import { getCartByClientId, insertCart, addPublicationToCart, removePublicationFromCart} from './dbModules/CartModule'
 import {getProductQuestionAnswer}  from './dbModules/QuestionAnswerModule'
 import { Question } from './entities/Question';
 import { insertQuestion } from './dbModules/QuestionsModule';
@@ -222,10 +222,9 @@ app.post('/admin', async function (req: Request, res: Response) {
 
 // -------------------------- CART ------------------------------
 
-app.get('/cart/:clientId', async function (req: Request, res: Response) {
-  const clientId = req.params.clientId
-  const cart = await getCartByClientId(pool, clientId)
-  res.send(cart)
+app.get('/cart/:cartId', async function (req: Request, res: Response) {
+  const cartId = req.params.cartId
+  getCartByClientId(pool, cartId).then((cart) => res.send(cart))
 });
 
 app.post('/cart', async function (req: Request, res: Response) {
@@ -233,18 +232,17 @@ app.post('/cart', async function (req: Request, res: Response) {
   insertCart(pool, cart).then((cartId) => res.send(JSON.stringify({ id: cartId })))
 });
 
-app.put('/cart/addItem', async function (req: Request, res: Response) {
+app.put('/cart/add-item', async function (req: Request, res: Response) {
   const cart = req.body.cartId
-  const product = req.body.productId
-  const cuantity = req.body.quantity
-  addProductToCart(pool, cart, product).then((r) => res.send(JSON.stringify({ id: r })))
+  const publication = req.body.publicationId
+  addPublicationToCart(pool, cart, publication).then((r) => res.send(JSON.stringify({ id: r })))
 });
 
-app.put('/cart/addItem', async function (req: Request, res: Response) {
+app.put('/cart/remove-item', async function (req: Request, res: Response) {
   const cart = req.body.cartId
-  const product = req.body.productId
+  const publication = req.body.publicationId
   const quantity = req.body.quantity
-  removeProductFromCart(pool, cart, product, quantity).then((r) => res.send(JSON.stringify({ id: r })))
+  removePublicationFromCart(pool, cart, publication, quantity).then((r) => res.send(JSON.stringify({ id: r })))
 });
 
 

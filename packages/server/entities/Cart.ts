@@ -1,19 +1,19 @@
 import { DBEntity } from './DBEntity'
-import { Product } from './Product'
+import { Publication } from './Pubilcation';
 
 class Cart implements DBEntity {
 
     id: string
     clientID: string
-    products: Product[]
+    publications: Publication[]
     tableName: string
 
     static readonly tableName = "cart_table"
 
-    constructor(id: string, clientID: string, products: Product[]) {
+    constructor(id: string, clientID: string, publications: Publication[]) {
         this.id = id
         this.clientID = clientID
-        this.products = products
+        this.publications = publications
     }
 }
 
