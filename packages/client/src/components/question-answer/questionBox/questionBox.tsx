@@ -4,6 +4,7 @@ import { Question } from '../question/question'
 import { QuestionInput } from '../questionInput/questionInput'
 import styles from './questionBox.scss'
 import { AnswerInput } from '../answerInput/answerInput'
+import Typography from '@material-ui/core/Typography/Typography'
 
 export type Props = {
   publicationId: number
@@ -32,6 +33,8 @@ export class QuestionBox extends React.PureComponent<Props, State> {
 
     const isLoggedUserSeller = userId === sellerId
 
+    const questionsAndAnswersWithAnswers = questionsAndAnswers.filter(qna => !!qna.answer_id)
+
     return (
       <div className={styles.questionBox}>
         {
@@ -45,10 +48,16 @@ export class QuestionBox extends React.PureComponent<Props, State> {
             />
           </div>
         }
+        <div className={styles.questionSubtitle}>
+          <Typography variant={'h6'}>
+            Questions
+          </Typography>
+        </div>
         <div className={styles.questions2}>
           {
-            questionsAndAnswers.map(qna => {
+            questionsAndAnswersWithAnswers.map(qna => {
               const { question, answer, question_id } = qna
+
               return <div key={question_id}>
                 <Question question={question} answer={answer} />
                 {
@@ -63,6 +72,10 @@ export class QuestionBox extends React.PureComponent<Props, State> {
                 }
               </div>
             })
+          }
+          {
+            questionsAndAnswersWithAnswers.length === 0 &&
+            <div className={styles.emptyMessage}>This publication does not have any answered questions yet.</div>
           }
         </div>
       </div>
