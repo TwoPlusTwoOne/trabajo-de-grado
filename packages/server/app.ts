@@ -53,7 +53,6 @@ const execQuery = async (query: string) => {
 }
 
 const getUserFromRequest = (json: any) => {
-  console.log(json.first_name)
   const firstName = json.first_name
   const lastName = json.last_name
   const direction = json.direction
@@ -96,9 +95,6 @@ const getReviewsFromRequest = (json: any) => {
 }
 
 const getProductFromRequest = (json: any) => {
-  const client = getClientFromRequest(json.client)
-  const images = getImagesFromRequest(json.images)
-  const reviews = getReviewsFromRequest(json.reviews)
   return new Product(json.id, json.name, json.value)
 }
 
@@ -282,8 +278,14 @@ app.get('/publication/:publicationId', async function (req: Request, res: Respon
 
 app.put('/publication', async function (req: Request, res: Response) {
   const publication = getPublicationFromRequest(req.body)
-  updatePublication(pool, publication).then((result) => res.send(result))
-});
+  updatePublication(pool, publication).then((result) => {
+    if(result != "") {
+      return res.sendStatus(200)
+    } else {
+      res.status(400)
+      res.send(result)
+    }
+})});
 
 
 app.delete('/publication/:publicationId', async function (req: Request, res: Response) {

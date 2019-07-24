@@ -18,6 +18,22 @@ export const insertImagePublication = async (pool: Pool, publicationImage: Publi
     return result
 }
 
+export const deleteImagePublication = async (pool: Pool, id: string) => {
+    const client = await pool.connect()
+    const result = client.query(
+        `DELETE FROM ${PublicationImage.tableName}
+        WHERE ID = ${id}`
+        ).then((res) => {
+                return res
+        }).catch(e => {
+            console.error(e.stack)
+            return ""
+        })
+    client.release()
+    return result
+}
+
+
 export const getImagesForPublication = async (pool: Pool, publicationId: string) => {
     const client = await pool.connect()
     const result: Promise<PublicationImage[]> = client.query(
