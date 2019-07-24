@@ -45,7 +45,7 @@ export const getClientByID = async (pool: Pool, id: string) => {
     WHERE client_table.id = ${id}`
     ).then((r) => {
             const result = r.rows[0]
-            return new Client(id, result.first_name, result.last_name, result.direction, result.dni, result.password, result.email, result.birthdate, result.sellerCalification, result.user_id)
+            return new Client(id, result.first_name, result.last_name, result.direction, result.dni, result.password, result.email, result.birthdate, result.seller_calification, result.user_id)
     }).catch(e => {
         console.error(e.stack)
         return new ClientBuilder().build()
