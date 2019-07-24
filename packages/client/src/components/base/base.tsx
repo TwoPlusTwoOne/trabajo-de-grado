@@ -19,6 +19,12 @@ class Base extends React.Component<Props, State> {
 
   navigateToHome = () => this.props.history.push('/')
 
+  navigateToMyPublications = () => this.props.history.push('/my-publications')
+
+  onClickGoToMyOrders = () => this.props.history.push('/my-orders')
+
+  onClickGoToMySales = () => this.props.history.push('/my-sales')
+
   render() {
     const { loggedUser, children } = this.props
 
@@ -36,7 +42,15 @@ class Base extends React.Component<Props, State> {
           </div>
 
           <div>
-            {loggedUser && <Profile user={loggedUser} />}
+            {
+              loggedUser &&
+              <Profile
+                onClickGoToMyOrders={this.onClickGoToMyOrders}
+                onClickGoToMySales={this.onClickGoToMySales}
+                onClickGoToMyPublications={this.navigateToMyPublications}
+                user={loggedUser}
+              />
+            }
           </div>
         </Toolbar>
       </AppBar>
