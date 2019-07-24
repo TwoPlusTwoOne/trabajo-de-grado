@@ -83,9 +83,10 @@ export const getCartProducts = async (pool: Pool, clientId: string) => {
 export const getCartByClientId = async (pool: Pool, clientId: string) => {
     const client = await pool.connect()
     const result = client.query(
-        `SELECT *
-        FROM cart_table
-        WHERE cart_table.id = ${clientId}
+        `SELECT
+        id
+        FROM ${Cart.tableName}
+        WHERE ${Cart.tableName}.client_id = ${clientId}
         `
         ).then((res) => {
                 const cart = res.rows[0]

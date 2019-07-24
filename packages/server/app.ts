@@ -228,10 +228,11 @@ app.post('/admin', async function (req: Request, res: Response) {
 
 // -------------------------- CART ------------------------------
 
-app.get('/cart/:cartId', async function (req: Request, res: Response) {
-  const cartId = req.params.cartId
-  getCartByClientId(pool, cartId).then((cart) => res.send(cart))
+app.get('/cart/:clientId', async function (req: Request, res: Response) {
+  const clientId = req.params.clientId
+  getCartByClientId(pool, clientId).then((cart) => res.send(cart))
 });
+
 
 app.post('/cart', async function (req: Request, res: Response) {
   const cart = getCartFromRequest(req.body)
