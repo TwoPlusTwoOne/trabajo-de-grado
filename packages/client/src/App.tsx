@@ -8,6 +8,7 @@ import { UnsecuredRoute } from './components/unsecured-route/unsecuredRoute'
 import { ProductView } from './views/product-view/productView'
 import { Base } from './components/base/base'
 import { AuthState, getLoggedUser, isLoggedIn, logIn, logOut, User } from './helpers/auth'
+import { MyPublicationsView } from './views/my-publications-view/myPublicationsView'
 
 export const AuthContext = React.createContext<AuthState>({
   logOut: () => null,
@@ -59,7 +60,7 @@ class App extends PureComponent<{}, State> {
             <Switch>
               <UnsecuredRoute exact path="/login" component={LoginView} />
               <SecuredRoute exact path="/" component={Home} />
-              <SecuredRoute exact path="/my-publications" component={Home} />
+              <SecuredRoute exact path="/my-publications" component={MyPublicationsView} />
               <SecuredRoute exact path="/products/:productId" component={ProductView} />
             </Switch>
           </Base>

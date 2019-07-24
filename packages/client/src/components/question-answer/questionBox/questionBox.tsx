@@ -5,6 +5,7 @@ import { QuestionInput } from '../questionInput/questionInput'
 import styles from './questionBox.scss'
 import { AnswerInput } from '../answerInput/answerInput'
 import Typography from '@material-ui/core/Typography/Typography'
+import { EmptyStateMessage } from '../../empty-state-message/emptyStateMessage'
 
 export type Props = {
   publicationId: number
@@ -75,7 +76,7 @@ export class QuestionBox extends React.PureComponent<Props, State> {
           }
           {
             questionsAndAnswersWithAnswers.length === 0 &&
-            <div className={styles.emptyMessage}>This publication does not have any answered questions yet.</div>
+            <EmptyStateMessage message={'This publication does not have any answered questions yet.'} />
           }
         </div>
       </div>
