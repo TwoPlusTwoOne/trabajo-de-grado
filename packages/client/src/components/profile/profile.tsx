@@ -38,7 +38,6 @@ class Profile extends React.PureComponent<Props, State> {
   setAnchorEl = (anchorEl: HTMLElement | null) => this.setState({ anchorEl })
 
   renderMenu = () => {
-    const { onClickGoToMyOrders, onClickGoToMyPublications, onClickGoToMySales } = this.props
     const { anchorEl } = this.state
     const isMenuOpen = Boolean(anchorEl)
 
