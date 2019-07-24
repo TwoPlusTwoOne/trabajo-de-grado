@@ -12,12 +12,14 @@ import {getProductQuestionAnswer}  from './dbModules/QuestionAnswerModule'
 import { Question } from './entities/Question';
 import { insertQuestion } from './dbModules/QuestionsModule';
 import { Cart } from './entities/Cart';
+import { Answer } from './entities/Answer';
 import { Product } from './entities/Product';
 import {PublicationImage} from './entities/PublicationImage'
 import { Review } from './entities/Review';
 import { getPublicationByID, getAllPublications, deletePublication, updatePublication } from './dbModules/PublicationModule';
 import { emit } from 'cluster';
 import { Publication } from './entities/Pubilcation';
+import { insertAnswer } from './dbModules/AnswerModule';
 
 
 var express = require('express');
@@ -83,7 +85,11 @@ const getClientFromRequest = (json: any) => {
 
 
 const getQuestionFromRequest = (json: any) => {
-  return new Question("", json.productId, json.question, json.userId)
+  return new Question("", json.publicationId, json.question, json.userId)
+}
+
+const getAnswerFromRequest = (json: any) => {
+  return new Answer("", json.questionId, json.answer, json.user)
 }
 
 const getImagesFromRequest = (json: any) => {
@@ -296,16 +302,20 @@ app.delete('/publication/:publicationId', async function (req: Request, res: Res
 
 // ----------------------- Q&A ---------------------------------------
 
-app.get('/qa/:productId', async function (req: Request, res: Response) {
-  const productId = req.params.productId
-  const client = await getProductQuestionAnswer(pool, productId)
+app.get('/qa/:publicationId', async function (req: Request, res: Response) {
+  const publicationId = req.params.publicationId
+  const client = await getProductQuestionAnswer(pool, publicationId)
   res.send(client)
 });
 
 app.post('/question', async function (req: Request, res: Response) {
   const question = getQuestionFromRequest(req.body)
-  const questionId: string = await insertQuestion(pool, question)
-  res.send(JSON.stringify({ id: questionId }))
+  insertQuestion(pool, question).then((id) => res.sendStatus(200))
+});
+
+app.post('/answer', async function (req: Request, res: Response) {
+  const answer = getAnswerFromRequest(req.body)
+  insertAnswer(pool, answer).then((id) => res.sendStatus(200))
 });
 
 // ----------------------------------------------------------------------

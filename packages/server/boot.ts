@@ -208,7 +208,7 @@ const saleTableInsert =
 const questionTableInsert =
     `CREATE TABLE ${Question.tableName} (
         id serial PRIMARY KEY,
-        "product_id" integer REFERENCES ${Product.tableName}(id),
+        "publication_id" integer REFERENCES ${Publication.tableName}(id),
         "question" text,
         "user_id" integer REFERENCES ${User.tableName}(id)
     );`

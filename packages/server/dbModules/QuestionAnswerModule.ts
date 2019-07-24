@@ -1,9 +1,9 @@
 import { Question } from '../entities/Question'
 import {Answer} from '../entities/Answer'
-import {Product} from '../entities/Product'
 import { Pool } from 'pg';
 import {insertQuestion} from './QuestionsModule'
 import {insertAnswer} from './AnswerModule'
+import { Publication } from '../entities/Pubilcation';
 
 export const getProductQuestionAnswer = async (pool: Pool, productId: string) => {
     const client = await pool.connect()
@@ -15,15 +15,24 @@ export const getProductQuestionAnswer = async (pool: Pool, productId: string) =>
             ${Answer.tableName}.user_id as seller_id,
             ${Question.tableName}.question,
             ${Answer.tableName}.answer,
-            ${Question.tableName}.product_id  
+            ${Question.tableName}.publication_id  
         FROM ${Question.tableName}
-        LEFT OUTER JOIN  ${Product.tableName} on ${Question.tableName}.product_id = ${Product.tableName}.id
+        LEFT OUTER JOIN  ${Publication.tableName} on ${Question.tableName}.publication_id = ${Publication.tableName}.id
         LEFT OUTER JOIN ${Answer.tableName} on ${Question.tableName}.id = ${Answer.tableName}.question_id
-        WHERE ${Product.tableName}.id = ${productId}
+        WHERE ${Publication.tableName}.id = ${productId}
         GROUP BY ${Question.tableName}.id, ${Answer.tableName}.id
         `
         ).then((res) => {
-            return res.rows
+            return res.rows.map(r => {
+                let answer = {}
+                if (r.answer_id != null){
+                    answer = new Answer(r.answer_id, r.question_id, r.answer, r.seller_id)
+                }
+                return {
+                    "question": new Question(r.question_id, r.publication_id, r.question, r.client_id),
+                    "answer": answer
+                }
+            })
         }).catch(e => {
             console.error(e.stack)
             return JSON.stringify({ error: e.stack })
