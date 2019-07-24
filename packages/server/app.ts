@@ -7,17 +7,19 @@ import { Request, Response } from 'express';
 import { Client } from './entities/Client'
 import { Admin } from './entities/Admin'
 import { boot } from './boot'
-import { getCartByClientId, insertCart, addProductToCart, removeProductFromCart} from './dbModules/CartModule'
+import { getCartByClientId, insertCart, addPublicationToCart, removePublicationFromCart} from './dbModules/CartModule'
 import {getProductQuestionAnswer}  from './dbModules/QuestionAnswerModule'
 import { Question } from './entities/Question';
 import { insertQuestion } from './dbModules/QuestionsModule';
 import { Cart } from './entities/Cart';
+import { Answer } from './entities/Answer';
 import { Product } from './entities/Product';
 import {PublicationImage} from './entities/PublicationImage'
 import { Review } from './entities/Review';
 import { getPublicationByID, getAllPublications, deletePublication, updatePublication } from './dbModules/PublicationModule';
 import { emit } from 'cluster';
 import { Publication } from './entities/Pubilcation';
+import { insertAnswer } from './dbModules/AnswerModule';
 
 
 var express = require('express');
@@ -53,7 +55,6 @@ const execQuery = async (query: string) => {
 }
 
 const getUserFromRequest = (json: any) => {
-  console.log(json.first_name)
   const firstName = json.first_name
   const lastName = json.last_name
   const direction = json.direction
@@ -84,7 +85,11 @@ const getClientFromRequest = (json: any) => {
 
 
 const getQuestionFromRequest = (json: any) => {
-  return new Question("", json.productId, json.question, json.userId)
+  return new Question("", json.publicationId, json.question, json.userId)
+}
+
+const getAnswerFromRequest = (json: any) => {
+  return new Answer("", json.questionId, json.answer, json.user)
 }
 
 const getImagesFromRequest = (json: any) => {
@@ -96,9 +101,6 @@ const getReviewsFromRequest = (json: any) => {
 }
 
 const getProductFromRequest = (json: any) => {
-  const client = getClientFromRequest(json.client)
-  const images = getImagesFromRequest(json.images)
-  const reviews = getReviewsFromRequest(json.reviews)
   return new Product(json.id, json.name, json.value)
 }
 
@@ -226,10 +228,9 @@ app.post('/admin', async function (req: Request, res: Response) {
 
 // -------------------------- CART ------------------------------
 
-app.get('/cart/:clientId', async function (req: Request, res: Response) {
-  const clientId = req.params.clientId
-  const cart = await getCartByClientId(pool, clientId)
-  res.send(cart)
+app.get('/cart/:cartId', async function (req: Request, res: Response) {
+  const cartId = req.params.cartId
+  getCartByClientId(pool, cartId).then((cart) => res.send(cart))
 });
 
 app.post('/cart', async function (req: Request, res: Response) {
@@ -237,18 +238,17 @@ app.post('/cart', async function (req: Request, res: Response) {
   insertCart(pool, cart).then((cartId) => res.send(JSON.stringify({ id: cartId })))
 });
 
-app.put('/cart/addItem', async function (req: Request, res: Response) {
+app.put('/cart/add-item', async function (req: Request, res: Response) {
   const cart = req.body.cartId
-  const product = req.body.productId
-  const cuantity = req.body.quantity
-  addProductToCart(pool, cart, product).then((r) => res.send(JSON.stringify({ id: r })))
+  const publication = req.body.publicationId
+  addPublicationToCart(pool, cart, publication).then((r) => res.send(JSON.stringify({ id: r })))
 });
 
-app.put('/cart/addItem', async function (req: Request, res: Response) {
+app.put('/cart/remove-item', async function (req: Request, res: Response) {
   const cart = req.body.cartId
-  const product = req.body.productId
+  const publication = req.body.publicationId
   const quantity = req.body.quantity
-  removeProductFromCart(pool, cart, product, quantity).then((r) => res.send(JSON.stringify({ id: r })))
+  removePublicationFromCart(pool, cart, publication, quantity).then((r) => res.send(JSON.stringify({ id: r })))
 });
 
 
@@ -282,8 +282,14 @@ app.get('/publication/:publicationId', async function (req: Request, res: Respon
 
 app.put('/publication', async function (req: Request, res: Response) {
   const publication = getPublicationFromRequest(req.body)
-  updatePublication(pool, publication).then((result) => res.send(result))
-});
+  updatePublication(pool, publication).then((result) => {
+    if(result != "") {
+      return res.sendStatus(200)
+    } else {
+      res.status(400)
+      res.send(result)
+    }
+})});
 
 
 app.delete('/publication/:publicationId', async function (req: Request, res: Response) {
@@ -296,16 +302,20 @@ app.delete('/publication/:publicationId', async function (req: Request, res: Res
 
 // ----------------------- Q&A ---------------------------------------
 
-app.get('/qa/:productId', async function (req: Request, res: Response) {
-  const productId = req.params.productId
-  const client = await getProductQuestionAnswer(pool, productId)
+app.get('/qa/:publicationId', async function (req: Request, res: Response) {
+  const publicationId = req.params.publicationId
+  const client = await getProductQuestionAnswer(pool, publicationId)
   res.send(client)
 });
 
 app.post('/question', async function (req: Request, res: Response) {
   const question = getQuestionFromRequest(req.body)
-  const questionId: string = await insertQuestion(pool, question)
-  res.send(JSON.stringify({ id: questionId }))
+  insertQuestion(pool, question).then((id) => res.sendStatus(200))
+});
+
+app.post('/answer', async function (req: Request, res: Response) {
+  const answer = getAnswerFromRequest(req.body)
+  insertAnswer(pool, answer).then((id) => res.sendStatus(200))
 });
 
 // ----------------------------------------------------------------------

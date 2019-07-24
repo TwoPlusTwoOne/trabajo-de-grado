@@ -42,7 +42,7 @@ export const updatePublication = async (pool: Pool, publication: Publication) =>
             return res.rows[0].id
         }).catch(e => {
             console.error(e.stack)
-            return ""
+            return e.stack
         })
     client.release()
     return result
@@ -50,13 +50,18 @@ export const updatePublication = async (pool: Pool, publication: Publication) =>
 
 export const deletePublication = async (pool: Pool, id: string) => {
     const client = await pool.connect()
-    const result = client.query(
-        `DELETE FROM ${Publication.tableName} WHERE id = ${id}`
-        ).then((res) => {
-            return res
-        }).catch(e => {
-            console.error(e.stack)
-            return ""
+    const result = 
+    client.query(
+        `DELETE FROM ${PublicationImage.tableName} WHERE publication_id = ${id}`
+        ).then ((x) => {
+            client.query(
+                `DELETE FROM ${Publication.tableName} WHERE id = ${id}`
+                ).then((res) => {
+                    return res
+                }).catch(e => {
+                    console.error(e.stack)
+                    return ""
+            })
         })
     client.release()
     return result

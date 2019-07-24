@@ -154,11 +154,11 @@ const cartTableInsert =
         client_id integer REFERENCES ${Client.tableName}(id)
     );`
 
-const cartProductInsert =
-    `CREATE TABLE cart_product_table (
+const cartPublicationInsert =
+    `CREATE TABLE cart_publication_table (
         id serial PRIMARY KEY,
         "cart_id" integer REFERENCES ${Cart.tableName}(id),
-        "product_id" integer REFERENCES ${Product.tableName}(id)
+        "publication_id" integer REFERENCES ${Publication.tableName}(id)
     );`
 
 const favouritesTableInsert =
@@ -208,7 +208,7 @@ const saleTableInsert =
 const questionTableInsert =
     `CREATE TABLE ${Question.tableName} (
         id serial PRIMARY KEY,
-        "product_id" integer REFERENCES ${Product.tableName}(id),
+        "publication_id" integer REFERENCES ${Publication.tableName}(id),
         "question" text,
         "user_id" integer REFERENCES ${User.tableName}(id)
     );`
@@ -222,7 +222,7 @@ const answerTableInsert =
     );`
 
 const tables = [
-    cartProductInsert,
+    cartPublicationInsert,
     saleTableInsert,
     productReviewTableInsert,
     reviewTableInsert,

@@ -19,28 +19,6 @@ export const insertAnswer = async (pool: Pool, answer: Answer) => {
     return result
 }
 
-export const getQuestionAnswer = async (pool: Pool, questionId: string) => {
-    const client = await pool.connect()
-    const result = client.query(
-        `SELECT 
-            ${Answer.tableName}.id, 
-            ${Answer.tableName}.answer, 
-            ${Answer.tableName}.question_id,
-            ${Answer.tableName}.user_id
-        FROM ${Answer.tableName}
-        LEFT OUTER JOIN ${Question.tableName} on ${Question}.tableName}.id = ${Answer.tableName}.question_id
-        WHERE ${Question.tableName}.id = ${questionId}
-        GROUP BY ${Answer.tableName}.id
-        `
-        ).then((res) => {
-            return res.rows
-        }).catch(e => {
-            console.error(e.stack)
-            return JSON.stringify({ error: e.stack })
-        })
-    client.release()
-    return result
-}
 
 export const getAnswer = async (pool: Pool, answerID: string) => {
     const client = await pool.connect()
@@ -54,7 +32,8 @@ export const getAnswer = async (pool: Pool, answerID: string) => {
         WHERE ${Answer.tableName}.id = ${answerID}
         `
         ).then((res) => {
-            return res.rows
+            const a = res.rows[0]
+            return new Answer(a.id, a.answer, a.question_id, a.user_id)
         }).catch(e => {
             console.error(e.stack)
             return JSON.stringify({ error: e.stack })

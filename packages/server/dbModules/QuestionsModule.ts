@@ -1,13 +1,13 @@
 import { Question } from '../entities/Question'
-import {Product} from '../entities/Product'
 import { Pool } from 'pg';
+import { Publication } from '../entities/Pubilcation';
 
 
 export const insertQuestion = async (pool: Pool, question: Question) => {
     const client = await pool.connect()
     const result: Promise<string> = client.query(
-        `INSERT INTO ${Question.tableName} (question, product_id, user_id) 
-        VALUES ('${question.question}', '${question.productId}', '${question.userId}') RETURNING id`
+        `INSERT INTO ${Question.tableName} (question, publication_id, user_id) 
+        VALUES ('${question.question}', '${question.publicationId}', '${question.userId}') RETURNING id`
         ).then((res) => {
             return res.rows[0].id
         }).catch(e => {
@@ -18,21 +18,21 @@ export const insertQuestion = async (pool: Pool, question: Question) => {
     return result
 }
 
-export const getProductQuestions = async (pool: Pool, productId: string) => {
+export const getPublicationQuestions = async (pool: Pool, publicationId: string) => {
     const client = await pool.connect()
     const result = client.query(
         `SELECT 
             ${Question.tableName}.id, 
             ${Question.tableName}.question, 
-            ${Question.tableName}.product_id,
+            ${Question.tableName}.publication_id,
             ${Question.tableName}.user_id
         FROM ${Question.tableName}
-        LEFT OUTER JOIN ${Question.tableName} on ${Product.tableName}.id = ${Question.tableName}.product_id
-        WHERE ${Product.tableName}.id = ${productId}
+        LEFT OUTER JOIN ${Question.tableName} on ${Publication.tableName}.id = ${Question.tableName}.publication_id
+        WHERE ${Publication.tableName}.id = ${publicationId}
         GROUP BY ${Question.tableName}.id
         `
         ).then((res) => {
-            return res.rows
+            return res.rows.map(q => new Question(q.id, q.question, q.publication_id, q.user_id))
         }).catch(e => {
             console.error(e.stack)
             return JSON.stringify({ error: e.stack })
@@ -47,13 +47,14 @@ export const getQuestion = async (pool: Pool, questionID: string) => {
         `SELECT 
             ${Question.tableName}.id, 
             ${Question.tableName}.question, 
-            ${Question.tableName}.product_id,
+            ${Question.tableName}.publication_id,
             ${Question.tableName}.user_id
         FROM ${Question.tableName}
         WHERE ${Question.tableName}.id = ${questionID}
         `
         ).then((res) => {
-            return res.rows
+            const q = res.rows[0]
+            return new Question(q.id, q.question, q.publication_id, q.user_id)
         }).catch(e => {
             console.error(e.stack)
             return JSON.stringify({ error: e.stack })
