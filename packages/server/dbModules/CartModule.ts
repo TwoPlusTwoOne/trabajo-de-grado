@@ -12,7 +12,7 @@ export const insertCart = async (pool: Pool, cart: Cart) => {
         RETURNING id`
         ).then((res) => {
                 const cartId = res.rows[0].id
-                cart.products.forEach(p => addProductToCart(pool, cartId, p))
+                cart.products.forEach(p => addProductToCart(pool, cartId, p.id))
                 return cartId
         }).catch(e => {
             console.error(e.stack)
@@ -22,11 +22,11 @@ export const insertCart = async (pool: Pool, cart: Cart) => {
     return result
 }
 
-export const addProductToCart = async (pool: Pool, cartId: string, p:Product) => {
+export const addProductToCart = async (pool: Pool, cartId: string, porductId: string) => {
     const client = await pool.connect()
     const result: Promise<string> = client.query(
         `INSERT INTO cart_product_table (cart_id, product_id) 
-        VALUES ('${cartId}', '${p.id}')
+        VALUES ('${cartId}', '${porductId}')
         RETURNING id`
         ).then((res) => {
                 return res.rows[0].id
@@ -37,7 +37,20 @@ export const addProductToCart = async (pool: Pool, cartId: string, p:Product) =>
     client.release()
     return result
 }
-const util = require('util')
+export const removeProductFromCart = async (pool: Pool, cartId: string, porductId: string, quantity: string) => {
+    const client = await pool.connect()
+    const result = client.query(
+        `DELETE TOP ${quantity} FROM cart_product_table
+        WHERE cart_id= ${cartId} AND product_id= ${porductId}`
+        ).then((res) => {
+                return res
+        }).catch(e => {
+            console.error(e.stack)
+            return ""
+        })
+    client.release()
+    return result
+}
 
 
 export const getCartProducts = async (pool: Pool, clientId: string) => {

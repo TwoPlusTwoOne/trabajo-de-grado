@@ -26,6 +26,43 @@ export const insertPublication = async (pool: Pool, publication: Publication) =>
     return result
 }
 
+export const updatePublication = async (pool: Pool, publication: Publication) => {
+    const client = await pool.connect()
+    const result: Promise<string> = client.query(
+        `UPDATE ${Publication.tableName} 
+        SET name = '${publication.name}', 
+        value = '${publication.value}', 
+        description = '${publication.description}', 
+        seller_id = '${publication.seller.id}', 
+        product_id = '${publication.product.id}'
+        WHERE id = ${publication.id}
+        RETURNING id`
+        ).then((res) => {
+            publication.images.forEach(i => insertImagePublication(pool, new PublicationImage(i.id, i.image, res.rows[0].id)))
+            return res.rows[0].id
+        }).catch(e => {
+            console.error(e.stack)
+            return ""
+        })
+    client.release()
+    return result
+}
+
+export const deletePublication = async (pool: Pool, id: string) => {
+    const client = await pool.connect()
+    const result = client.query(
+        `DELETE FROM ${Publication.tableName} WHERE id = ${id}`
+        ).then((res) => {
+            return res
+        }).catch(e => {
+            console.error(e.stack)
+            return ""
+        })
+    client.release()
+    return result
+}
+
+
 
 export const getAllPublications = async (pool: Pool) => {
     const client = await pool.connect()

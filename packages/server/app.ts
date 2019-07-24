@@ -7,7 +7,7 @@ import { Request, Response } from 'express';
 import { Client } from './entities/Client'
 import { Admin } from './entities/Admin'
 import { boot } from './boot'
-import { getCartByClientId, insertCart } from './dbModules/CartModule'
+import { getCartByClientId, insertCart, addProductToCart, removeProductFromCart} from './dbModules/CartModule'
 import {getProductQuestionAnswer}  from './dbModules/QuestionAnswerModule'
 import { Question } from './entities/Question';
 import { insertQuestion } from './dbModules/QuestionsModule';
@@ -15,8 +15,9 @@ import { Cart } from './entities/Cart';
 import { Product } from './entities/Product';
 import {PublicationImage} from './entities/PublicationImage'
 import { Review } from './entities/Review';
-import { getPublicationByID, getAllPublications } from './dbModules/PublicationModule';
+import { getPublicationByID, getAllPublications, deletePublication, updatePublication } from './dbModules/PublicationModule';
 import { emit } from 'cluster';
+import { Publication } from './entities/Pubilcation';
 
 
 var express = require('express');
@@ -52,8 +53,9 @@ const execQuery = async (query: string) => {
 }
 
 const getUserFromRequest = (json: any) => {
-  const firstName = json.firstName;
-  const lastName = json.lastName
+  console.log(json.first_name)
+  const firstName = json.first_name
+  const lastName = json.last_name
   const direction = json.direction
   const dni = json.dni
   const password = json.password
@@ -75,9 +77,8 @@ const getUserFromRequest = (json: any) => {
 }
 
 const getClientFromRequest = (json: any) => {
-  const sellerCalification = json.sellerCalification;
   const client = <Client> getUserFromRequest(json)
-  client.sellerCalification = sellerCalification
+  client.sellerCalification = json.sellerCalification
   return client
 }
 
@@ -106,20 +107,17 @@ const getCartFromRequest = (json: any) => {
   return new Cart(json.id, json.clientId, products)
 }
 
-app.get('/user', async (req: Request, res: Response) => {
-  const result = await execQuery('SELECT * FROM user_table')
-  res.send(result);
-})
+const getPublicationFromRequest = (json: any) => {
+  const seller = getClientFromRequest(json.seller)
+  const images = getImagesFromRequest(json.images)
+  const product = getProductFromRequest(json.product)
+  return new Publication(json.id, json.name, json.value, seller, images, product, json.description)
+}
 
-app.get('/user/:userId', async function (req: Request, res: Response) {
-  const userId = req.params.userId
-  const result = await execQuery(`SELECT * FROM user_table WHERE id = ${userId}`)
-  res.send(result);
-});
 
 app.post('/login', async function (req: Request, res: Response) {
-  const userEmail = req.body.email;
-  const userPassword = req.body.password;
+  const userEmail = req.body.email
+  const userPassword = req.body.password
   loginUser(pool, userEmail, userPassword).then((r) => {
     if(r.id !== null && r.id !== ""){
       res.send(r)
@@ -142,18 +140,31 @@ app.delete('/all', async function (req: Request, res: Response) {
   ).then((r) => res.send(r))
 });
 
+
+// -------------------------- USER ----------------------------------------
+
 app.post('/user', async function (req: Request, res: Response) {
   const user = getUserFromRequest(req.body)
   const userID: string = await insertUser(pool, user)
   res.send(JSON.stringify({ id: userID }))
 });
 
+app.get('/user', async (req: Request, res: Response) => {
+  const result = await execQuery('SELECT * FROM user_table')
+  res.send(result);
+})
 
-app.post('/admin', async function (req: Request, res: Response) {
-  const admin = <Admin> getUserFromRequest(req.body)
-  const userID: string = await insertAdmin(pool, admin)
-  res.send(JSON.stringify({ id: userID }))
+app.get('/user/:userId', async function (req: Request, res: Response) {
+  const userId = req.params.userId
+  const result = await execQuery(`SELECT * FROM user_table WHERE id = ${userId}`)
+  res.send(result);
 });
+
+// ----------------------------------------------------------------------------
+
+
+// ----------------------------------- CLIENT --------------------------------
+
 
 app.post('/client', async function (req: Request, res: Response) {
   const user = getClientFromRequest(req.body)
@@ -166,6 +177,24 @@ app.get('/client/:clientId', async function (req: Request, res: Response) {
   const client = await getClientByID(pool, clientId)
   res.send(client)
 });
+
+app.post('/client/login', async function (req: Request, res: Response) {
+  const email = req.body.email
+  const password = req.body.password
+  loginClient(pool, email, password).then((r) => {
+    if(r.id !== null && r.id !== ""){
+      res.send(r)
+    } else{
+      res.sendStatus(401)
+    }
+  })})
+
+// ----------------------------------------------------------------------------
+
+
+
+// -------------------------- ADMIN -----------------------------
+
 
 app.get('/admin/:adminId', async function (req: Request, res: Response) {
   const adminId = req.params.adminId
@@ -184,16 +213,18 @@ app.post('/admin/login', async function (req: Request, res: Response) {
     }
   })})
 
-app.post('/client/login', async function (req: Request, res: Response) {
-  const email = req.body.email
-  const password = req.body.password
-  loginClient(pool, email, password).then((r) => {
-    if(r.id !== null && r.id !== ""){
-      res.send(r)
-    } else{
-      res.sendStatus(401)
-    }
-  })})
+app.post('/admin', async function (req: Request, res: Response) {
+  const admin = <Admin> getUserFromRequest(req.body)
+  const userID: string = await insertAdmin(pool, admin)
+  res.send(JSON.stringify({ id: userID }))
+});
+
+
+// --------------------------------------------------------------
+
+
+
+// -------------------------- CART ------------------------------
 
 app.get('/cart/:clientId', async function (req: Request, res: Response) {
   const clientId = req.params.clientId
@@ -203,9 +234,28 @@ app.get('/cart/:clientId', async function (req: Request, res: Response) {
 
 app.post('/cart', async function (req: Request, res: Response) {
   const cart = getCartFromRequest(req.body)
-  const cartId: string = await insertCart(pool, cart)
-  res.send(JSON.stringify({ id: cartId }))
+  insertCart(pool, cart).then((cartId) => res.send(JSON.stringify({ id: cartId })))
 });
+
+app.put('/cart/addItem', async function (req: Request, res: Response) {
+  const cart = req.body.cartId
+  const product = req.body.productId
+  const cuantity = req.body.quantity
+  addProductToCart(pool, cart, product).then((r) => res.send(JSON.stringify({ id: r })))
+});
+
+app.put('/cart/addItem', async function (req: Request, res: Response) {
+  const cart = req.body.cartId
+  const product = req.body.productId
+  const quantity = req.body.quantity
+  removeProductFromCart(pool, cart, product, quantity).then((r) => res.send(JSON.stringify({ id: r })))
+});
+
+
+// --------------------------------------------------------------
+
+
+// ----------------------- PRODUCT -------------------------------
 
 app.get('/product', async function (req: Request, res: Response) {
   getAllProducts(pool).then((result) => res.send(result))
@@ -216,6 +266,11 @@ app.get('/product/:productId', async function (req: Request, res: Response) {
   getProductByID(pool, productId).then((result) => res.send(result))
 });
 
+// -----------------------------------------------------------------
+
+
+// ----------------------- PUBLICATION -------------------------------
+
 app.get('/publication', async function (req: Request, res: Response) {
   getAllPublications(pool).then((result) => res.send(result))
 });
@@ -224,6 +279,22 @@ app.get('/publication/:publicationId', async function (req: Request, res: Respon
   const publicationId = req.params.publicationId
   getPublicationByID(pool, publicationId).then((result) => res.send(result))
 });
+
+app.put('/publication', async function (req: Request, res: Response) {
+  const publication = getPublicationFromRequest(req.body)
+  updatePublication(pool, publication).then((result) => res.send(result))
+});
+
+
+app.delete('/publication/:publicationId', async function (req: Request, res: Response) {
+  const publicationId = req.params.publicationId
+  deletePublication(pool, publicationId).then((result) => res.send(result))
+});
+
+// -------------------------------------------------------------------
+
+
+// ----------------------- Q&A ---------------------------------------
 
 app.get('/qa/:productId', async function (req: Request, res: Response) {
   const productId = req.params.productId
@@ -236,6 +307,9 @@ app.post('/question', async function (req: Request, res: Response) {
   const questionId: string = await insertQuestion(pool, question)
   res.send(JSON.stringify({ id: questionId }))
 });
+
+// ----------------------------------------------------------------------
+
 app.listen(3001, function () {
   console.log('Server started');
 });
