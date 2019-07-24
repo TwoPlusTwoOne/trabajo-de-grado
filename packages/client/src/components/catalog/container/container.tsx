@@ -22,7 +22,7 @@ export class Container extends React.PureComponent<Props, State> {
 
 
   handleComponentClick = (product: Product) => {
-    this.setState({ redirect: `/products/${product.id}` })
+    this.setState({ redirect: `/publications/${product.id}` })
   }
 
   render() {

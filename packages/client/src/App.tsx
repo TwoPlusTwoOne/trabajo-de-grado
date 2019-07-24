@@ -61,7 +61,7 @@ class App extends PureComponent<{}, State> {
               <UnsecuredRoute exact path="/login" component={LoginView} />
               <SecuredRoute exact path="/" component={Home} />
               <SecuredRoute exact path="/my-publications" component={MyPublicationsView} />
-              <SecuredRoute exact path="/products/:productId" component={ProductView} />
+              <SecuredRoute exact path="/publications/:productId" component={ProductView} />
             </Switch>
           </Base>
         </Router>

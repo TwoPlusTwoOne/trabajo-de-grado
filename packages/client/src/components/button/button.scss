@@ -1,5 +1,6 @@
 :local {
   .button {
+    font-family: "Open Sans", Lato, Arial, sans-serif;
     border-radius: 4px;
     cursor: pointer;
     padding: 15px;
@@ -11,9 +12,23 @@
       &:active {
         background-color: rgba(63, 81, 181, .9);
       }
+    }
 
-      .secondary {
-        background-color: gray;
+    &.secondary {
+      background-color: white;
+      color: #989a9b;
+      border: 1px solid #989a9b;
+
+      &:hover {
+        color: white;
+        background-color: #cacbcc;
+        border-color: #cacbcc;
+      }
+
+      &:active {
+        color: white;
+        background-color: rgba(202, 203, 204, .8);
+        border-color: rgba(202, 203, 204, .8);
       }
     }
 

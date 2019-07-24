@@ -11,7 +11,7 @@ export type Props = {
 export class Button extends React.Component<Props> {
   render() {
     const { className, kind, onClick, children } = this.props
-    return <button onClick={onClick} className={classNames(className, styles.button, styles[kind])}>
+    return <button onClick={onClick} className={classNames(styles.button, styles[kind], className)}>
       {children}
     </button>
   }

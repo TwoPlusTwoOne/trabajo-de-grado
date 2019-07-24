@@ -29,7 +29,7 @@ class SearchBarContainer extends React.PureComponent<Props, State> {
   }
 
   handleClickItem = (product: Product) => {
-    this.props.history.push(`/products/${product.id}`)
+    this.props.history.push(`/publications/${product.id}`)
   }
 
   render() {
