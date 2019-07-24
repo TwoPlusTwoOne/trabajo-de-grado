@@ -175,10 +175,11 @@ const publicationImageTableInsert =
         publication_id integer REFERENCES ${Publication.tableName}(id)
     );`
 
-const reviewTableInsert =
+const sellerReviewTableInsert =
     `CREATE TABLE ${Review.tableName} (
         id serial PRIMARY KEY,
         buyer_id integer REFERENCES ${Client.tableName}(id),
+        seller_id integer REFERENCES ${Client.tableName}(id),
         description text,
         calification integer
     );`
@@ -186,8 +187,10 @@ const reviewTableInsert =
 const productReviewTableInsert =
     `CREATE TABLE product_review_table (
         id serial PRIMARY KEY,
+        buyer_id integer REFERENCES ${Client.tableName}(id),
         "product_id" integer REFERENCES ${Product.tableName}(id),
-        "review_id" integer REFERENCES ${Review.tableName}(id)
+        description text,
+        calification integer
     );`
 
 const roleTableInsert =
@@ -225,7 +228,7 @@ const tables = [
     cartPublicationInsert,
     saleTableInsert,
     productReviewTableInsert,
-    reviewTableInsert,
+    sellerReviewTableInsert,
     favouritesTableInsert,
     answerTableInsert,
     questionTableInsert,
