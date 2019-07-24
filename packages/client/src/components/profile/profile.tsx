@@ -10,6 +10,9 @@ import Typography from '@material-ui/core/Typography/Typography'
 
 export type ExternalProps = {
   user: User
+  onClickGoToMyPublications: () => void
+  onClickGoToMyOrders: () => void
+  onClickGoToMySales: () => void
 }
 
 export type Props = ExternalProps & {
@@ -35,6 +38,7 @@ class Profile extends React.PureComponent<Props, State> {
   setAnchorEl = (anchorEl: HTMLElement | null) => this.setState({ anchorEl })
 
   renderMenu = () => {
+    const { onClickGoToMyOrders, onClickGoToMyPublications, onClickGoToMySales } = this.props
     const { anchorEl } = this.state
     const isMenuOpen = Boolean(anchorEl)
 
@@ -47,13 +51,30 @@ class Profile extends React.PureComponent<Props, State> {
         open={isMenuOpen}
         onClose={this.handleMenuClose}
       >
+        <MenuItem onClick={this.handleClickGoToMyPublications}>My publications</MenuItem>
+        <MenuItem onClick={this.handleClickGoToMySales}>My sales</MenuItem>
+        <MenuItem onClick={this.handleClickGoToMyOrders}>My orders</MenuItem>
         <MenuItem onClick={this.logOut}>Log out</MenuItem>
       </Menu>
     )
   }
 
+  handleClickGoToMyPublications = () => {
+    this.props.onClickGoToMyPublications()
+    this.handleMenuClose()
+  }
+
+  handleClickGoToMySales = () => {
+    this.props.onClickGoToMySales()
+    this.handleMenuClose()
+  }
+
+  handleClickGoToMyOrders = () => {
+    this.props.onClickGoToMyOrders()
+    this.handleMenuClose()
+  }
   logOut = () => {
-    this.props.onLogOut();
+    this.props.onLogOut()
   }
 
   render() {
@@ -61,7 +82,7 @@ class Profile extends React.PureComponent<Props, State> {
       <div className={styles.container}>
         <div className={styles.profileWrapper}>
           <div>
-            <Typography color={"inherit"} variant={"subtitle1"}>Welcome, {this.props.user.first_name}!</Typography>
+            <Typography color={'inherit'} variant={'subtitle1'}>Welcome, {this.props.user.first_name}!</Typography>
           </div>
           <MenuItem className={styles.profileIcon} onClick={this.handleProfileMenuOpen}>
             <IconButton
