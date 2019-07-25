@@ -15,13 +15,15 @@ import { Cart } from './entities/Cart';
 import { Answer } from './entities/Answer';
 import { Product } from './entities/Product';
 import {PublicationImage} from './entities/PublicationImage'
-import { Review } from './entities/Review';
+import { SellerReview } from './entities/SellerReview';
 import { getPublicationByID, getAllPublications, deletePublication, updatePublication } from './dbModules/PublicationModule';
 import { emit } from 'cluster';
 import { Publication } from './entities/Pubilcation';
 import { insertAnswer } from './dbModules/AnswerModule';
 import { insertSale, getSale } from './dbModules/SaleModule';
 import { Sale } from './entities/Sale';
+import { getSellerReviewsForClient, getSellerReviewsForSeller, insertSellerReview } from './dbModules/SellerReviewModule';
+import { insertProductReview, getProductReviewsForClient, getProductReviewsForProduct } from './dbModules/ProductReviewModule';
 
 var express = require('express');
 var app = express();
@@ -98,7 +100,7 @@ const getImagesFromRequest = (json: any) => {
 }
 
 const getReviewsFromRequest = (json: any) => {
-  return json.map(r => new Review(r.id, getClientFromRequest(r.buyer), r.description, r.calification))
+  return json.map(r => new SellerReview(r.id, getClientFromRequest(r.buyer), getClientFromRequest(r.seller), r.description, r.calification))
 }
 
 const getProductFromRequest = (json: any) => {
@@ -121,7 +123,7 @@ const getSaleFromRequest = (json: any) => {
   const product = getProductFromRequest(json.product)
   const buyer = getClientFromRequest(json.buyer)
   const reviews =  json.reviews.map(r => getReviewsFromRequest(r))
-  return new Sale(json.id, product, buyer, reviews, json.traking_id)
+  return new Sale(json.id, product, buyer, json.traking_id)
 }
 
 
@@ -347,6 +349,57 @@ app.post('/sale', async function (req: Request, res: Response) {
 });
 
 // ----------------------------------------------------------------------
+
+
+// ----------------------- REVIEW ---------------------------------------
+
+// Sellers reviews made by buery ':id'
+app.get('/buyer/seller/review/:id', async function (req: Request, res: Response) {
+  const buyer = req.params.id
+  getSellerReviewsForClient(pool, buyer).then((sale) => res.send(sale))
+});
+
+// Seller reviews
+app.get('/seller/review/:id', async function (req: Request, res: Response) {
+  const seller = req.params.id
+  getSellerReviewsForSeller(pool, seller).then((sale) => res.send(sale))
+});
+
+app.post('/seller/review', async function (req: Request, res: Response) {
+  const uuidv1 = require('uuid/v1');
+
+  const buyer_id = req.body.buyer_id
+  const seller_id = req.body.seller_id
+  const description = req.body.description
+  const calification = req.body.calification
+  insertSellerReview(pool, buyer_id, seller_id, description, calification).then((id) => res.sendStatus(200))
+});
+
+
+// Products reviews made by buery ':id'
+app.get('/buyer/product/review/:id', async function (req: Request, res: Response) {
+  const buyer = req.params.id
+  getProductReviewsForClient(pool, buyer).then((sale) => res.send(sale))
+});
+
+// Products reviews
+app.get('/product/review/:id', async function (req: Request, res: Response) {
+  const seller = req.params.id
+  getProductReviewsForProduct(pool, seller).then((sale) => res.send(sale))
+});
+
+app.post('/product/review', async function (req: Request, res: Response) {
+  const uuidv1 = require('uuid/v1');
+
+  const buyer_id = req.body.buyer_id
+  const product_id = req.body.product_id
+  const description = req.body.description
+  const calification = req.body.calification
+  insertProductReview(pool, buyer_id, product_id, description, calification).then((id) => res.sendStatus(200))
+});
+
+// ----------------------------------------------------------------------
+
 
 app.listen(3001, function () {
   console.log('Server started');

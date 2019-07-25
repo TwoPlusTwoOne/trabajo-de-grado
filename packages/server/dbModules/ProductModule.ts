@@ -1,27 +1,24 @@
 import { Product } from '../entities/Product'
 import { Pool } from 'pg';
-import {insertReview, getReviewsForProduct} from './ReviewModule'
-import { Review } from '../entities/Review';
+import {getProductReviewsForProduct} from './ProductReviewModule'
+import { SellerReview } from '../entities/SellerReview';
 import { ProductBuilder } from '../builders/ProductBuilder';
+import { ProductReview } from '../entities/ProductReview';
 
 
 export const insertProduct = async (pool: Pool, product: Product) => {
     const client = await pool.connect()
-    const result: Promise<Product> = client.query(
+    const result: Promise<string> = client.query(
         `INSERT INTO ${Product.tableName} (name) 
         VALUES ('${product.name}')
         RETURNING id`
         ).then((res) => {
             const productId = res.rows[0]
-            return Promise.all(
-                product.reviews.map(i => insertReview(pool, new Review(i.id, i.buyer, i.description, i.calification)))
-                ).then((reviewIds) => {
-                return Promise.all(reviewIds.map(reviewId => insertProductReview(pool, productId, reviewId))
-                )})
+            return res.rows[0].id
                 .then(() => {return productId})
         }).catch(e => {
             console.error(e.stack)
-            return new ProductBuilder().build()
+            return ""
         })
     client.release()
     return result
@@ -72,7 +69,7 @@ export const getProductByID = async (pool: Pool, productId: string) => {
         `
         ).then((r) => {
             const result =  r.rows[0]
-            return getReviewsForProduct(pool, productId).then((reviews: Review[]) => {
+            return getProductReviewsForProduct(pool, productId).then((reviews: ProductReview[]) => {
                 return  new Product(result.id, result.name, reviews)
             })
         }).catch(e => {

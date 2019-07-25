@@ -1,11 +1,11 @@
 import { Product } from '../entities/Product'
-import { Review } from '../entities/Review';
+import { SellerReview } from '../entities/SellerReview';
 
 class ProductBuilder {
 
     private id: string
     private name: string
-    private reviews: Review[] = []
+    private reviews: SellerReview[] = []
 
     withName(name: string){
         this.name = name
@@ -13,7 +13,7 @@ class ProductBuilder {
     }
 
 
-    withReview(review: Review){
+    withReview(review: SellerReview){
         this.reviews.push( review )
         return this
     }

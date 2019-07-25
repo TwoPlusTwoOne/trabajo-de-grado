@@ -1,11 +1,10 @@
 import { getProductByID } from './ProductModule'
 import { getClientByID } from './ClientModule'
-import { getReviewsForProduct } from './ReviewModule'
 import { Pool } from 'pg';
 import {Sale} from '../entities/Sale'
 import { Product } from '../entities/Product';
 import { Client } from '../entities/Client';
-import { Review } from '../entities/Review';
+import { SellerReview } from '../entities/SellerReview';
 import { ProductBuilder } from '../builders/ProductBuilder';
 import { ClientBuilder } from '../builders/ClientBuilder';
 
@@ -36,14 +35,12 @@ export const getSale = async (pool: Pool, id: string) => {
                 const r = res.rows[0]
                 return getProductByID(pool, r.product_id).then ((product: Product) => {
                     return getClientByID(pool, r.buyer_id).then((client: Client) => {
-                        return getReviewsForProduct(pool, product.id).then((reviews: Review[]) => {
-                            return new Sale(id, product, client, reviews, r.traking_id)
-                        })
+                        return new Sale(id, product, client, r.traking_id)
                     })
                 })
         }).catch(e => {
             console.error(e.stack)
-            return new Sale("", new ProductBuilder().build(), new ClientBuilder().build(), [], "")
+            return new Sale("", new ProductBuilder().build(), new ClientBuilder().build(), "")
         })
     client.release()
     return result
