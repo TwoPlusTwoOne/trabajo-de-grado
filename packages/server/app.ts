@@ -278,7 +278,11 @@ app.get('/publication', async function (req: Request, res: Response) {
 
 app.get('/publication/:publicationId', async function (req: Request, res: Response) {
   const publicationId = req.params.publicationId
-  getPublicationByID(pool, publicationId).then((result) => res.send(result))
+  getPublicationByID(pool, publicationId).then((result) => {
+    if (result)
+    res.send(result)
+    else res.status(404).send('Not found')
+  })
 });
 
 app.put('/publication', async function (req: Request, res: Response) {

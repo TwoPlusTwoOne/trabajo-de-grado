@@ -50,7 +50,7 @@ export const updatePublication = async (pool: Pool, publication: Publication) =>
 
 export const deletePublication = async (pool: Pool, id: string) => {
     const client = await pool.connect()
-    const result = 
+    const result =
     client.query(
         `DELETE FROM ${PublicationImage.tableName} WHERE publication_id = ${id}`
         ).then ((x) => {
@@ -102,6 +102,7 @@ export const getPublicationByID = async (pool: Pool, publicationID: string) => {
         `
         ).then((r) => {
             const result = r.rows[0]
+            if (!result) return null
             const productId = result.product_id
             return getImagesForPublication(pool, publicationID).then((images: PublicationImage[]) => {
                 return getProductByID(pool, productId).then((p: Product) => {

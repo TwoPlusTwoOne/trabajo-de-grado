@@ -43,6 +43,7 @@ export class MyPublicationsView extends React.PureComponent<Props, State> {
   }
 
   handleGoToEditPublication = (publicationId: number) => {
+    this.setState({ redirect: `/my-publications/${publicationId}/edit` })
   }
 
   render() {
