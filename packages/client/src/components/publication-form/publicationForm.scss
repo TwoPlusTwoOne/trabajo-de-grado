@@ -1,0 +1,28 @@
+:local {
+  .fieldPair {
+    &:not(:last-child) {
+      margin-bottom: 50px;
+    }
+
+    .field {
+      width: 100%;
+
+      &.price {
+        width: auto;
+      }
+    }
+  }
+
+  .buttons {
+    display: flex;
+    justify-content: flex-end;
+
+    .button {
+      width: 100px;
+
+      &:not(:last-child) {
+        margin-right: 20px;
+      }
+    }
+  }
+}

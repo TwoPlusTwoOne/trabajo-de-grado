@@ -1,6 +1,6 @@
 import * as React from 'react'
 import * as styles from './editPublicationView.scss'
-import { RouteComponentProps } from 'react-router'
+import { Redirect, RouteComponentProps } from 'react-router'
 import { getPublicationById } from '../../api/api'
 import { Loader } from '../../components/loader/loader'
 import { PublicationForm } from '../../components/publication-form/publicationForm'
@@ -14,6 +14,7 @@ export type Props = RouteComponentProps<RouteParams> & {}
 export type State = {
   publication: Publication | null
   isFetchingPublication: boolean
+  redirect?: string
 }
 
 export class EditPublicationView extends React.PureComponent<Props, State> {
@@ -36,20 +37,31 @@ export class EditPublicationView extends React.PureComponent<Props, State> {
       .catch(() => this.setState({ publication: null, isFetchingPublication: false }))
   }
 
+  handleSave = (publication: Publication) => {
+  }
+
+  handleCancel = () => {
+    this.setState({ redirect: '/my-publications' })
+  }
+
   render() {
-    const { publication, isFetchingPublication } = this.state
+    const { publication, isFetchingPublication, redirect } = this.state
+
+    if (redirect) return <Redirect to={redirect} />
 
     if (isFetchingPublication) return <Loader />
-
-    console.log({ publication })
-
 
     return (
       <div className={styles.container}>
         <Paper className={styles.paper}>
           {
             publication
-              ? <PublicationForm publication={publication} />
+              ? <PublicationForm
+                submitLabel={'Save'}
+                publication={publication}
+                onSubmit={this.handleSave}
+                onCancel={this.handleCancel}
+              />
               : <EmptyStateMessage message={'No publication for the given id was found'} />
           }
         </Paper>
