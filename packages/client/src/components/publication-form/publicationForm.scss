@@ -13,6 +13,26 @@
     }
   }
 
+  .deleteButtonRow {
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+
+    .deleteButton {
+      padding: 10px;
+
+      .deleteButtonContent {
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+
+        > svg {
+          margin-right: 10px;
+        }
+      }
+    }
+  }
+
   .buttons {
     display: flex;
     justify-content: flex-end;

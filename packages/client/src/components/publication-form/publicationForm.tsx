@@ -4,20 +4,28 @@ import classNames from 'classnames'
 import TextField from '@material-ui/core/TextField/TextField'
 import Typography from '@material-ui/core/Typography/Typography'
 import { Button } from '../button/button'
+import Delete from '@material-ui/icons/Delete'
+import { ConfirmationDialog } from '../confirmation-dialog/confirmationDialog'
+import { Loader } from '../loader/loader'
 
 export type Props = {
   publication?: Publication
-  product?: Product
-  seller?: Seller
+  product: Product
+  seller: Seller
   submitLabel: string
+  isSubmitting: boolean
+  isDeleting: boolean
   onCancel: () => void
   onSubmit: (publication: Publication) => void
+  onDelete: (publicationId: number) => void
 }
 
 export type State = {
   fields: {
     [K in keyof Publication]?: Publication[K]
   }
+  isNew: boolean
+  isDeleteConfirmationOpen: boolean
 }
 
 export class PublicationForm extends React.PureComponent<Props, State> {
@@ -25,7 +33,7 @@ export class PublicationForm extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props)
 
-    this.state = { fields: {} }
+    this.state = { fields: {}, isNew: true, isDeleteConfirmationOpen: false }
   }
 
   componentDidMount(): void {
@@ -40,7 +48,7 @@ export class PublicationForm extends React.PureComponent<Props, State> {
   mapPublicationToState = () => {
     const { seller, product, publication } = this.props
     if (publication) {
-      this.setState({ fields: { ...publication } })
+      this.setState({ fields: { ...publication }, isNew: false })
     } else {
       if (!seller || !product) return
 
@@ -52,7 +60,9 @@ export class PublicationForm extends React.PureComponent<Props, State> {
           images: [],
           product,
           seller,
+          id: undefined,
         },
+        isNew: true,
       })
     }
   }
@@ -66,14 +76,49 @@ export class PublicationForm extends React.PureComponent<Props, State> {
   }
 
   handleSubmit = () => {
+    const { fields } = this.state
+    const { value = '', images = [], description = '', name = '', id = -1 } = fields
+    const { product, seller } = this.props
+
+    this.props.onSubmit({ value, images, description, name, product, seller, id })
+  }
+
+  openDeleteConfirmation = () => this.setState({ isDeleteConfirmationOpen: true })
+
+  closeDeleteConfirmation = () => this.setState({ isDeleteConfirmationOpen: false })
+
+  handleDeletePublication = () => {
+    if (this.props.publication) this.props.onDelete(this.props.publication.id)
   }
 
   render() {
-    const { submitLabel } = this.props
-    const { name, description, value, images } = this.state.fields
+    const { submitLabel, isSubmitting, isDeleting } = this.props
+    const { fields, isNew, isDeleteConfirmationOpen } = this.state
+
+    const { name, description, value, images } = fields
 
     return (
       <div>
+        <ConfirmationDialog
+          open={isDeleteConfirmationOpen}
+          onCancel={this.closeDeleteConfirmation}
+          content={isDeleting ? <Loader /> : 'Deleting this publication is a permanent action.'}
+          title={'Are you sure you want to delete this publication?'}
+          cancelLabel={'Cancel'}
+          confirmLabel={'Delete'}
+          onConfirm={this.handleDeletePublication}
+        />
+        {
+          !isNew &&
+          <div className={styles.deleteButtonRow}>
+            <Button className={styles.deleteButton} kind={'danger'} onClick={this.openDeleteConfirmation}>
+              <div className={styles.deleteButtonContent}>
+                <Delete />
+                <Typography color={'inherit'} variant={'button'}>Delete</Typography>
+              </div>
+            </Button>
+          </div>
+        }
         <div className={styles.fieldPair}>
           <div>
             <Typography variant={'h6'}>Publication name</Typography>
@@ -115,12 +160,18 @@ export class PublicationForm extends React.PureComponent<Props, State> {
         </div>
         {/*<div>{images}</div>*/}
         <div className={styles.buttons}>
-          <Button className={styles.button} onClick={this.handleCancel} kind={'secondary'}>
-            <Typography color={'inherit'} variant={'button'}>Cancel</Typography>
-          </Button>
-          <Button className={styles.button} onClick={this.handleSubmit} kind={'primary'}>
-            <Typography color={'inherit'} variant={'button'}>{submitLabel}</Typography>
-          </Button>
+          {
+            isSubmitting
+              ? <Loader />
+              : <>
+                <Button className={styles.button} onClick={this.handleCancel} kind={'secondary'}>
+                  <Typography color={'inherit'} variant={'button'}>Cancel</Typography>
+                </Button>
+                <Button className={styles.button} onClick={this.handleSubmit} kind={'primary'}>
+                  <Typography color={'inherit'} variant={'button'}>{submitLabel}</Typography>
+                </Button>
+              </>
+          }
         </div>
       </div>
     )

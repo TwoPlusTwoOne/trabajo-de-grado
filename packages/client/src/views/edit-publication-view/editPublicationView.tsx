@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as styles from './editPublicationView.scss'
 import { Redirect, RouteComponentProps } from 'react-router'
-import { getPublicationById } from '../../api/api'
+import { deletePublication, getPublicationById, updatePublication } from '../../api/api'
 import { Loader } from '../../components/loader/loader'
 import { PublicationForm } from '../../components/publication-form/publicationForm'
 import { EmptyStateMessage } from '../../components/empty-state-message/emptyStateMessage'
@@ -14,6 +14,8 @@ export type Props = RouteComponentProps<RouteParams> & {}
 export type State = {
   publication: Publication | null
   isFetchingPublication: boolean
+  isUpdating: boolean
+  isDeleting: boolean
   redirect?: string
 }
 
@@ -22,7 +24,7 @@ export class EditPublicationView extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props)
 
-    this.state = { publication: null, isFetchingPublication: false }
+    this.state = { publication: null, isFetchingPublication: false, isUpdating: false, isDeleting: false }
   }
 
 
@@ -38,14 +40,25 @@ export class EditPublicationView extends React.PureComponent<Props, State> {
   }
 
   handleSave = (publication: Publication) => {
+    this.setState({ isUpdating: true })
+    updatePublication(publication).then(() => {
+      this.setState({ redirect: `/publications/${publication.id}` })
+    })
   }
 
   handleCancel = () => {
     this.setState({ redirect: '/my-publications' })
   }
 
+  handleDelete = (publicationId: number) => {
+    this.setState({ isDeleting: true })
+    deletePublication(publicationId).then(() => {
+      this.setState({ redirect: `/my-publications` })
+    })
+  }
+
   render() {
-    const { publication, isFetchingPublication, redirect } = this.state
+    const { publication, isFetchingPublication, redirect, isUpdating, isDeleting } = this.state
 
     if (redirect) return <Redirect to={redirect} />
 
@@ -61,6 +74,11 @@ export class EditPublicationView extends React.PureComponent<Props, State> {
                 publication={publication}
                 onSubmit={this.handleSave}
                 onCancel={this.handleCancel}
+                onDelete={this.handleDelete}
+                seller={publication.seller}
+                product={publication.product}
+                isSubmitting={isUpdating}
+                isDeleting={isDeleting}
               />
               : <EmptyStateMessage message={'No publication for the given id was found'} />
           }

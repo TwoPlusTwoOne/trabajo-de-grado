@@ -32,6 +32,18 @@
       }
     }
 
+    &.danger {
+      color: #fff;
+      background-color: rgb(220, 0, 78);
+      border: 1px solid rgb(220, 0, 78);
+
+      &:active {
+        color: #fff;
+        background-color: rgba(220, 0, 78, .8);
+        border: 1px solid rgba(220, 0, 78, .8);
+      }
+    }
+
     &:focus {
       outline: none;
     }

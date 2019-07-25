@@ -3,7 +3,7 @@ import * as styles from './button.scss'
 import classNames from 'classnames'
 
 export type Props = {
-  kind: 'primary' | 'secondary'
+  kind: 'primary' | 'secondary' | 'danger'
   onClick: () => void
   className?: string
 }

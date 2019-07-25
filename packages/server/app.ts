@@ -25,9 +25,10 @@ import { Sale } from './entities/Sale';
 import { getSellerReviewsForClient, getSellerReviewsForSeller, insertSellerReview } from './dbModules/SellerReviewModule';
 import { insertProductReview, getProductReviewsForClient, getProductReviewsForProduct } from './dbModules/ProductReviewModule';
 
-var express = require('express');
-var app = express();
-var conString = "postgres://glwiuwlhjwmqqo:474e0f0aaf3f47f6d09b7738232f97430869cac957e16ae8404edd3ea8770c60@ec2-23-21-171-25.compute-1.amazonaws.com:5432/d7qm3v80l8bmvr";
+const express = require('express');
+const cors = require('cors');
+const app = express();
+const conString = "postgres://glwiuwlhjwmqqo:474e0f0aaf3f47f6d09b7738232f97430869cac957e16ae8404edd3ea8770c60@ec2-23-21-171-25.compute-1.amazonaws.com:5432/d7qm3v80l8bmvr";
 
 const bodyParser = require('body-parser')
 app.use(bodyParser.json());
@@ -37,6 +38,7 @@ app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
+app.use(cors())
 
 const { Pool } = require('pg');
 const pool = new Pool({

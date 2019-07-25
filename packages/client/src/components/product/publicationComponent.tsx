@@ -19,7 +19,8 @@ export class PublicationComponent extends React.PureComponent<Props> {
       <div className={styles.product}>
         <div className={styles.mainInfo}>
           <div className={styles.image}>
-            {images.map(image => <img src={image.image} alt={image.id.toString()} key={image.id} />)}
+            {images[0] && <img src={images[0].image} alt={images[0].id.toString()} key={images[0].id} />}
+            {/*{images.map(image => <img src={image.image} alt={image.id.toString()} key={image.id} />)}*/}
           </div>
           <div className={styles.nameAndPrice}>
             <div className={styles.name}>{name}</div>

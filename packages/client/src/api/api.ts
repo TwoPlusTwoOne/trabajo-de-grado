@@ -71,6 +71,33 @@ export const getPublicationById = (publicationId: string): Promise<Publication> 
   return fetch(url, init).then(response => response.json())
 }
 
+export const updatePublication = (publication: Publication) => {
+  const url = `${baseUri}/publication`
+
+  const init: RequestInit = {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(publication)
+  }
+
+  return fetch(url, init).then(response => response.json())
+}
+
+export const deletePublication = (publicationId: number) => {
+  const url = `${baseUri}/publication/${publicationId}`
+
+  const init: RequestInit = {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  }
+
+  return fetch(url, init)
+}
+
 export const getQuestionsForPublication = (productId: number): Promise<PublicationQnA[]> => {
 
   const url = `${baseUri}/qa/${productId}`

@@ -31,7 +31,7 @@ export class MyPublicationsView extends React.PureComponent<Props, State> {
 
   receivePublications = (publications: Publication[]) => {
     const user = getLoggedUser()
-    const userPublications = publications.filter(p => p.seller.id === user.id)
+    const userPublications = publications.filter(p => p.seller.userID === user.id)
     this.setState({ publications: userPublications, fetchedPublications: true })
   }
 
