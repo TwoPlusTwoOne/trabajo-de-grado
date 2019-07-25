@@ -287,7 +287,8 @@ export const boot = async (pool: Pool) => {
         products.map(p => insertProduct(pool, p)))
         .then((x) => getAllProducts(pool))
         .then((products: Product[]) => {
-            Promise.all(
+            console.log("Products created")
+            return Promise.all(
                 products.map((product, i) => {
                     const publication = publications[i]
                     .withSeller(sellerWithID)
@@ -296,25 +297,9 @@ export const boot = async (pool: Pool) => {
                 })
             )
     }).then((x) => {
-        console.log("Products created")
+        console.log("Publications created")
         return Promise.resolve()
     })
-
-    // const productsWithSeller =  products.map(async (p, index) => {
-    //     p.seller = sellerWithID
-    //     await insertProduct(pool, p).then((pId) => {
-    //         const qs = questions[index].map(q => new Question(q.id, pId, q.question, clientID))
-    //         const ans = answers[index].map(a => new Answer(a.id, a.questionId, a.answer, sellerID))
-    //         qs.map(async (q, qIndex) => {
-    //             insertQustionAnswer(pool, q, ans[qIndex])
-    //         })
-    //     })
-    // })
-    // Promise.all(productsWithSeller).then(() => {
-    //     console.log("Products created")
-    //     return Promise.resolve()
-    // })
-
 }
 
 

@@ -34,9 +34,8 @@ export const getProductReviewsForProduct = async (pool: Pool, productId: string)
             ${ProductReview.tableName}.buyer_id,
             ${ProductReview.tableName}.description,
             ${ProductReview.tableName}.calification
-        FROM ${ProductReview.tableName} INNER JOIN product_review_table
-        on ${ProductReview.tableName}.product_id = ${Product.tableName}.id
-        WHERE ${Product.tableName}.id = ${productId}`
+        FROM ${ProductReview.tableName}
+        WHERE ${ProductReview.tableName}.product_id = ${productId}`
         ).then((res) => {
                 return Promise.all(res.rows.map(r => {
                     return getClientByID(pool, r.buyer_id).then((buyer) => {
@@ -64,9 +63,8 @@ export const getProductReviewsForClient = async (pool: Pool, clientId: string) =
             ${ProductReview.tableName}.buyer_id,
             ${ProductReview.tableName}.description,
             ${ProductReview.tableName}.calification
-        FROM ${ProductReview.tableName} INNER JOIN product_review_table
-        on ${ProductReview.tableName}.id = ${Client.tableName}.id
-        WHERE ${Client.tableName}.buyer_id = ${clientId}`
+        FROM ${ProductReview.tableName}
+        WHERE ${ProductReview.tableName}.buyer_id = ${clientId}`
         ).then((res) => {
                 return Promise.all(res.rows.map(r => {
                     return getClientByID(pool, clientId).then((buyer) => {

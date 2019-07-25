@@ -60,7 +60,7 @@ export const getSellerReviewsForClient = async (pool: Pool, cleintId: string) =>
             ${SellerReview.tableName}.description,
             ${SellerReview.tableName}.calification
         FROM ${SellerReview.tableName}
-        WHERE ${Client.tableName}.buyer_id = ${cleintId}`
+        WHERE ${SellerReview.tableName}.buyer_id = ${cleintId}`
         ).then((res) => {
                 return Promise.all(res.rows.map(r => {
                     return getClientByID(pool, cleintId).then((buyer) => {
