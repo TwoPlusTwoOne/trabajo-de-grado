@@ -19,6 +19,7 @@ import {Answer}  from './entities/Answer'
 import {Question}  from './entities/Question'
 import {Review}  from './entities/Review'
 import { insertPublication } from './dbModules/PublicationModule';
+import { Sale } from './entities/Sale';
 
 const client = new ClientBuilder()
                     .withFirstName("Martin")
@@ -198,11 +199,11 @@ const roleTableInsert =
     );`
 
 const saleTableInsert =
-    `CREATE TABLE sale_table (
+    `CREATE TABLE ${Sale.tableName} (
         id serial PRIMARY KEY,
         "product_id" integer REFERENCES ${Product.tableName}(id),
         "buyer_id" integer REFERENCES ${Client.tableName}(id),
-        "review_id" integer REFERENCES ${Review.tableName}(id)
+        "traking_id" text
     );`
 
 const questionTableInsert =

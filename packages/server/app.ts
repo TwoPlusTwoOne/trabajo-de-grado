@@ -20,7 +20,8 @@ import { getPublicationByID, getAllPublications, deletePublication, updatePublic
 import { emit } from 'cluster';
 import { Publication } from './entities/Pubilcation';
 import { insertAnswer } from './dbModules/AnswerModule';
-
+import { insertSale, getSale } from './dbModules/SaleModule';
+import { Sale } from './entities/Sale';
 
 var express = require('express');
 var app = express();
@@ -114,6 +115,13 @@ const getPublicationFromRequest = (json: any) => {
   const images = getImagesFromRequest(json.images)
   const product = getProductFromRequest(json.product)
   return new Publication(json.id, json.name, json.value, seller, images, product, json.description)
+}
+
+const getSaleFromRequest = (json: any) => {
+  const product = getProductFromRequest(json.product)
+  const buyer = getClientFromRequest(json.buyer)
+  const reviews =  json.reviews.map(r => getReviewsFromRequest(r))
+  return new Sale(json.id, product, buyer, reviews, json.traking_id)
 }
 
 
@@ -317,6 +325,25 @@ app.post('/question', async function (req: Request, res: Response) {
 app.post('/answer', async function (req: Request, res: Response) {
   const answer = getAnswerFromRequest(req.body)
   insertAnswer(pool, answer).then((id) => res.sendStatus(200))
+});
+
+// ----------------------------------------------------------------------
+
+
+// ----------------------- Sale ---------------------------------------
+
+app.get('/sale/:id', async function (req: Request, res: Response) {
+  const id = req.params.id
+  getSale(pool, id).then((sale) => res.send(sale))
+});
+
+app.post('/sale', async function (req: Request, res: Response) {
+  const uuidv1 = require('uuid/v1');
+
+  const product_id = req.body.product_id
+  const buyer_id = req.body.buyer_id
+  const traking_id = uuidv1()
+  insertSale(pool, product_id, buyer_id, traking_id).then((id) => res.sendStatus(200))
 });
 
 // ----------------------------------------------------------------------
