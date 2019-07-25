@@ -5,7 +5,7 @@ import { PublicationBuilder } from './builders/PublicationBuilder'
 import { insertAdmin } from './dbModules/AdminModule';
 import { insertRole } from './dbModules/RoleModule'
 import { insertClient } from './dbModules/ClientModule'
-import { insertProduct } from './dbModules/ProductModule'
+import { insertProduct, getAllProducts } from './dbModules/ProductModule'
 import { Role } from './entities/Role';
 import { Pool } from 'pg';
 import { PublicationImage } from './entities/PublicationImage';
@@ -17,8 +17,10 @@ import {Admin}  from './entities/Admin'
 import {Cart}  from './entities/Cart'
 import {Answer}  from './entities/Answer'
 import {Question}  from './entities/Question'
-import {Review}  from './entities/Review'
+import {ProductReview}  from './entities/ProductReview'
+import {SellerReview}  from './entities/SellerReview'
 import { insertPublication } from './dbModules/PublicationModule';
+import { Sale } from './entities/Sale';
 
 const client = new ClientBuilder()
                     .withFirstName("Martin")
@@ -175,19 +177,22 @@ const publicationImageTableInsert =
         publication_id integer REFERENCES ${Publication.tableName}(id)
     );`
 
-const reviewTableInsert =
-    `CREATE TABLE ${Review.tableName} (
+const sellerReviewTableInsert =
+    `CREATE TABLE ${SellerReview.tableName} (
         id serial PRIMARY KEY,
         buyer_id integer REFERENCES ${Client.tableName}(id),
+        seller_id integer REFERENCES ${Client.tableName}(id),
         description text,
         calification integer
     );`
 
 const productReviewTableInsert =
-    `CREATE TABLE product_review_table (
+    `CREATE TABLE ${ProductReview.tableName} (
         id serial PRIMARY KEY,
-        "product_id" integer REFERENCES ${Product.tableName}(id),
-        "review_id" integer REFERENCES ${Review.tableName}(id)
+        product_id integer REFERENCES ${Product.tableName}(id),
+        buyer_id integer REFERENCES ${Client.tableName}(id),
+        description text,
+        calification integer
     );`
 
 const roleTableInsert =
@@ -198,11 +203,11 @@ const roleTableInsert =
     );`
 
 const saleTableInsert =
-    `CREATE TABLE sale_table (
+    `CREATE TABLE ${Sale.tableName} (
         id serial PRIMARY KEY,
         "product_id" integer REFERENCES ${Product.tableName}(id),
         "buyer_id" integer REFERENCES ${Client.tableName}(id),
-        "review_id" integer REFERENCES ${Review.tableName}(id)
+        "traking_id" text
     );`
 
 const questionTableInsert =
@@ -225,7 +230,7 @@ const tables = [
     cartPublicationInsert,
     saleTableInsert,
     productReviewTableInsert,
-    reviewTableInsert,
+    sellerReviewTableInsert,
     favouritesTableInsert,
     answerTableInsert,
     questionTableInsert,
@@ -278,36 +283,23 @@ export const boot = async (pool: Pool) => {
     console.log("Seller created")
     const sellerWithID = seller.withID(sellerID).build()
 
-    Promise.all(products.map(p => insertProduct(pool, p)))
-    .then((products: Product[]) => {
-        Promise.all(
-            products.map((product, i) => {
-                const publication = publications[i]
-                .withSeller(sellerWithID)
-                .withProduct(product).build()
-                insertPublication(pool, publication)
-            })
-        )
+    Promise.all(
+        products.map(p => insertProduct(pool, p)))
+        .then((x) => getAllProducts(pool))
+        .then((products: Product[]) => {
+            console.log("Products created")
+            return Promise.all(
+                products.map((product, i) => {
+                    const publication = publications[i]
+                    .withSeller(sellerWithID)
+                    .withProduct(product).build()
+                    insertPublication(pool, publication)
+                })
+            )
     }).then((x) => {
-        console.log("Products created")
+        console.log("Publications created")
         return Promise.resolve()
     })
-
-    // const productsWithSeller =  products.map(async (p, index) => {
-    //     p.seller = sellerWithID
-    //     await insertProduct(pool, p).then((pId) => {
-    //         const qs = questions[index].map(q => new Question(q.id, pId, q.question, clientID))
-    //         const ans = answers[index].map(a => new Answer(a.id, a.questionId, a.answer, sellerID))
-    //         qs.map(async (q, qIndex) => {
-    //             insertQustionAnswer(pool, q, ans[qIndex])
-    //         })
-    //     })
-    // })
-    // Promise.all(productsWithSeller).then(() => {
-    //     console.log("Products created")
-    //     return Promise.resolve()
-    // })
-
 }
 
 
