@@ -9,6 +9,23 @@
       margin: 50px;
       padding: 50px;
 
+      .publications {
+        .addPublicationButtonContainer {
+          width: 100%;
+          display: flex;
+          justify-content: flex-end;
+        }
+      }
+
+      .empty {
+        .addPublicationButtonContainer {
+          width: 100%;
+          display: flex;
+          justify-content: center;
+          margin-top: 40px;
+        }
+      }
+
       .publicationItem {
         padding: 20px 0;
 
@@ -16,6 +33,12 @@
           border-bottom: 1px solid rgba(0, 0, 0, .3);
         }
       }
+    }
+
+    .addPublicationButtonContent {
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
     }
   }
 }
