@@ -82,7 +82,7 @@ export const updatePublication = (publication: Publication) => {
     body: JSON.stringify(publication)
   }
 
-  return fetch(url, init).then(response => response.json())
+  return fetch(url, init)
 }
 
 export const deletePublication = (publicationId: number) => {
