@@ -62,9 +62,7 @@ export class MyPublicationsView extends React.PureComponent<Props, State> {
     const addPublicationButton = <div className={styles.addPublicationButtonContainer}>
       <Button kind={'primary'} onClick={this.handleClickAddPublication}>
         <div className={styles.addPublicationButtonContent}>
-          <div>
-            <Add />
-          </div>
+          <Add />
           <div>
             <Typography color={'inherit'} variant={'button'}>
               Create new publication
