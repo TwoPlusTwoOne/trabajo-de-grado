@@ -138,7 +138,7 @@ export const postAnswer = (info: { answer: string, questionId: number, userId: n
   return fetch(url, init)
 }
 
-export const getCart = (clientId: string) => {
+export const getCart = (clientId: number) => {
   const url = `${baseUri}/cart/${clientId}`
 
   const init: RequestInit = {

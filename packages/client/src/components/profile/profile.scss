@@ -7,9 +7,14 @@
       display: flex;
       align-items: center;
 
+      .welcomeMessage {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+
       .profileIcon {
-        padding-left: 8px;
-        padding-right: 8px;
+        padding-left: 0;
+        padding-right: 0;
       }
     }
   }

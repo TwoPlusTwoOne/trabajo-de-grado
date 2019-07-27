@@ -25,6 +25,8 @@ class Base extends React.Component<Props, State> {
 
   onClickGoToMySales = () => this.props.history.push('/my-sales')
 
+  handleClickShoppingCart = () => this.props.history.push('/cart')
+
   render() {
     const { loggedUser, children } = this.props
 
@@ -48,6 +50,7 @@ class Base extends React.Component<Props, State> {
                 onClickGoToMyOrders={this.onClickGoToMyOrders}
                 onClickGoToMySales={this.onClickGoToMySales}
                 onClickGoToMyPublications={this.navigateToMyPublications}
+                onClickShoppingCart={this.handleClickShoppingCart}
                 user={loggedUser}
               />
             }

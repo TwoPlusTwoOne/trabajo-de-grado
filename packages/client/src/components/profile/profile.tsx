@@ -3,7 +3,7 @@ import * as styles from './profile.scss'
 import { AuthState, User } from '../../helpers/auth'
 import MenuItem from '@material-ui/core/MenuItem/MenuItem'
 import IconButton from '@material-ui/core/IconButton/IconButton'
-import { AccountCircle } from '@material-ui/icons'
+import { AccountCircle, ShoppingCart } from '@material-ui/icons'
 import Menu from '@material-ui/core/Menu/Menu'
 import { AuthContext } from '../../App'
 import Typography from '@material-ui/core/Typography/Typography'
@@ -13,6 +13,7 @@ export type ExternalProps = {
   onClickGoToMyPublications: () => void
   onClickGoToMyOrders: () => void
   onClickGoToMySales: () => void
+  onClickShoppingCart: () => void
 }
 
 export type Props = ExternalProps & {
@@ -76,13 +77,26 @@ class Profile extends React.PureComponent<Props, State> {
     this.props.onLogOut()
   }
 
+  handleClickShoppingCart = () => {
+    this.props.onClickShoppingCart()
+  }
+
   render() {
     return (
       <div className={styles.container}>
         <div className={styles.profileWrapper}>
-          <div>
+          <div className={styles.welcomeMessage}>
             <Typography color={'inherit'} variant={'subtitle1'}>Welcome, {this.props.user.first_name}!</Typography>
           </div>
+          <MenuItem className={styles.profileIcon} onClick={this.handleClickShoppingCart}>
+            <IconButton
+              aria-haspopup="true"
+              color={'inherit'}
+              className={styles.iconButton}
+            >
+              <ShoppingCart />
+            </IconButton>
+          </MenuItem>
           <MenuItem className={styles.profileIcon} onClick={this.handleProfileMenuOpen}>
             <IconButton
               aria-label="Account of current user"

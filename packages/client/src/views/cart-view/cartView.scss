@@ -1,0 +1,27 @@
+:local {
+  .container {
+    padding: 50px;
+
+    .paper {
+      padding: 50px;
+
+      .section {
+        border-bottom: 1px solid #e6e6e6;
+
+        &.title {
+          padding-bottom: 20px;
+        }
+
+        &.cart {
+          padding-bottom: 30px;
+
+          &.empty {
+            padding-top: 90px;
+            padding-bottom: 40px;
+            border-bottom: none;
+          }
+        }
+      }
+    }
+  }
+}
