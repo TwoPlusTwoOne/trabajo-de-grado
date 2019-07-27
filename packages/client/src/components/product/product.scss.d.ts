@@ -4,6 +4,7 @@ export const image: string;
 export const nameAndPrice: string;
 export const name: string;
 export const price: string;
+export const addToCart: string;
 export const addToCartButton: string;
 export const description: string;
 export const questionsAndAnswers: string;

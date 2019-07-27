@@ -150,3 +150,17 @@ export const getCart = (clientId: number) => {
 
   return fetch(url, init)
 }
+
+export const addItemToCart = (info: { cartId: number, publicationId: number }) => {
+  const url = `${baseUri}/cart/add-item`
+
+  const init: RequestInit = {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(info)
+  }
+
+  return fetch(url, init)
+}

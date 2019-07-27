@@ -1,9 +1,10 @@
 import * as React from 'react'
 import * as styles from './productView.scss'
-import { getPublicationById, getQuestionsForPublication } from '../../api/api'
+import { addItemToCart, getCart, getPublicationById, getQuestionsForPublication } from '../../api/api'
 import { PublicationComponent, PublicationWithQnA } from '../../components/product/publicationComponent'
 import { Loader } from '../../components/loader/loader'
 import Paper from '@material-ui/core/Paper/Paper'
+import { getLoggedUser } from '../../helpers/auth'
 
 export type Props = {
   match: {
@@ -16,6 +17,7 @@ export type Props = {
 export type State = {
   product: PublicationWithQnA | null
   isLoading: boolean
+  isAddingToCart: boolean
 }
 
 export class ProductView extends React.PureComponent<Props, State> {
@@ -25,7 +27,8 @@ export class ProductView extends React.PureComponent<Props, State> {
 
     this.state = {
       product: null,
-      isLoading: false
+      isLoading: false,
+      isAddingToCart: false,
     }
   }
 
@@ -55,14 +58,31 @@ export class ProductView extends React.PureComponent<Props, State> {
     }
   }
 
+  handleClickAddToCart = (publication: Publication) => () => {
+    this.setState({ isAddingToCart: true })
+    getCart(getLoggedUser().id)
+      .then(response => response.json())
+      .then(cart => addItemToCart({
+        cartId: cart.id,
+        publicationId: publication.id
+      }))
+      .then(console.log)
+      .catch(console.log)
+      .then(() => this.setState({ isAddingToCart: false }))
+  }
+
   render() {
-    const { product, isLoading } = this.state
+    const { product, isLoading, isAddingToCart } = this.state
 
     if (isLoading || !product) return <Loader />
 
     return <div className={styles.productContainer}>
       <Paper className={styles.product}>
-        <PublicationComponent publication={product} />
+        <PublicationComponent
+          isAddingToCart={isAddingToCart}
+          onClickAddToCart={this.handleClickAddToCart(product)}
+          publication={product}
+        />
       </Paper>
     </div>
   }
