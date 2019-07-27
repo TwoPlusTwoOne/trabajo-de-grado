@@ -9,6 +9,10 @@
       background-color: rgb(63, 81, 181);
       color: white;
 
+      &:hover {
+        background-color: rgba(63, 81, 181, .8);
+      }
+
       &:active {
         background-color: rgba(63, 81, 181, .9);
       }
@@ -42,6 +46,12 @@
         background-color: rgba(220, 0, 78, .8);
         border: 1px solid rgba(220, 0, 78, .8);
       }
+    }
+
+    &.disabled {
+      color: rgba(0, 0, 0, 0.26);
+      box-shadow: none;
+      background-color: rgba(0, 0, 0, 0.12);
     }
 
     &:focus {

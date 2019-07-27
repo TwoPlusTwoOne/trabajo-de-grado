@@ -12,12 +12,13 @@ export type Props = {
   publication?: Publication
   product: Product
   seller: Seller
+  cancelLabel?: string
   submitLabel: string
   isSubmitting: boolean
   isDeleting: boolean
   onCancel: () => void
   onSubmit: (publication: Publication) => void
-  onDelete: (publicationId: number) => void
+  onDelete?: (publicationId: number) => void
 }
 
 export type State = {
@@ -88,11 +89,17 @@ export class PublicationForm extends React.PureComponent<Props, State> {
   closeDeleteConfirmation = () => this.setState({ isDeleteConfirmationOpen: false })
 
   handleDeletePublication = () => {
-    if (this.props.publication) this.props.onDelete(this.props.publication.id)
+    const { publication, onDelete } = this.props
+    if (publication && onDelete) onDelete(publication.id)
+  }
+
+  isSubmitDisabled = () => {
+    const { name, description, value } = this.state.fields
+    return !(value && description && name)
   }
 
   render() {
-    const { submitLabel, isSubmitting, isDeleting } = this.props
+    const { submitLabel, isSubmitting, isDeleting, cancelLabel } = this.props
     const { fields, isNew, isDeleteConfirmationOpen } = this.state
 
     const { name, description, value, images } = fields
@@ -165,10 +172,11 @@ export class PublicationForm extends React.PureComponent<Props, State> {
               ? <Loader />
               : <>
                 <Button className={styles.button} onClick={this.handleCancel} kind={'secondary'}>
-                  <Typography color={'inherit'} variant={'button'}>Cancel</Typography>
+                  <Typography color={'inherit'} variant={'button'}>{cancelLabel || 'Cancel'}</Typography>
                 </Button>
-                <Button className={styles.button} onClick={this.handleSubmit} kind={'primary'}>
-                  <Typography color={'inherit'} variant={'button'}>{submitLabel}</Typography>
+                <Button isDisabled={this.isSubmitDisabled()} className={styles.button} onClick={this.handleSubmit}
+                        kind={'primary'}>
+                  <Typography color={'inherit'} variant={'button'}>{submitLabel || 'Submit'}</Typography>
                 </Button>
               </>
           }

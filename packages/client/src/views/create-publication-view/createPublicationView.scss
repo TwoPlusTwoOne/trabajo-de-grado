@@ -1,0 +1,39 @@
+:local {
+  .container {
+    padding: 50px;
+
+    .paper {
+      padding: 50px;
+
+      .productSelect {
+        .title {
+          margin-bottom: 40px;
+        }
+
+        .select {
+          margin-bottom: 40px;
+
+          .selectedProductId {
+            width: 100%;
+          }
+        }
+
+        .buttonContainer {
+          display: flex;
+          width: 100%;
+          justify-content: flex-end;
+
+          .buttonsContainer {
+            > button {
+              width: 80px;
+
+              &:not(:last-child) {
+                margin-right: 20px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
