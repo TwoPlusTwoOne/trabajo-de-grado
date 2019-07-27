@@ -1,6 +1,7 @@
 import * as React from 'react'
 import * as styles from './product.scss'
 import { QuestionsAndAnswersContainer } from '../questionsAndAnswers/questionsAndAnswersContainer'
+import { Button } from '../button/button'
 
 export type PublicationWithQnA = Publication & {
   qa: PublicationQnA[]
@@ -11,6 +12,10 @@ export type Props = {
 }
 
 export class PublicationComponent extends React.PureComponent<Props> {
+  handleClickAddToCart = () => {
+
+  }
+
   render() {
     const { publication } = this.props
     const { qa, product, id, value, name, description, images, seller } = publication
@@ -25,6 +30,9 @@ export class PublicationComponent extends React.PureComponent<Props> {
           <div className={styles.nameAndPrice}>
             <div className={styles.name}>{name}</div>
             <div className={styles.price}>$ {value}</div>
+            <div>
+              <Button className={styles.addToCartButton} kind={'primary'} onClick={this.handleClickAddToCart}>Add to cart</Button>
+            </div>
           </div>
         </div>
         <div className={styles.description}>
