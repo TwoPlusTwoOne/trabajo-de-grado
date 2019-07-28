@@ -418,24 +418,36 @@ app.post('/product/review', async function (req: Request, res: Response) {
 const https = require('https');
 
 app.post('/card', async function (req: Request, res: Response) {
-  https.post('https://bisa.herokuapp.com/pay', req.body)
+  const options = {
+    hostname: 'bisa.herokuapp.com',
+    port: 443,
+    path: '/pay',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'text/plain',
+      'Content-Length': req.body.card.length
+    }
+  }
+
+  const request = https.request(options, (response) => { 
+    let body = '';
+    response.on('data', (d) => body += d);
+    response.on('end', () => {
+      res.status(response.statusCode)
+      res.send(body)
+    });
+  })
+
+  request.write(req.body.card)
+  request.end()
 });
 
 app.get('/card/key', async function (req: Request, res: Response) {
-  const options = {
-    host: 'bisa.herokuapp.com',
-    port: 443,
-    path: '/publicKey',
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  };
-  return https.get({host: 'bisa.herokuapp.com', path: '/publicKey'}, function(response) {
+  https.get({host: 'bisa.herokuapp.com', path: '/publicKey'}, (response) => {
     let body = '';
     response.on('data', (d) => body += d);
     response.on('end', () => res.send(body));
-});
+  });
 });
 
 // -----------------------------------------------------------------------
