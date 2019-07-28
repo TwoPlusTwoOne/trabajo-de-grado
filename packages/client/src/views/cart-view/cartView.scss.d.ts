@@ -10,3 +10,5 @@ export const image: string;
 export const nameAndPrice: string;
 export const removeButton: string;
 export const checkoutButtonDiv: string;
+export const total: string;
+export const checkoutButton: string;

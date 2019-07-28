@@ -63,6 +63,12 @@
         justify-content: flex-end;
         width: 100%;
 
+        .total {
+          display: flex;
+          justify-content: flex-end;
+          margin-bottom: 30px;
+        }
+
         .checkoutButton {
           padding: 15px;
         }

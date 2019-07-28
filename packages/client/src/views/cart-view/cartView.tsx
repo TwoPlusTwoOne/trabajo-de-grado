@@ -95,6 +95,11 @@ export class CartView extends React.PureComponent<Props, State> {
       </div>
       <div className={styles.checkoutButtonDiv}>
         <div>
+          <div className={styles.total}>
+            <Typography variant={'h5'}>
+              Total: $ {shoppingCart.publications.reduce((acc, pub) => acc + parseInt(pub.value), 0)}
+            </Typography>
+          </div>
           <Button className={styles.checkoutButton} kind={'primary'} onClick={this.handleClickProceedToCheckout}>
             Proceed to checkout
           </Button>
