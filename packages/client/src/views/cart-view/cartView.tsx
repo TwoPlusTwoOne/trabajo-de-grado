@@ -9,6 +9,7 @@ import { getCart, removeItemFromCart } from '../../api/api'
 import { getLoggedUser } from '../../helpers/auth'
 import { Button } from '../../components/button/button'
 import { Redirect } from 'react-router'
+import { CartComponent } from '../../components/cart/cartComponent'
 
 export type Props = {}
 
@@ -74,25 +75,7 @@ export class CartView extends React.PureComponent<Props, State> {
     </div>
 
     return <>
-      <div className={classNames(styles.section, styles.cart)}>
-        {shoppingCart.publications.map(publication => <div className={styles.cartItem}>
-          <div className={styles.image}>
-            <img alt={publication.name} src={publication.images[0] && publication.images[0].image} />
-          </div>
-          <div className={styles.nameAndPrice}>
-            <div><Typography variant={'h5'}>{publication.name}</Typography></div>
-            <div>$ {publication.value}</div>
-          </div>
-          <div className={styles.removeButton}>
-            <Button
-              kind={'danger'}
-              onClick={this.onClickRemove(publication.id)}
-            >
-              Remove
-            </Button>
-          </div>
-        </div>)}
-      </div>
+      <CartComponent shoppingCart={shoppingCart} onClickRemove={this.onClickRemove} />
       <div className={styles.checkoutButtonDiv}>
         <div>
           <div className={styles.total}>

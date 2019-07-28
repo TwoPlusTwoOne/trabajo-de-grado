@@ -1,0 +1,17 @@
+:local {
+  .input {
+    &.name, &.cardNumber, &.idNumber {
+      width: 320px;
+    }
+
+    &.expirationDate, &.securityCode {
+      width: 150px;
+    }
+  }
+
+  .dateAndCode {
+    > div:not(:last-child) {
+      margin-right: 20px;
+    }
+  }
+}

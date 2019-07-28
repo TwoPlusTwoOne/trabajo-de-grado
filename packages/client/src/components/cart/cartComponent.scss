@@ -1,0 +1,55 @@
+:local {
+  .section {
+    border-bottom: 1px solid #e6e6e6;
+
+    &.title {
+      padding-bottom: 20px;
+    }
+
+    &.empty {
+      padding-top: 90px;
+      padding-bottom: 40px;
+      border-bottom: none;
+    }
+
+    &.isLoading {
+      padding-top: 90px;
+    }
+
+    &.cart {
+      padding-bottom: 30px;
+      border-bottom: none;
+
+      .cartItem {
+        display: flex;
+        border-bottom: 1px solid #e6e6e6;
+        padding-top: 44px;
+        padding-bottom: 48px;
+
+        .image {
+          width: 48px;
+          margin-right: 48px;
+
+          img {
+            width: inherit;
+          }
+        }
+
+        .nameAndPrice {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          width: 100%;
+          margin-right: 48px;
+        }
+
+        .removeButton {
+          display: flex;
+          align-items: center;
+          width: 100px;
+        }
+      }
+    }
+  }
+
+}

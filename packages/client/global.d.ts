@@ -48,3 +48,11 @@ declare type Cart = {
   id: number
   publications: Publication[]
 }
+
+declare type CreditCardInfo = {
+  cardNumber: string
+  name: string
+  expirationDate: string
+  securityCode: string
+  idNumber: string
+}
