@@ -354,9 +354,9 @@ app.get('/sale/:id', async function (req: Request, res: Response) {
   getSale(pool, id).then((sale) => res.send(sale))
 });
 
-app.post('/sale', async function (req: Request, res: Response) {
-  const uuidv1 = require('uuid/v1');
+const uuidv1 = require('uuid/v1');
 
+app.post('/sale', async function (req: Request, res: Response) {
   const product_id = req.body.product_id
   const buyer_id = req.body.buyer_id
   const traking_id = uuidv1()
@@ -381,8 +381,6 @@ app.get('/seller/review/:id', async function (req: Request, res: Response) {
 });
 
 app.post('/seller/review', async function (req: Request, res: Response) {
-  const uuidv1 = require('uuid/v1');
-
   const buyer_id = req.body.buyer_id
   const seller_id = req.body.seller_id
   const description = req.body.description
@@ -404,7 +402,6 @@ app.get('/product/review/:id', async function (req: Request, res: Response) {
 });
 
 app.post('/product/review', async function (req: Request, res: Response) {
-  const uuidv1 = require('uuid/v1');
 
   const buyer_id = req.body.buyer_id
   const product_id = req.body.product_id
@@ -415,6 +412,45 @@ app.post('/product/review', async function (req: Request, res: Response) {
 
 // ----------------------------------------------------------------------
 
+
+// ---------------------- Credit Card ------------------------------------
+
+const https = require('https');
+
+app.post('/card', async function (req: Request, res: Response) {
+  const options = {
+    hostname: 'bisa.herokuapp.com',
+    port: 443,
+    path: '/pay',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'text/plain',
+      'Content-Length': req.body.card.length
+    }
+  }
+
+  const request = https.request(options, (response) => { 
+    let body = '';
+    response.on('data', (d) => body += d);
+    response.on('end', () => {
+      res.status(response.statusCode)
+      res.send(body)
+    });
+  })
+
+  request.write(req.body.card)
+  request.end()
+});
+
+app.get('/card/key', async function (req: Request, res: Response) {
+  https.get({host: 'bisa.herokuapp.com', path: '/publicKey'}, (response) => {
+    let body = '';
+    response.on('data', (d) => body += d);
+    response.on('end', () => res.send(body));
+  });
+});
+
+// -----------------------------------------------------------------------
 
 app.listen(3001, function () {
   console.log('Server started');
