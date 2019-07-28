@@ -93,7 +93,7 @@ export const getCartByClientId = async (pool: Pool, clientId: string) => {
         ).then((res) => {
                 const cart = res.rows[0]
                 return getCartProducts(pool, cart.id).then((res2) => {
-                    cart.products = res2
+                    cart.publications = res2
                     return cart
                 })
         }).catch(e => {

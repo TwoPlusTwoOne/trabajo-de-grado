@@ -1,4 +1,8 @@
-export type User = {
+export type Client = UserBase
+
+export type Admin = UserBase & {}
+
+export type UserBase = {
   birthdate: string
   direction: string
   dni: string
@@ -7,7 +11,10 @@ export type User = {
   id: number
   last_name: string
   password: string
+  userID: number
 }
+
+export type User = Client | Admin
 
 export type AuthState = {
   logIn: (user: User) => void

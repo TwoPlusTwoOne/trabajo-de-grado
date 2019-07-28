@@ -60,14 +60,13 @@ export class ProductView extends React.PureComponent<Props, State> {
 
   handleClickAddToCart = (publication: Publication) => () => {
     this.setState({ isAddingToCart: true })
-    getCart(getLoggedUser().id)
+    getCart(getLoggedUser().userID)
       .then(response => response.json())
-      .then(cart => addItemToCart({
-        cartId: cart.id,
-        publicationId: publication.id
-      }))
-      .then(console.log)
-      .catch(console.log)
+      .then(cart =>
+        addItemToCart({
+          cartId: cart.id,
+          publicationId: publication.id
+        }))
       .then(() => this.setState({ isAddingToCart: false }))
   }
 

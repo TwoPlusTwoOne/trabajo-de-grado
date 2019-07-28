@@ -43,3 +43,8 @@ declare type PublicationQnA = {
   question_id: number
   seller_id: number
 }
+
+declare type Cart = {
+  id: number
+  publications: Publication[]
+}

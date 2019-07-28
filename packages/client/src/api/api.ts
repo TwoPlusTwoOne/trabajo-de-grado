@@ -19,7 +19,8 @@ export const getProductById = (id: number) => {
 }
 
 export const login = (info: { email: string, password: string }) => {
-  const url = `${baseUri}/login`
+  const clientUrl = `${baseUri}/client/login`
+  const adminUrl = `${baseUri}/admin/login`
 
   const init: RequestInit = {
     method: 'POST',
@@ -29,7 +30,7 @@ export const login = (info: { email: string, password: string }) => {
     body: JSON.stringify(info),
   }
 
-  return fetch(url, init)
+  return fetch(adminUrl, init).then(response => response.status === 401 ? fetch(clientUrl, init) : response)
 }
 
 export const getProducts = (): Promise<Product[]> => {
@@ -160,6 +161,21 @@ export const addItemToCart = (info: { cartId: number, publicationId: number }) =
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(info)
+  }
+
+  return fetch(url, init)
+}
+
+
+export const removeItemFromCart = (info: { cartId: number, publicationId: number }) => {
+  const url = `${baseUri}/cart/remove-item`
+
+  const init: RequestInit = {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ ...info, quantity: 1 })
   }
 
   return fetch(url, init)

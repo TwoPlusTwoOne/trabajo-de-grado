@@ -56,7 +56,6 @@ export class SearchBar extends React.PureComponent<Props, State> {
             onChange={this.handleQueryChange}
             onSelect={this.handleSelect}
             renderMenu={(items, value) => {
-              console.log({ items })
               const hasNoQuery = !value
               const noItems = items.length === 0
               return (
