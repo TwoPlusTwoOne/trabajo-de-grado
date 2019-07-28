@@ -14,4 +14,14 @@
       margin-right: 20px;
     }
   }
+
+  .confirmButtonDiv {
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+
+    > button {
+      padding: 15px;
+    }
+  }
 }

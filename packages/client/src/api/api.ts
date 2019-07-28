@@ -180,3 +180,9 @@ export const removeItemFromCart = (info: { cartId: number, publicationId: number
 
   return fetch(url, init)
 }
+
+export const getCardKey = () => {
+  const url = `${baseUri}/card/key`
+
+  return fetch(url)
+}

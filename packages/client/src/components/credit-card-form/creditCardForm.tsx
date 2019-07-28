@@ -2,6 +2,7 @@ import * as React from 'react'
 import * as styles from './creditCardForm.scss'
 import classNames from 'classnames'
 import { TextField } from '@material-ui/core'
+import { Button } from '../button/button'
 
 export type Props = {
   onSubmit: (info: CreditCardInfo) => void
@@ -29,6 +30,18 @@ export class CreditCardForm extends React.PureComponent<Props, State> {
 
   handleChange = (name: keyof CreditCardInfo) => (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ fields: { ...this.state.fields, [name]: event.target.value } })
+  }
+
+  handleSubmit = () => {
+    this.props.onSubmit(this.state.fields)
+  }
+
+  isSubmitDisabled = () => {
+    const { idNumber, securityCode, expirationDate, name, cardNumber } = this.state.fields
+
+    if (!(idNumber && securityCode && expirationDate && name && cardNumber)) return true
+
+    return false
   }
 
 
@@ -77,6 +90,11 @@ export class CreditCardForm extends React.PureComponent<Props, State> {
             onChange={this.handleChange('idNumber')}
             margin={'normal'}
           />
+        </div>
+        <div className={styles.confirmButtonDiv}>
+          <Button isDisabled={this.isSubmitDisabled()} kind={'primary'} onClick={this.handleSubmit}>
+            Confirm payment
+          </Button>
         </div>
       </div>
     )

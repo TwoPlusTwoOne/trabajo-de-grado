@@ -5,3 +5,4 @@ export const idNumber: string;
 export const expirationDate: string;
 export const securityCode: string;
 export const dateAndCode: string;
+export const confirmButtonDiv: string;
