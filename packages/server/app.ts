@@ -16,7 +16,7 @@ import { Answer } from './entities/Answer';
 import { Product } from './entities/Product';
 import {PublicationImage} from './entities/PublicationImage'
 import { SellerReview } from './entities/SellerReview';
-import { getPublicationByID, getAllPublications, deletePublication, updatePublication } from './dbModules/PublicationModule';
+import { getPublicationByID, getAllPublications, deletePublication, updatePublication,insertPublication2 } from './dbModules/PublicationModule';
 import { emit } from 'cluster';
 import { Publication } from './entities/Pubilcation';
 import { insertAnswer } from './dbModules/AnswerModule';
@@ -24,6 +24,8 @@ import { insertSale, getSale } from './dbModules/SaleModule';
 import { Sale } from './entities/Sale';
 import { getSellerReviewsForClient, getSellerReviewsForSeller, insertSellerReview } from './dbModules/SellerReviewModule';
 import { insertProductReview, getProductReviewsForClient, getProductReviewsForProduct } from './dbModules/ProductReviewModule';
+import { PublicationBuilder } from './builders/PublicationBuilder';
+import { ClientBuilder } from './builders/ClientBuilder';
 
 const express = require('express');
 const cors = require('cors');
@@ -295,6 +297,16 @@ app.get('/publication/:publicationId', async function (req: Request, res: Respon
     res.send(result)
     else res.status(404).send('Not found')
   })
+});
+
+app.post('publication', async function (req: Request, res: Response) {
+  const name = req.body.name
+  const value = req.body.value
+  const sellerId = req.body.sellerId
+  const imagenes = req.body.imagenes
+  const productId = req.body.productId
+  const description = req.body.description
+  insertPublication2(pool, name, value, description, sellerId,productId, imagenes).then((result) => res.send(result))
 });
 
 app.put('/publication', async function (req: Request, res: Response) {
