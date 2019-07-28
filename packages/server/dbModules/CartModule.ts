@@ -3,6 +3,7 @@ import { Pool } from 'pg';
 import { Product } from '../entities/Product';
 import { getProductByID } from './ProductModule';
 import { getPublicationByID } from './PublicationModule';
+import { Publication } from '../entities/Pubilcation';
 
 
 export const insertCart = async (pool: Pool, cart: Cart) => {
@@ -58,18 +59,19 @@ export const removePublicationFromCart = async (pool: Pool, cartId: string, publ
 }
 
 
-export const getCartProducts = async (pool: Pool, clientId: string) => {
+export const getCartProducts = async (pool: Pool, cartId: string) => {
     const client = await pool.connect()
     const result = client.query(
         `SELECT publication_id
         FROM cart_publication_table
-        WHERE cart_id = ${clientId}
+        WHERE cart_id = ${cartId}
         `
         ).then((res) => {return res.rows})
         .then((ids) => {
-            const promises =  ids.map(id => getPublicationByID(pool, id.publication_id))
-           return Promise.all(promises)
-        }).then((res) => res[0])
+            return Promise.all(ids.map(id => getPublicationByID(pool, id.publication_id))).then((p:Publication[]) => {
+                return p
+            })
+        })
         .catch(e => {
             console.error(e.stack)
             return ""

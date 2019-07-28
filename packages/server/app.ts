@@ -17,15 +17,12 @@ import { Product } from './entities/Product';
 import {PublicationImage} from './entities/PublicationImage'
 import { SellerReview } from './entities/SellerReview';
 import { getPublicationByID, getAllPublications, deletePublication, updatePublication,insertPublication2 } from './dbModules/PublicationModule';
-import { emit } from 'cluster';
 import { Publication } from './entities/Pubilcation';
 import { insertAnswer } from './dbModules/AnswerModule';
 import { insertSale, getSale } from './dbModules/SaleModule';
 import { Sale } from './entities/Sale';
 import { getSellerReviewsForClient, getSellerReviewsForSeller, insertSellerReview } from './dbModules/SellerReviewModule';
 import { insertProductReview, getProductReviewsForClient, getProductReviewsForProduct } from './dbModules/ProductReviewModule';
-import { PublicationBuilder } from './builders/PublicationBuilder';
-import { ClientBuilder } from './builders/ClientBuilder';
 
 const express = require('express');
 const cors = require('cors');
