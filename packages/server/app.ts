@@ -296,7 +296,7 @@ app.get('/publication/:publicationId', async function (req: Request, res: Respon
   })
 });
 
-app.post('publication', async function (req: Request, res: Response) {
+app.post('/publication', async function (req: Request, res: Response) {
   const name = req.body.name
   const value = req.body.value
   const sellerId = req.body.sellerId
