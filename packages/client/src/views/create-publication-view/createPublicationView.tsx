@@ -2,7 +2,7 @@ import * as React from 'react'
 import * as styles from './createPublicationView.scss'
 import { PublicationForm } from '../../components/publication-form/publicationForm'
 import Paper from '@material-ui/core/Paper/Paper'
-import { getProducts } from '../../api/api'
+import { createPublication, getProducts } from '../../api/api'
 import Typography from '@material-ui/core/Typography/Typography'
 import Select from '@material-ui/core/Select/Select'
 import MenuItem from '@material-ui/core/MenuItem/MenuItem'
@@ -179,6 +179,13 @@ export class CreatePublicationView extends React.PureComponent<Props, State> {
   handleCreate = (publication: Publication) => {
     this.setState({ isCreating: true })
     console.log({ publication })
+    createPublication({
+      ...publication,
+      sellerId: publication.seller.userID,
+      productId: publication.product.id,
+      images: publication.images.map(image => image.image),
+    })
+      .then(() => this.setState({ redirect: '/my-publications' }))
   }
 
   render() {

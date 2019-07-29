@@ -300,10 +300,13 @@ app.post('/publication', async function (req: Request, res: Response) {
   const name = req.body.name
   const value = req.body.value
   const sellerId = req.body.sellerId
-  const imagenes = req.body.imagenes
+  const imagenes = req.body.images
   const productId = req.body.productId
   const description = req.body.description
-  insertPublication2(pool, name, value, description, sellerId,productId, imagenes).then((result) => res.send(result))
+  insertPublication2(pool, name, value, description, sellerId, productId, imagenes).then((result) => {
+    res.status(200)
+    res.send({ publicationId: result })
+  })
 });
 
 app.put('/publication', async function (req: Request, res: Response) {

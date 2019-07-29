@@ -100,8 +100,21 @@ export const deletePublication = (publicationId: number) => {
   return fetch(url, init)
 }
 
-export const getQuestionsForPublication = (productId: number): Promise<PublicationQnA[]> => {
+export const createPublication = (info: { name: string, value: string, sellerId: number, images: string[], productId: number, description: string }) => {
+  const url = `${baseUri}/publication`
 
+  const init: RequestInit = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(info),
+  }
+
+  return fetch(url, init)
+}
+
+export const getQuestionsForPublication = (productId: number): Promise<PublicationQnA[]> => {
   const url = `${baseUri}/qa/${productId}`
 
   const init: RequestInit = {
