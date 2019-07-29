@@ -178,7 +178,6 @@ export class CreatePublicationView extends React.PureComponent<Props, State> {
 
   handleCreate = (publication: Publication) => {
     this.setState({ isCreating: true })
-    console.log({ publication })
     createPublication({
       ...publication,
       sellerId: publication.seller.userID,
