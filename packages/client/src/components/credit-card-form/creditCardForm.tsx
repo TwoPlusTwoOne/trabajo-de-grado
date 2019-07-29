@@ -55,6 +55,7 @@ export class CreditCardForm extends React.PureComponent<Props, State> {
             value={this.state.fields.cardNumber}
             onChange={this.handleChange('cardNumber')}
             margin={'normal'}
+            type={'number'}
           />
         </div>
         <div>
@@ -80,6 +81,7 @@ export class CreditCardForm extends React.PureComponent<Props, State> {
             value={this.state.fields.securityCode}
             onChange={this.handleChange('securityCode')}
             margin={'normal'}
+            type={'password'}
           />
         </div>
         <div>
@@ -89,6 +91,7 @@ export class CreditCardForm extends React.PureComponent<Props, State> {
             value={this.state.fields.idNumber}
             onChange={this.handleChange('idNumber')}
             margin={'normal'}
+            type={'number'}
           />
         </div>
         <div className={styles.confirmButtonDiv}>

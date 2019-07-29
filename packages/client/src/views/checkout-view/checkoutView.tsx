@@ -4,7 +4,7 @@ import { CartComponent } from '../../components/cart/cartComponent'
 import { Paper } from '@material-ui/core'
 import { Loader } from '../../components/loader/loader'
 import { getLoggedUser } from '../../helpers/auth'
-import { getCardKey, getCart } from '../../api/api'
+import { getCart, postCard } from '../../api/api'
 import Typography from '@material-ui/core/Typography'
 import { CreditCardForm } from '../../components/credit-card-form/creditCardForm'
 
@@ -47,18 +47,14 @@ export class CheckoutView extends React.PureComponent<Props, State> {
 
   handleCreditCardFormSubmit = (info: CreditCardInfo) => {
     const requestBody = {
-      number: info.cardNumber,
+      number: parseInt(info.cardNumber),
       expireDate: info.expirationDate,
       owner: info.name,
       securityCode: info.securityCode,
-      document: info.idNumber,
+      document: parseInt(info.idNumber),
     }
 
-    getCardKey()
-      .then(response => response.text())
-      .then(key => {
-
-      })
+    postCard({ card: requestBody }).then(console.log)
   }
 
   render() {
@@ -80,7 +76,7 @@ export class CheckoutView extends React.PureComponent<Props, State> {
           <Typography variant={'h5'}>
             Enter your payment information
           </Typography>
-          <CreditCardForm onSubmit={this.handleCreditCardFormSubmit}/>
+          <CreditCardForm onSubmit={this.handleCreditCardFormSubmit} />
         </div>
       </div>
     )

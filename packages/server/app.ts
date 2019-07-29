@@ -424,12 +424,12 @@ app.post('/card', async function (req: Request, res: Response) {
     path: '/pay',
     method: 'POST',
     headers: {
-      'Content-Type': 'text/plain',
-      'Content-Length': req.body.card.length
+      'Content-Type': 'application/json',
+      // 'Content-Length': req.body.card.length
     }
   }
 
-  const request = https.request(options, (response) => { 
+  const request = https.request(options, (response) => {
     let body = '';
     response.on('data', (d) => body += d);
     response.on('end', () => {
@@ -438,7 +438,7 @@ app.post('/card', async function (req: Request, res: Response) {
     });
   })
 
-  request.write(req.body.card)
+  request.write(JSON.stringify(req.body.card))
   request.end()
 });
 

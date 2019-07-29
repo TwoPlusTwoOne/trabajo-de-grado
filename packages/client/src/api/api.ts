@@ -1,3 +1,4 @@
+// const baseUri = 'https://mitesis.herkouapp.com'
 const baseUri = 'http://localhost:3001'
 
 export const getAllUsers = () => {
@@ -185,4 +186,19 @@ export const getCardKey = () => {
   const url = `${baseUri}/card/key`
 
   return fetch(url)
+}
+
+
+export const postCard = (info: { card: any }) => {
+  const url = `${baseUri}/card`
+
+  const init: RequestInit = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(info)
+  }
+
+  return fetch(url, init)
 }
