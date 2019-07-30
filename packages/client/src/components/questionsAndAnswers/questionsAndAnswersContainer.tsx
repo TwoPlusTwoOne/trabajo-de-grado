@@ -61,10 +61,12 @@ export class QuestionsAndAnswersContainer extends React.PureComponent<Props, Sta
   handleAnswerQuestion = (answer: string, questionId: number) => {
     const user = getLoggedUser()
     const userId = user.userID
-    const { publicationId } = this.props
 
     this.setState({ isSendingAnswer: { ...this.state.isSendingAnswer, [questionId]: true } })
-    // postAnswer()
+    postAnswer({ answer, questionId, userId })
+      .catch(console.log)
+      .then(() => this.setState({ isSendingAnswer: { ...this.state.isSendingAnswer, [questionId]: false } }))
+      .then(this.fetchQuestions)
   }
 
   render() {

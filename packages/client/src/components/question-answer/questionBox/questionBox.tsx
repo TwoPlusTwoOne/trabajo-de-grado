@@ -54,7 +54,7 @@ export class QuestionBox extends React.PureComponent<Props, State> {
               return <div key={questionId}>
                 <Question question={question.question} answer={answer.answer} />
                 {
-                  isLoggedUserSeller && !answer &&
+                  isLoggedUserSeller && !answer.answer &&
                   <AnswerInput
                     questionId={questionId}
                     onSubmit={onAnswerQuestion}

@@ -51,7 +51,7 @@ export class PublicationComponent extends React.PureComponent<Props> {
             Questions & Answers
           </div>
           <QuestionsAndAnswersContainer
-            sellerId={seller.id}
+            sellerId={seller.userID}
             publicationId={id}
             data={qa}
           />
