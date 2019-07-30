@@ -205,9 +205,10 @@ const roleTableInsert =
 const saleTableInsert =
     `CREATE TABLE ${Sale.tableName} (
         id serial PRIMARY KEY,
-        "product_id" integer REFERENCES ${Product.tableName}(id),
+        "publication_id" integer REFERENCES ${Publication.tableName}(id),
         "buyer_id" integer REFERENCES ${Client.tableName}(id),
-        "traking_id" text
+        "price"  integer,
+        "traking" text
     );`
 
 const questionTableInsert =

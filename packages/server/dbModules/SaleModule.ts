@@ -1,18 +1,17 @@
-import { getProductByID } from './ProductModule'
 import { getClientByID } from './ClientModule'
 import { Pool } from 'pg';
 import {Sale} from '../entities/Sale'
-import { Product } from '../entities/Product';
 import { Client } from '../entities/Client';
-import { SellerReview } from '../entities/SellerReview';
-import { ProductBuilder } from '../builders/ProductBuilder';
 import { ClientBuilder } from '../builders/ClientBuilder';
+import { getPublicationByID } from './PublicationModule';
+import { Publication } from '../entities/Pubilcation';
+import { PublicationBuilder } from '../builders/PublicationBuilder';
 
-export const insertSale = async (pool: Pool, product_id: string, buyer_id:string, traking_id: string) => {
+export const insertSale = async (pool: Pool, publication_id: string, price:number, buyer_id:string, traking_id: string) => {
     const client = await pool.connect()
     const result: Promise<string> = client.query(
-        `INSERT INTO ${Sale.tableName} (product_id, buyer_id, traking_id) 
-        VALUES ('${product_id}', '${buyer_id}', '${traking_id}')
+        `INSERT INTO ${Sale.tableName} (publication_id, price, buyer_id, traking_id) 
+        VALUES ('${publication_id}', '${price}', '${buyer_id}', '${traking_id}')
         RETURNING id`
         ).then((res) => {
                 return res.rows[0].id
@@ -33,14 +32,14 @@ export const getSale = async (pool: Pool, id: string) => {
         WHERE id = ${id}`
         ).then((res) => {
                 const r = res.rows[0]
-                return getProductByID(pool, r.product_id).then ((product: Product) => {
+                return getPublicationByID(pool, r.product_id).then ((publication: Publication) => {
                     return getClientByID(pool, r.buyer_id).then((client: Client) => {
-                        return new Sale(id, product, client, r.traking_id)
+                        return new Sale(id, publication, client, r.price, r.traking_id)
                     })
                 })
         }).catch(e => {
             console.error(e.stack)
-            return new Sale("", new ProductBuilder().build(), new ClientBuilder().build(), "")
+            return new Sale("", new PublicationBuilder().build(), new ClientBuilder().build(), 0, "")
         })
     client.release()
     return result
