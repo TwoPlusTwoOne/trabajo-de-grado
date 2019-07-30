@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as styles from './productView.scss'
 import { addItemToCart, getCart, getPublicationById, getQuestionsForPublication } from '../../api/api'
-import { PublicationComponent, PublicationWithQnA } from '../../components/product/publicationComponent'
+import { PublicationComponent } from '../../components/product/publicationComponent'
 import { Loader } from '../../components/loader/loader'
 import Paper from '@material-ui/core/Paper/Paper'
 import { getLoggedUser } from '../../helpers/auth'

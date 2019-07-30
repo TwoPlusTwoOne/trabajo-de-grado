@@ -34,7 +34,7 @@ export class QuestionBox extends React.PureComponent<Props, State> {
 
     const isLoggedUserSeller = userId === sellerId
 
-    const questionsAndAnswersWithAnswers = questionsAndAnswers.filter(qna => !!qna.answer_id)
+    // const questionsAndAnswersWithAnswers = questionsAndAnswers.filter(qna => !!qna.answer_id)
 
     return (
       <div className={styles.questionBox}>
@@ -56,27 +56,28 @@ export class QuestionBox extends React.PureComponent<Props, State> {
         </div>
         <div className={styles.questions2}>
           {
-            questionsAndAnswersWithAnswers.map(qna => {
-              const { question, answer, question_id } = qna
+            questionsAndAnswers.map(qna => {
+              const { question, answer } = qna
+              const questionId = question.id
 
-              return <div key={question_id}>
-                <Question question={question} answer={answer} />
+              return <div key={questionId}>
+                <Question question={question.question} answer={answer.answer} />
                 {
                   isLoggedUserSeller && !answer &&
                   <AnswerInput
-                    questionId={question_id}
+                    questionId={questionId}
                     onSubmit={onAnswerQuestion}
                     publicationId={publicationId}
                     clientId={userId}
-                    isSendingAnswer={isSendingAnswer[question_id]}
+                    isSendingAnswer={isSendingAnswer[questionId]}
                   />
                 }
               </div>
             })
           }
           {
-            questionsAndAnswersWithAnswers.length === 0 &&
-            <EmptyStateMessage message={'This publication does not have any answered questions yet.'} />
+            questionsAndAnswers.length === 0 &&
+            <EmptyStateMessage message={'This publication does not have any questions yet.'} />
           }
         </div>
       </div>

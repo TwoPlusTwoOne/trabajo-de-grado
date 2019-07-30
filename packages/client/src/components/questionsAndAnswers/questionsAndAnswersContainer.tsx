@@ -31,17 +31,19 @@ export class QuestionsAndAnswersContainer extends React.PureComponent<Props, Sta
     this.setState({ isSendingQuestion: true })
 
     postQuestion({ question, userId, publicationId })
-      .then(response => response.json())
-      .then(body => {
+      .then(response => {
+        console.log({ response })
+        return response
+      })
+      .then(() => {
         this.setState({ isSendingQuestion: false })
-        console.log(body)
       })
       .catch(console.log)
   }
 
   handleAnswerQuestion = (answer: string, questionId: number) => {
     const user = getLoggedUser()
-    const userId = user.id
+    const userId = user.userID
     const { publicationId } = this.props
 
     this.setState({ isSendingAnswer: { ...this.state.isSendingAnswer, [questionId]: true } })
@@ -60,7 +62,7 @@ export class QuestionsAndAnswersContainer extends React.PureComponent<Props, Sta
           sellerId={sellerId}
           questionsAndAnswers={data}
           publicationId={publicationId}
-          userId={user.id}
+          userId={user.userID}
           onAskQuestion={this.handleAskQuestion}
           onAnswerQuestion={this.handleAnswerQuestion}
         />

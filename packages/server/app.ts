@@ -93,7 +93,7 @@ const getQuestionFromRequest = (json: any) => {
 }
 
 const getAnswerFromRequest = (json: any) => {
-  return new Answer("", json.questionId, json.answer, json.user)
+  return new Answer("", json.questionId, json.answer, json.userId)
 }
 
 const getImagesFromRequest = (json: any) => {
@@ -352,9 +352,9 @@ app.get('/sale/:id', async function (req: Request, res: Response) {
 const uuidv1 = require('uuid/v1');
 
 app.post('/sale', async function (req: Request, res: Response) {
-  const publication_id = req.body.publication_id
+  const publication_id = req.body.publicationId
   const price = req.body.price
-  const buyer_id = req.body.buyer_id
+  const buyer_id = req.body.buyerId
   const traking_id = uuidv1()
   insertSale(pool, publication_id, buyer_id, price, traking_id).then((id) => res.sendStatus(200))
 });

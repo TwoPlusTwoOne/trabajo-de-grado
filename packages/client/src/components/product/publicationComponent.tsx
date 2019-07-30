@@ -4,10 +4,6 @@ import { QuestionsAndAnswersContainer } from '../questionsAndAnswers/questionsAn
 import { Button } from '../button/button'
 import { Loader } from '../loader/loader'
 
-export type PublicationWithQnA = Publication & {
-  qa: PublicationQnA[]
-}
-
 export type Props = {
   publication: PublicationWithQnA
   isAddingToCart: boolean

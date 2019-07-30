@@ -178,13 +178,23 @@ export class CreatePublicationView extends React.PureComponent<Props, State> {
 
   handleCreate = (publication: Publication) => {
     this.setState({ isCreating: true })
+    const sellerId = publication.seller.userID
+    const loggedUser = getLoggedUser()
+    console.log({ sellerId, loggedUser })
     createPublication({
       ...publication,
-      sellerId: publication.seller.userID,
+      sellerId: sellerId,
       productId: publication.product.id,
       images: publication.images.map(image => image.image),
     })
-      .then(() => this.setState({ redirect: '/my-publications' }))
+      .then(response => {
+        const { status } = response
+        if (status >= 400) {
+          this.setState({ isCreating: false })
+        } else if (status >= 200) {
+          this.setState({ redirect: '/my-publications' })
+        }
+      })
   }
 
   render() {

@@ -1,5 +1,5 @@
-// const baseUri = 'https://mitesis.herkouapp.com'
-const baseUri = 'http://localhost:3001'
+const baseUri = 'https://mitesis.herokuapp.com'
+// const baseUri = 'http://localhost:3001'
 
 export const getAllUsers = () => {
   return fetch(`${baseUri}/user`, { method: 'get' })
@@ -140,8 +140,8 @@ export const postQuestion = (info: { question: string, userId: number, publicati
   return fetch(url, init)
 }
 
-export const postAnswer = (info: { answer: string, questionId: number, userId: number, publicationId: number }) => {
-  const url = `${baseUri}/question`
+export const postAnswer = (info: { answer: string, questionId: number, userId: number }) => {
+  const url = `${baseUri}/answer`
   const init: RequestInit = {
     method: 'POST',
     headers: {
@@ -204,6 +204,20 @@ export const getCardKey = () => {
 
 export const postCard = (info: { card: any }) => {
   const url = `${baseUri}/card`
+
+  const init: RequestInit = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(info)
+  }
+
+  return fetch(url, init)
+}
+
+export const createSale = (info: { publicationId: number, price: string, buyerId: number }) => {
+  const url = `${baseUri}/sale`
 
   const init: RequestInit = {
     method: 'POST',

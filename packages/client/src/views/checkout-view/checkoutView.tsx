@@ -4,7 +4,7 @@ import { CartComponent } from '../../components/cart/cartComponent'
 import { Paper } from '@material-ui/core'
 import { Loader } from '../../components/loader/loader'
 import { getLoggedUser } from '../../helpers/auth'
-import { getCart, postCard } from '../../api/api'
+import { createSale, getCart, postCard } from '../../api/api'
 import Typography from '@material-ui/core/Typography'
 import { CreditCardForm } from '../../components/credit-card-form/creditCardForm'
 
@@ -15,7 +15,7 @@ export type State = {
   isFetchingCart: boolean
 }
 
-const wrapped = (content: any) => {
+export const wrapped = (content: any) => {
   return <div className={styles.container}>
     <Paper className={styles.paper}>
       {content}
@@ -54,7 +54,29 @@ export class CheckoutView extends React.PureComponent<Props, State> {
       document: parseInt(info.idNumber),
     }
 
-    postCard({ card: requestBody }).then(console.log)
+    postCard({ card: requestBody })
+      .then(response => {
+        if (response.status === 200) return Promise.resolve()
+        else return Promise.reject('Invalid card')
+      })
+      .then(this.completeCheckout)
+  }
+
+  completeCheckout = () => {
+    const { shoppingCart } = this.state
+
+    if (!shoppingCart) return
+
+    const { publications } = shoppingCart
+    const loggedUser = getLoggedUser()
+
+    Promise.all(publications.map(publication => createSale({
+      price: publication.value,
+      publicationId: publication.id,
+      buyerId: loggedUser.userID,
+    })))
+      .then(response => console.log({ response }))
+      .catch(error => console.log({ error }))
   }
 
   render() {

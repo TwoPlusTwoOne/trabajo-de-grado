@@ -34,7 +34,8 @@ export class MyPublicationsView extends React.PureComponent<Props, State> {
 
   receivePublications = (publications: Publication[]) => {
     const user = getLoggedUser()
-    const userPublications = publications.filter(p => p.seller.userID === user.id)
+    console.log({ publications, user })
+    const userPublications = publications.filter(p => p.seller.userID === user.userID)
     this.setState({ publications: userPublications, fetchedPublications: true })
   }
 
@@ -43,6 +44,7 @@ export class MyPublicationsView extends React.PureComponent<Props, State> {
   }
 
   handleGoToPublicationQuestions = (publicationId: number) => {
+    this.setState({ redirect: `/my-publications/${publicationId}/questions` })
   }
 
   handleGoToEditPublication = (publicationId: number) => {

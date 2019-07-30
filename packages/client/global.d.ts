@@ -35,13 +35,19 @@ declare type Product = {
 declare type ProductReview = {}
 
 declare type PublicationQnA = {
-  answer: string
-  answer_id: number
-  client_id: number
-  product_id: number
-  question: string
-  question_id: number
-  seller_id: number
+  question: {
+    id: number
+    publicationId: number
+    question: string
+    userId: number
+
+  }
+  answer: {
+    answer: string
+    userId: number
+    publicationId: number
+    id: number
+  }
 }
 
 declare type Cart = {
@@ -55,4 +61,8 @@ declare type CreditCardInfo = {
   expirationDate: string
   securityCode: string
   idNumber: string
+}
+
+declare type PublicationWithQnA = Publication & {
+  qa: PublicationQnA[]
 }
