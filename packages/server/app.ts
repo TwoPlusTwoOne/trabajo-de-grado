@@ -1,6 +1,6 @@
 import { UserBuilder } from './builders/UserBuilder'
 import { insertAdmin, getAdminByID, loginAdmin } from './dbModules/AdminModule';
-import { insertUser, loginUser } from './dbModules/UsersModule'
+import { insertUser, loginUser, validateEmail } from './dbModules/UsersModule'
 import { insertClient, getClientByID, loginClient } from './dbModules/ClientModule'
 import { getAllProducts, getProductByID } from './dbModules/ProductModule'
 import { Request, Response } from 'express';
@@ -65,7 +65,7 @@ const getUserFromRequest = (json: any) => {
   const dni = json.dni
   const password = json.password
   const email = json.email
-  const birthdate = json.birthdate
+  const birthdate = new Date(json.birthdate)
   const id = json.id === undefined ?   "" : json.id
 
   const user = new UserBuilder()
@@ -172,9 +172,14 @@ app.get('/user/:userId', async function (req: Request, res: Response) {
 
 
 app.post('/client', async function (req: Request, res: Response) {
-  const user = getClientFromRequest(req.body)
-  const clientID: string = await insertClient(pool, user)
-  res.send(JSON.stringify({ id: clientID }))
+  if (!validateEmail(req.body.email)) {
+    res.status(400)
+    res.send('Bad email')
+  } else {
+    const user = getClientFromRequest(req.body)
+    const clientID: string = await insertClient(pool, user)
+    res.send(JSON.stringify({ id: clientID }))
+  }
 });
 
 app.get('/client/:clientId', async function (req: Request, res: Response) {

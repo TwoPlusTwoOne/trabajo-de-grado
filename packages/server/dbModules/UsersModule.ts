@@ -4,6 +4,8 @@ import { UserBuilder } from '../builders/UserBuilder';
 
 const md5 = require('md5');
 
+const emailRegex = /^([a-zA-Z0-9])(([\-.]|[_]+)?([a-zA-Z0-9]+))*(@){1}[a-z0-9]+[.]{1}(([a-z]{2,3})|([a-z]{2,3}[.]{1}[a-z]{2,3}))$/
+
 export const insertUser = async (pool: Pool, user: User) => {
     const client = await pool.connect()
     const password = md5(user.password)
@@ -35,4 +37,10 @@ export const loginUser = async (pool: Pool, email:string, password: string) => {
         })
     client.release()
     return result
+}
+
+export const validateEmail = (email: string) => {
+  if (!email) return false
+
+  return emailRegex.test(email)
 }

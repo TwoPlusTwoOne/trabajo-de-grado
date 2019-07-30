@@ -34,6 +34,28 @@ export const login = (info: { email: string, password: string }) => {
   return fetch(adminUrl, init).then(response => response.status === 401 ? fetch(clientUrl, init) : response)
 }
 
+export const registerUser = (info: {
+  first_name: string,
+  last_name: string,
+  direction: string,
+  dni: string,
+  password: string,
+  email: string,
+  birthdate: Date,
+}) => {
+  const url = `${baseUri}/client`
+
+  const init: RequestInit = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(info),
+  }
+
+  return fetch(url, init)
+}
+
 export const getProducts = (): Promise<Product[]> => {
   const url = `${baseUri}/product`
 

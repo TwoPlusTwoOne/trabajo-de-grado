@@ -7,6 +7,7 @@ import { LoginButton } from './loginButton'
 import { Loader } from '../loader/loader'
 import { User } from '../../helpers/auth'
 import { Redirect } from 'react-router'
+import { Button } from '../button/button'
 
 export type Props = {
   logIn: (user: User) => void
@@ -39,9 +40,9 @@ export class Login extends React.PureComponent<Props, State> {
     if (response.status === 401) {
       this.logInError()
     } else {
-      response.json().then( (user: User) => {
-      console.log(user)
-      this.logInSuccess(user)
+      response.json().then((user: User) => {
+        console.log(user)
+        this.logInSuccess(user)
       })
     }
   }
@@ -64,6 +65,10 @@ export class Login extends React.PureComponent<Props, State> {
   handleChange = (field: string, e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const value = e.target.value
     this.setState({ ...this.state, [field]: value })
+  }
+
+  handleClickRegister = () => {
+    this.setState({ redirect: '/register' })
   }
 
   render() {
@@ -95,7 +100,8 @@ export class Login extends React.PureComponent<Props, State> {
           isLoggingIn
             ? <Loader />
             : <div className={styles.buttonsDiv}>
-              <LoginButton onClick={this.handleClickLogin} />
+              <div><LoginButton onClick={this.handleClickLogin} /></div>
+              <div><Button kind={'secondary'} onClick={this.handleClickRegister}>Register</Button></div>
             </div>
         }
         <div />

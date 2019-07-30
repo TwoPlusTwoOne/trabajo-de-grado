@@ -10,12 +10,12 @@
   }
 
   .buttonsDiv {
-    button {
-      width: 100%;
+    > div {
+      margin-bottom: 10px;
+      button {
+        width: 100%;
+      }
     }
-
-    display: flex;
-    justify-content: space-around;
   }
 
   .error {

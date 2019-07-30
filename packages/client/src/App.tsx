@@ -14,6 +14,7 @@ import { CreatePublicationView } from './views/create-publication-view/createPub
 import { CartView } from './views/cart-view/cartView'
 import { CheckoutView } from './views/checkout-view/checkoutView'
 import { PublicationQuestionsView } from './views/publication-questions-view/publicationQuestionsView'
+import { RegisterView } from './views/register-view/registerView'
 
 export const AuthContext = React.createContext<AuthState>({
   logOut: () => null,
@@ -64,6 +65,7 @@ class App extends PureComponent<{}, State> {
           <Base loggedUser={this.state.auth.loggedUser}>
             <Switch>
               <UnsecuredRoute exact path="/login" component={LoginView} />
+              <UnsecuredRoute exact path="/register" component={RegisterView} />
               <SecuredRoute exact path="/" component={Home} />
               <SecuredRoute exact path="/my-publications" component={MyPublicationsView} />
               <SecuredRoute exact path="/my-publications/create" component={CreatePublicationView} />
