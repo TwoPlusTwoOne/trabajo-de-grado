@@ -120,14 +120,6 @@ const getPublicationFromRequest = (json: any) => {
   return new Publication(json.id, json.name, json.value, seller, images, product, json.description)
 }
 
-const getSaleFromRequest = (json: any) => {
-  const product = getProductFromRequest(json.product)
-  const buyer = getClientFromRequest(json.buyer)
-  const reviews =  json.reviews.map(r => getReviewsFromRequest(r))
-  return new Sale(json.id, product, buyer, json.traking_id)
-}
-
-
 app.post('/login', async function (req: Request, res: Response) {
   const userEmail = req.body.email
   const userPassword = req.body.password
@@ -360,10 +352,11 @@ app.get('/sale/:id', async function (req: Request, res: Response) {
 const uuidv1 = require('uuid/v1');
 
 app.post('/sale', async function (req: Request, res: Response) {
-  const product_id = req.body.product_id
+  const publication_id = req.body.publication_id
+  const price = req.body.price
   const buyer_id = req.body.buyer_id
   const traking_id = uuidv1()
-  insertSale(pool, product_id, buyer_id, traking_id).then((id) => res.sendStatus(200))
+  insertSale(pool, publication_id, buyer_id, price, traking_id).then((id) => res.sendStatus(200))
 });
 
 // ----------------------------------------------------------------------
