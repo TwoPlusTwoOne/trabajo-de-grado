@@ -17,7 +17,7 @@ export class PublicationComponent extends React.PureComponent<Props> {
 
   render() {
     const { publication, isAddingToCart } = this.props
-    const { qa, product, id, value, name, description, images, seller } = publication
+    const { qa, id, value, name, description, images, seller } = publication
 
     return (
       <div className={styles.product}>
@@ -50,7 +50,11 @@ export class PublicationComponent extends React.PureComponent<Props> {
           <div className={styles.title}>
             Questions & Answers
           </div>
-          <QuestionsAndAnswersContainer sellerId={seller.id} publicationId={id} data={qa} />
+          <QuestionsAndAnswersContainer
+            sellerId={seller.id}
+            publicationId={id}
+            data={qa}
+          />
         </div>
       </div>
     )

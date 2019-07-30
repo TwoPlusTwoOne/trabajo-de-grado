@@ -22,19 +22,10 @@ export type State = {}
 
 export class QuestionBox extends React.PureComponent<Props, State> {
 
-  componentDidMount() {
-    const { publicationId } = this.props
-
-    getQuestionsForPublication(publicationId)
-      .then(q => this.setState({ ...this.state, questionsAndAnswers: q }))
-  }
-
   render() {
     const { userId, publicationId, sellerId, questionsAndAnswers, onAnswerQuestion, onAskQuestion, isSendingQuestion, isSendingAnswer } = this.props
 
     const isLoggedUserSeller = userId === sellerId
-
-    // const questionsAndAnswersWithAnswers = questionsAndAnswers.filter(qna => !!qna.answer_id)
 
     return (
       <div className={styles.questionBox}>

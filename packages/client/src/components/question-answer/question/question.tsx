@@ -15,17 +15,18 @@ export class Question extends React.PureComponent<Props, State> {
 
   render() {
     const { answer, question } = this.props
+    console.log({ question })
     return (
       <div className={styles.question}>
         <div>
           <FontAwesomeIcon icon={faComment} flip="horizontal" />
-          <a>{question}</a>
+          <span dangerouslySetInnerHTML={{ __html: question }} />
         </div>
         {
           answer &&
           <div>
             <FontAwesomeIcon icon={faReply} flip="horizontal" />
-            <a>{answer}</a>
+            <span dangerouslySetInnerHTML={{ __html: answer }} />
           </div>
         }
       </div>

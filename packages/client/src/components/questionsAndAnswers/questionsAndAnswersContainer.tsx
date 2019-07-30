@@ -1,7 +1,8 @@
 import * as React from 'react'
 import { QuestionBox } from '../question-answer/questionBox/questionBox'
 import { getLoggedUser } from '../../helpers/auth'
-import { postAnswer, postQuestion } from '../../api/api'
+import { getQuestionsForPublication, postAnswer, postQuestion } from '../../api/api'
+import { Loader } from '../loader/loader'
 
 export type Props = {
   data: PublicationQnA[]
@@ -10,8 +11,10 @@ export type Props = {
 }
 
 export type State = {
+  questions: PublicationQnA[]
   isSendingQuestion: boolean
   isSendingAnswer: { [questionId: string]: boolean }
+  isFetchingQuestions: boolean
 }
 
 export class QuestionsAndAnswersContainer extends React.PureComponent<Props, State> {
@@ -19,7 +22,20 @@ export class QuestionsAndAnswersContainer extends React.PureComponent<Props, Sta
   constructor(props: Props) {
     super(props)
 
-    this.state = { isSendingAnswer: {}, isSendingQuestion: false }
+    this.state = { isSendingAnswer: {}, isSendingQuestion: false, questions: [], isFetchingQuestions: false }
+  }
+
+  componentDidMount(): void {
+    this.fetchQuestions()
+  }
+
+  fetchQuestions = () => {
+    this.setState({ isFetchingQuestions: true })
+    const { publicationId } = this.props
+
+    getQuestionsForPublication(publicationId)
+      .then(questions => this.setState({ questions, isFetchingQuestions: false }))
+      .catch(() => this.setState({ isFetchingQuestions: false }))
   }
 
 
@@ -38,6 +54,7 @@ export class QuestionsAndAnswersContainer extends React.PureComponent<Props, Sta
       .then(() => {
         this.setState({ isSendingQuestion: false })
       })
+      .then(this.fetchQuestions)
       .catch(console.log)
   }
 
@@ -51,8 +68,11 @@ export class QuestionsAndAnswersContainer extends React.PureComponent<Props, Sta
   }
 
   render() {
-    const { data, publicationId, sellerId } = this.props
-    const { isSendingAnswer, isSendingQuestion } = this.state
+    const { publicationId, sellerId } = this.props
+    const { isSendingAnswer, isSendingQuestion, questions, isFetchingQuestions } = this.state
+
+    if (isFetchingQuestions) return <Loader />
+
     const user = getLoggedUser()
     return (
       <div>
@@ -60,7 +80,7 @@ export class QuestionsAndAnswersContainer extends React.PureComponent<Props, Sta
           isSendingQuestion={isSendingQuestion}
           isSendingAnswer={isSendingAnswer}
           sellerId={sellerId}
-          questionsAndAnswers={data}
+          questionsAndAnswers={questions}
           publicationId={publicationId}
           userId={user.userID}
           onAskQuestion={this.handleAskQuestion}
