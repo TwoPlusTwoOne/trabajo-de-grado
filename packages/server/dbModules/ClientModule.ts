@@ -95,8 +95,7 @@ export const loginClient = async (pool: Pool, email: string, password: string) =
     ON client_table.user_id = user_table.id
     WHERE ${User.tableName}.email = '${email}' AND ${User.tableName}.password = '${md5Password}'`
     ).then((r) => {
-            const result = r.rows[0]
-            return new Client(result.client_id, result.first_name, result.last_name, result.direction, result.dni, result.password, result.email, result.birthdate, result.sellerCalification, result.user_id)
+            return r.rows[0]
     }).catch(e => {
         console.error(e.stack)
         return new ClientBuilder().build()

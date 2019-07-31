@@ -77,8 +77,7 @@ export const loginUser = async (pool: Pool, email:string, password: string) => {
     const result: Promise<User> = client.query(
         `SELECT * FROM ${User.tableName} WHERE ${User.tableName}.email = '${email}' AND ${User.tableName}.password = '${md5Password}'`
         ).then((r) => {
-                const result = r.rows[0]
-                return new User(result.id, result.first_name, result.last_name, result.direction, result.dni, result.password, result.email, result.birthdate)
+                return r.rows[0]
         }).catch(e => {
             console.error(e.stack)
             return new UserBuilder().build()

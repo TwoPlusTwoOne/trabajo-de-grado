@@ -101,9 +101,7 @@ export const loginAdmin = async (pool: Pool, email: string, password: string) =>
         ON ${Role.tableName}.id = ${Admin.tableName}.role_id
         WHERE ${User.tableName}.email = '${email}' AND ${User.tableName}.password = '${md5Password}'`
     ).then((r) => {
-            const result = r.rows[0]
-            const role = new Role(result.role_id, result.role_name, result.role_level)
-            return new Admin(result.admin_id, result.first_name, result.last_name, result.direction, result.dni, result.password, result.email, result.birthdate, role, result.user_id)
+            return r.rows[0]
     }).catch(e => {
         console.error(e.stack)
         return new AdminBuilder().build()
