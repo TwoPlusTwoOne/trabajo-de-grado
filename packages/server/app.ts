@@ -217,13 +217,13 @@ app.get('/client/:clientId', async function (req: Request, res: Response) {
 app.post('/client/login', async function (req: Request, res: Response) {
   const email = req.body.email
   const password = req.body.password
-  loginClient(pool, email, password).then((r) => {
-    if(r.id !== null && r.id !== ""){
-      res.send(r)
-    } else{
-      res.sendStatus(401)
-    }
-  })})
+  loginClient(pool, email, password)
+  .catch((e) => {
+    res.status(401)
+    return e.message
+  })
+  .then((r) => {res.send(r)})
+})
 
 // ----------------------------------------------------------------------------
 
@@ -241,13 +241,12 @@ app.get('/admin/:adminId', async function (req: Request, res: Response) {
 app.post('/admin/login', async function (req: Request, res: Response) {
   const email = req.body.email
   const password = req.body.password
-  loginAdmin(pool, email, password).then((r) => {
-    if(r.id !== null && r.id !== ""){
-      res.send(r)
-    } else {
-      res.sendStatus(401)
-    }
-  })})
+  loginAdmin(pool, email, password)
+  .catch((e) => {
+    res.status(401)
+    return e.message
+  })
+  .then((r) => {res.send(r)})})
 
 app.post('/admin', async function (req: Request, res: Response) {
   const admin = <Admin> getUserFromRequest(req.body)

@@ -92,19 +92,24 @@ export const loginAdmin = async (pool: Pool, email: string, password: string) =>
         ${User.tableName}.password, 
         ${User.tableName}.email, 
         ${User.tableName}.birthdate, 
-        ${Role.tableName}.id as role_id
-        ${Role.tableName}.name as role_name
-        ${Role.tableName}.level as role_level 
+        ${Role.tableName}.id as role_id,
+        ${Role.tableName}.name as role_name,
+        ${Role.tableName}.level as role_level,
+        ${User.tableName}.id as user_id
         FROM ${Admin.tableName} INNER JOIN ${User.tableName}
         ON ${Admin.tableName}.user_id = ${User.tableName}.id
-        INNER JOIN role_table
+        FULL OUTER JOIN role_table
         ON ${Role.tableName}.id = ${Admin.tableName}.role_id
-        WHERE ${User.tableName}.email = '${email}' AND ${User.tableName}.password = '${md5Password}'`
+        WHERE ${User.tableName}.email = '${email}'`
     ).then((r) => {
+        if(r.rowCount === 0){
+            throw new Error("Invalid email")
+        }
+        else if(r.rows[0].password === md5Password){
             return r.rows[0]
-    }).catch(e => {
-        console.error(e.stack)
-        return new AdminBuilder().build()
+        } else {
+            throw new Error("Invalid password")
+        }
     })
     clientDB.release()
     return result

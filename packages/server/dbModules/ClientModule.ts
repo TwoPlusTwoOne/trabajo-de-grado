@@ -79,7 +79,7 @@ export const getClientByID = async (pool: Pool, id: string) => {
 export const loginClient = async (pool: Pool, email: string, password: string) => {
     const clientDB = await pool.connect()
     const md5Password = md5(password)
-    const result: Promise<Client> = clientDB.query(
+    const result: Promise<any> = clientDB.query(
     `SELECT 
         ${Client.tableName}.id as client_id,
         ${User.tableName}.first_name, 
@@ -93,12 +93,16 @@ export const loginClient = async (pool: Pool, email: string, password: string) =
         ${User.tableName}.id as user_id
     FROM client_table  INNER JOIN user_table
     ON client_table.user_id = user_table.id
-    WHERE ${User.tableName}.email = '${email}' AND ${User.tableName}.password = '${md5Password}'`
+    WHERE ${User.tableName}.email = '${email}'`
     ).then((r) => {
-            return r.rows[0]
-    }).catch(e => {
-        console.error(e.stack)
-        return new ClientBuilder().build()
+            if(r.rowCount === 0){
+                throw new Error("Invalid email")
+            }
+            else if(r.rows[0].password === md5Password){
+                return r.rows[0]
+            } else {
+                throw new Error("Invalid password")
+            }
     })
     clientDB.release()
     return result
