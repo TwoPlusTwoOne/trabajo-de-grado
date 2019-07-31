@@ -1,13 +1,8 @@
 import { UserBuilder } from './builders/UserBuilder'
-<<<<<<< HEAD
-import { insertAdmin, getAdminByID, loginAdmin } from './dbModules/AdminModule';
-import { insertUser, loginUser, validateEmail } from './dbModules/UsersModule'
-import { insertClient, getClientByID, loginClient } from './dbModules/ClientModule'
-=======
+
 import { insertAdmin, getAdminByID, loginAdmin, updateAdmin } from './dbModules/AdminModule';
-import { insertUser, loginUser, deleteUser } from './dbModules/UsersModule'
+import { insertUser, loginUser, deleteUser, validateEmail} from './dbModules/UsersModule'
 import { insertClient, getClientByID, loginClient, updateClient } from './dbModules/ClientModule'
->>>>>>> Users BM added
 import { getAllProducts, getProductByID } from './dbModules/ProductModule'
 import { Request, Response } from 'express';
 import { Client } from './entities/Client'
