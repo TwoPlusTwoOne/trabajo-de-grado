@@ -11,15 +11,17 @@ class Sale implements DBEntity {
     buyer: Client
     price: number
     traking_id: string
+    direction: string
 
     static readonly tableName = "sale_table"
 
-    constructor(id: string, publication: Publication, buyer: Client, price:number, trakingId: string){
+    constructor(id: string, publication: Publication, buyer: Client, price:number, trakingId: string, direction:string){
         this.id = id
         this.publication = publication
         this.buyer = buyer
         this.price = price
         this.traking_id = trakingId
+        this.direction = direction
     }
 }
 

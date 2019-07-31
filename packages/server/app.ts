@@ -386,8 +386,9 @@ app.post('/sale', async function (req: Request, res: Response) {
   const publication_id = req.body.publicationId
   const price = req.body.price
   const buyer_id = req.body.buyerId
+  const direction = req.body.direction
   const traking_id = uuidv1()
-  insertSale(pool, publication_id, buyer_id, price, traking_id).then((id) => res.sendStatus(200))
+  insertSale(pool, publication_id, buyer_id, price, traking_id, direction).then((id) => res.sendStatus(200))
 });
 
 // ----------------------------------------------------------------------

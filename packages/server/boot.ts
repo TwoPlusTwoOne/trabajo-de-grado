@@ -208,7 +208,8 @@ const saleTableInsert =
         "publication_id" integer REFERENCES ${Publication.tableName}(id),
         "buyer_id" integer REFERENCES ${Client.tableName}(id),
         "price"  integer,
-        "traking" text
+        "traking_id" text,
+        "direction" text
     );`
 
 const questionTableInsert =
