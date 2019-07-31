@@ -1,5 +1,5 @@
 import { Client } from '../entities/Client'
-import { insertUser, loginUser } from './UsersModule'
+import { insertUser, updateUser } from './UsersModule'
 import { User } from '../entities/User'
 import { Pool } from 'pg';
 import { ClientBuilder } from '../builders/ClientBuilder';
@@ -12,8 +12,30 @@ export const insertClient = async (pool: Pool, client: Client) => {
     const result: Promise<string> = insertUser(pool, <User>client)
         .then(async (userID) => {
             const result: Promise<string> = clientDB.query(
-            `INSERT INTO client_table (seller_calification, user_id) 
+            `INSERT INTO ${Client.tableName} (seller_calification, user_id) 
             VALUES ('${client.sellerCalification}', '${userID}')
+            RETURNING id`
+            ).then((res) => {
+                    return res.rows[0].id
+            }).catch(e => {
+                console.error(e.stack)
+                return ""
+            })
+        return result
+        })
+    clientDB.release()
+    return result
+}
+
+export const updateClient = async (pool: Pool, client:Client) => {
+    const clientDB = await pool.connect()
+    const result: Promise<string> = updateUser(pool, <User>client)
+        .then(async (userID) => {
+            const result: Promise<string> = clientDB.query(
+            `UPDATE ${Client.tableName} SET 
+            seller_calification = '${client.sellerCalification}', 
+            user_id = '${client.userID}'
+            WHERE id = ${client.id}
             RETURNING id`
             ).then((res) => {
                     return res.rows[0].id

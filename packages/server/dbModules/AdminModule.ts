@@ -1,9 +1,10 @@
 import { Admin } from '../entities/Admin'
-import { insertUser } from './UsersModule'
+import { insertUser, updateUser } from './UsersModule'
 import { User } from '../entities/User'
 import { Pool } from 'pg';
 import { Role } from '../entities/Role';
 import { AdminBuilder } from '../builders/AdminBuilder';
+import { updateRole } from './RoleModule';
 
 
 const md5 = require('md5');
@@ -14,7 +15,7 @@ export const insertAdmin = async (pool: Pool, client: Admin) => {
     const result: Promise<string> = insertUser(pool, <User>client)
         .then(async (userID) => {
             const result: Promise<string> = clientDB.query(
-            `INSERT INTO admin_table (user_id) 
+            `INSERT INTO ${Admin.tableName} (user_id) 
             VALUES ('${userID}')
             RETURNING id`
             ).then((res) => {
@@ -24,6 +25,27 @@ export const insertAdmin = async (pool: Pool, client: Admin) => {
                 return ""
             })
         return result
+        })
+    clientDB.release()
+    return result
+}
+
+export const updateAdmin = async (pool: Pool, admin: Admin) => {
+    const clientDB = await pool.connect()
+    const result: Promise<string> = updateUser(pool, <User>admin)
+        .then((userID) => {
+            return clientDB.query(
+            `UPDATE ${Admin.tableName} SET 
+            user_id = '${userID}',
+            role_id = '${admin.role.id}'
+            WHERE id = ${admin.id}
+            RETURNING id`
+            ).then((res) => {
+                    return res.rows[0].id
+            }).catch(e => {
+                console.error(e.stack)
+                return ""
+            })
         })
     clientDB.release()
     return result

@@ -1,7 +1,13 @@
 import { UserBuilder } from './builders/UserBuilder'
+<<<<<<< HEAD
 import { insertAdmin, getAdminByID, loginAdmin } from './dbModules/AdminModule';
 import { insertUser, loginUser, validateEmail } from './dbModules/UsersModule'
 import { insertClient, getClientByID, loginClient } from './dbModules/ClientModule'
+=======
+import { insertAdmin, getAdminByID, loginAdmin, updateAdmin } from './dbModules/AdminModule';
+import { insertUser, loginUser, deleteUser } from './dbModules/UsersModule'
+import { insertClient, getClientByID, loginClient, updateClient } from './dbModules/ClientModule'
+>>>>>>> Users BM added
 import { getAllProducts, getProductByID } from './dbModules/ProductModule'
 import { Request, Response } from 'express';
 import { Client } from './entities/Client'
@@ -23,6 +29,7 @@ import { insertSale, getSale } from './dbModules/SaleModule';
 import { Sale } from './entities/Sale';
 import { getSellerReviewsForClient, getSellerReviewsForSeller, insertSellerReview } from './dbModules/SellerReviewModule';
 import { insertProductReview, getProductReviewsForClient, getProductReviewsForProduct } from './dbModules/ProductReviewModule';
+import { Role } from './entities/Role';
 
 const express = require('express');
 const cors = require('cors');
@@ -84,9 +91,20 @@ const getUserFromRequest = (json: any) => {
 const getClientFromRequest = (json: any) => {
   const client = <Client> getUserFromRequest(json)
   client.sellerCalification = json.sellerCalification
+  client.userID = json.userID
   return client
 }
 
+const getAdminFromRequest = (json: any) => {
+  const admin = <Admin> getUserFromRequest(json)
+  admin.role = getRoleFromRequest(json.role)
+  admin.userID = json.userID
+  return admin
+}
+
+const getRoleFromRequest = (json: any) => {
+  return new Role(json.id, json.name, json.level)
+}
 
 const getQuestionFromRequest = (json: any) => {
   return new Question("", json.publicationId, json.question, json.userId)
@@ -154,9 +172,22 @@ app.post('/user', async function (req: Request, res: Response) {
   res.send(JSON.stringify({ id: userID }))
 });
 
+app.put('/user', async function (req: Request, res: Response) {
+  if(req.body.role !== undefined){
+    updateAdmin(pool, getAdminFromRequest(req.body)).then((r) => res.send(""))
+  }else {
+   updateClient(pool, getClientFromRequest(req.body)).then((r) => res.send(""))
+  }
+});
+
 app.get('/user', async (req: Request, res: Response) => {
   const result = await execQuery('SELECT * FROM user_table')
   res.send(result);
+})
+
+app.delete('/user/:id', async (req: Request, res: Response) => {
+  const id = req.params.id
+  deleteUser(pool, id).then((result) => res.send(result))
 })
 
 app.get('/user/:userId', async function (req: Request, res: Response) {
