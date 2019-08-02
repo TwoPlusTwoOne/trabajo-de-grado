@@ -381,6 +381,7 @@ app.get('/sale/:id', async function (req: Request, res: Response) {
 
 const uuidv1 = require('uuid/v1');
 
+
 app.post('/sale', async function (req: Request, res: Response) {
   const publication_id = req.body.publicationId
   const price = req.body.price
@@ -480,6 +481,7 @@ app.get('/card/key', async function (req: Request, res: Response) {
 // -----------------------------------------------------------------------
 const port =process.env.PORT || 3001
 
-app.listen(3001, function () {
+
+app.listen(port, function () {
   console.log(`Server started on port: ${port}`);
 });
