@@ -21,12 +21,11 @@ import { getPublicationByID, getAllPublications, deletePublication, updatePublic
 import { Publication } from './entities/Pubilcation';
 import { insertAnswer } from './dbModules/AnswerModule';
 import { insertSale, getSale } from './dbModules/SaleModule';
-import { Sale } from './entities/Sale';
 import { getSellerReviewsForClient, getSellerReviewsForSeller, insertSellerReview } from './dbModules/SellerReviewModule';
 import { insertProductReview, getProductReviewsForClient, getProductReviewsForProduct } from './dbModules/ProductReviewModule';
 import { Role } from './entities/Role';
-import { json } from 'body-parser';
 
+const moment = require('moment');
 const express = require('express');
 const cors = require('cors');
 const app = express();
@@ -66,13 +65,9 @@ const execQuery = async (query: string) => {
 const getUserBirthDate = (json: any) => {
   const locale = json.dateLocale || "en"
   const format = json.dateFormat || "yyyy-mm-dd"
-  console.log(`locale: ${locale}`)
-  console.log(`format: ${format}`)
-  var m = require("moment");
-  m.locale(locale)
-  const date = m(json.birthdate)
-  date.format(format) 
-  return date
+
+  moment.locale(locale)
+  return moment(json.birthdate).format(format)
 }
 
 
