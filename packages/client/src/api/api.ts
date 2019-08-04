@@ -3,8 +3,9 @@ import { UserBase } from '../helpers/auth'
 
 const baseUri = 'http://localhost:3001'
 
-export const getAllUsers = () => {
+export const getAllUsers = (): Promise<GetUsersResponse> => {
   return fetch(`${baseUri}/user`, { method: 'get' })
+    .then(response => response.json())
 }
 
 export const getUserById = (id: string) => {
@@ -35,17 +36,7 @@ export const deleteUser = (userId: number) => {
   return fetch(url, init)
 }
 
-export const getAllXss = () => {
-  return fetch(`${baseUri}/xss`, { method: 'get' })
-}
-
-export const getProductById = (id: number) => {
-  return fetch(`${baseUri}/product`, { method: 'get' })
-    .then(response => response.json())
-    .then(body => body.find((p: Product) => p.id === id))
-}
-
-export const login = (info: { email: string, password: string }) => {
+export const login = (info: { email: string, password: string }): Promise<LoginResponse> => {
   const clientUrl = `${baseUri}/client/login`
   const adminUrl = `${baseUri}/admin/login`
 
@@ -57,7 +48,14 @@ export const login = (info: { email: string, password: string }) => {
     body: JSON.stringify(info),
   }
 
-  return fetch(adminUrl, init).then(response => response.status === 401 ? fetch(clientUrl, init) : response)
+  return fetch(adminUrl, init)
+    .then(response => response.status === 401 ? fetch(clientUrl, init) : response)
+    .then(response => {
+      if (response.status < 400)
+        return response.json()
+
+      return response.text()
+    })
 }
 
 export const registerUser = (info: {
@@ -228,7 +226,6 @@ export const addItemToCart = (info: { cartId: number, publicationId: number }) =
   return fetch(url, init)
 }
 
-
 export const removeItemFromCart = (info: { cartId: number, publicationId: number }) => {
   const url = `${baseUri}/cart/remove-item`
 
@@ -242,13 +239,6 @@ export const removeItemFromCart = (info: { cartId: number, publicationId: number
 
   return fetch(url, init)
 }
-
-export const getCardKey = () => {
-  const url = `${baseUri}/card/key`
-
-  return fetch(url)
-}
-
 
 export const postCard = (info: { card: any }) => {
   const url = `${baseUri}/card`

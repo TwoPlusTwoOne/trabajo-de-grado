@@ -66,3 +66,33 @@ declare type CreditCardInfo = {
 declare type PublicationWithQnA = Publication & {
   qa: PublicationQnA[]
 }
+
+declare type LoginResponse = ClientLoginResponse
+
+declare type ClientLoginResponse = {
+  birthdate: string
+  client_id: number
+  direction: string
+  dni: string
+  email: string
+  first_name: string
+  last_name: string
+  password: string
+  seller_calification: string
+  user_id: number
+}
+
+declare type BackendUser = {
+  id: number
+  first_name: string
+  last_name: string
+  direction: string
+  dni: string
+  password: string
+  email: string
+  birthdate: string
+}
+
+declare type GetUsersResponse = {
+  results: BackendUser[]
+}

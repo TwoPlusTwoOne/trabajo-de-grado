@@ -8,6 +8,7 @@ import { Redirect } from 'react-router'
 import { Dialog, DialogContentText, DialogTitle, DialogContent, DialogActions } from '@material-ui/core'
 import { Button } from '../../components/button/button'
 import * as styles from './adminPanel.scss'
+import { transformBackendUserToUserBase } from '../../util/backendTransformations'
 
 export type Props = {}
 
@@ -42,13 +43,17 @@ export class AdminPanel extends React.PureComponent<Props, State> {
   fetchUsers = () => {
     this.setState({ isFetchingUsers: true })
     getAllUsers()
-      .then(response => response.json())
-      .then(response => this.setState({ users: response.results, isFetchingUsers: false }))
+      .then((response) => response.results.map(user => transformBackendUserToUserBase(user)))
+      .then(users => this.setState({ users, isFetchingUsers: false }))
   }
 
   handleClickCreate = () => this.setState({ redirect: '/admin/create-user' })
 
-  handleClickDelete = (userId: number) => this.setState({ deleteUserId: userId, isDeleteConfirmationOpen: true, isDeleting: false })
+  handleClickDelete = (userId: number) => this.setState({
+    deleteUserId: userId,
+    isDeleteConfirmationOpen: true,
+    isDeleting: false,
+  })
 
   handleClickEdit = (userId: number) => this.setState({ redirect: `/admin/edit-user/${userId}` })
 
@@ -75,7 +80,7 @@ export class AdminPanel extends React.PureComponent<Props, State> {
   render() {
     const { isFetchingUsers, users, redirect, isDeleteConfirmationOpen, deleteUserId, isDeleting } = this.state
 
-    if (redirect) return <Redirect to={redirect}/>
+    if (redirect) return <Redirect to={redirect} />
 
     const deleteUser = users.find(user => user.id === deleteUserId)
 
@@ -86,7 +91,7 @@ export class AdminPanel extends React.PureComponent<Props, State> {
           onClose={this.closeDeleteConfirmationDialog}
         >
           {(isDeleting)
-            ? <div className={styles.deletingLoader}><Loader/></div>
+            ? <div className={styles.deletingLoader}><Loader /></div>
             : <>
               <DialogTitle>Confirm delete</DialogTitle>
               <DialogContent>
@@ -107,7 +112,7 @@ export class AdminPanel extends React.PureComponent<Props, State> {
           }
         </Dialog>
         {isFetchingUsers
-          ? <Loader/>
+          ? <Loader />
           : <UsersTable
             users={users}
             onClickCreate={this.handleClickCreate}

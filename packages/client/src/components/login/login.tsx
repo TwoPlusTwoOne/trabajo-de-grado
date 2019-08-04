@@ -34,20 +34,24 @@ export class Login extends React.PureComponent<Props, State> {
     this.setState({ redirect: '/' })
   }
 
-  logInError = () => this.setState({ ...this.state, error: 'Invalid username/password' })
+  handleLogIn = (response: LoginResponse | string) => {
+    if (typeof response === 'string') throw Error(response)
 
-  handleLogIn = (response: any) => {
-    if (response.status === 401) {
-      this.logInError()
-    } else {
-      response.json().then((user: User) => {
-        console.log(user)
-        this.logInSuccess(user)
-      })
+    if (response.client_id) {
+      const client = {
+        ...response,
+        userID: response.client_id,
+        id: response.user_id,
+      }
+
+      this.logInSuccess(client)
     }
+    // else handle admin log in
   }
 
-  handleError = () => this.setState({ ...this.state, error: 'There was a problem with the request' })
+  handleError = (error: Error) => {
+    this.setState({ ...this.state, error: error.message, isLoggingIn: false })
+  }
 
   stopLoggingIn = () => this.setState({ ...this.state, isLoggingIn: false })
 
@@ -59,7 +63,6 @@ export class Login extends React.PureComponent<Props, State> {
     login({ email, password })
       .then(this.handleLogIn)
       .catch(this.handleError)
-      .then(this.stopLoggingIn)
   }
 
   handleChange = (field: string, e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
