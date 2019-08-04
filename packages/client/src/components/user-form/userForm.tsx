@@ -88,7 +88,7 @@ export class UserForm extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { onCancel, onSubmit, isSubmitting } = this.props
+    const { onCancel, isSubmitting } = this.props
     const { birthdate, direction, dni, email, first_name, last_name, password } = this.state.fields
     return (
       <div>

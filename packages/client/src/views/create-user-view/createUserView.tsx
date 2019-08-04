@@ -22,15 +22,19 @@ export class CreateUserView extends React.PureComponent<Props, State> {
   }
 
   handleCreate = (user: UserBase) => {
-    console.log({ user })
+    this.setState({ isCreating: true })
     createUser(user)
       .then(response => {
-        console.log({ response })
+        if (response.status < 400) {
+          this.setState({ 'redirect': '/admin' })
+        } else {
+          this.setState({ isCreating: false })
+        }
       })
       .catch(error => {
         console.log({ error })
+        this.setState({ isCreating: false })
       })
-      .then(() => this.setState({ 'redirect': '/admin' }))
   }
 
   handleCancel = () => {
