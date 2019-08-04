@@ -25,6 +25,7 @@ import { Sale } from './entities/Sale';
 import { getSellerReviewsForClient, getSellerReviewsForSeller, insertSellerReview } from './dbModules/SellerReviewModule';
 import { insertProductReview, getProductReviewsForClient, getProductReviewsForProduct } from './dbModules/ProductReviewModule';
 import { Role } from './entities/Role';
+import { json } from 'body-parser';
 
 const express = require('express');
 const cors = require('cors');
@@ -60,6 +61,21 @@ const execQuery = async (query: string) => {
   }
 }
 
+
+
+const getUserBirthDate = (json: any) => {
+  const locale = json.dateLocale || "en"
+  const format = json.dateFormat || "yyyy-mm-dd"
+  console.log(`locale: ${locale}`)
+  console.log(`format: ${format}`)
+  var m = require("moment");
+  m.locale(locale)
+  const date = m(json.birthdate)
+  date.format(format) 
+  return date
+}
+
+
 const getUserFromRequest = (json: any) => {
   const firstName = json.first_name
   const lastName = json.last_name
@@ -67,7 +83,7 @@ const getUserFromRequest = (json: any) => {
   const dni = json.dni
   const password = json.password
   const email = json.email
-  const birthdate = new Date(json.birthdate)
+  const birthdate = getUserBirthDate(json)
   const id = json.id === undefined ?   "" : json.id
 
   const user = new UserBuilder()
