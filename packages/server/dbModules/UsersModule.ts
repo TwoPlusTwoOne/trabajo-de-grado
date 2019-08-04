@@ -69,6 +69,17 @@ export const deleteUser = async (pool: Pool, id: string) => {
     return result
 }
 
+export const getUserById = async (pool: Pool, id:string) => {
+    const client = await pool.connect()
+    const result: Promise<User> = client.query(
+        `SELECT * FROM ${User.tableName} WHERE id = '${id}'`
+        ).then((r) => {
+            return r.rows[0]
+    })
+    client.release()
+    return result
+}
+
 
 
 export const loginUser = async (pool: Pool, email:string, password: string) => {
