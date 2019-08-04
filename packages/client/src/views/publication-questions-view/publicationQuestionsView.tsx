@@ -3,7 +3,7 @@ import * as styles from './publicationQuestionsView.scss'
 import { getQuestionsForPublication } from '../../api/api'
 import { QuestionsAndAnswersContainer } from '../../components/questionsAndAnswers/questionsAndAnswersContainer'
 import { getLoggedUser } from '../../helpers/auth'
-import { wrapped } from '../checkout-view/checkoutView'
+import { wrapped } from '../../util/ui'
 
 export type Props = {
   match: {

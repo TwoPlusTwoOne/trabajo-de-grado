@@ -1,26 +1,18 @@
 import * as React from 'react'
 import * as styles from './checkoutView.scss'
 import { CartComponent } from '../../components/cart/cartComponent'
-import { Paper } from '@material-ui/core'
 import { Loader } from '../../components/loader/loader'
 import { getLoggedUser } from '../../helpers/auth'
 import { createSale, getCart, postCard } from '../../api/api'
 import Typography from '@material-ui/core/Typography'
 import { CreditCardForm } from '../../components/credit-card-form/creditCardForm'
+import { wrapped } from '../../util/ui'
 
 export type Props = {}
 
 export type State = {
   shoppingCart: Cart | null
   isFetchingCart: boolean
-}
-
-export const wrapped = (content: any) => {
-  return <div className={styles.container}>
-    <Paper className={styles.paper}>
-      {content}
-    </Paper>
-  </div>
 }
 
 export class CheckoutView extends React.PureComponent<Props, State> {

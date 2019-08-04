@@ -1,6 +1,11 @@
-export type Client = UserBase
+export type Client = UserBase & {
+  client_id: number
+}
 
-export type Admin = UserBase & {}
+export type Admin = UserBase & {
+  role_name: string
+  admin_id: number
+}
 
 export type UserBase = {
   birthdate: string
@@ -33,4 +38,6 @@ const getLoggedUser = (): User => {
 
 const isLoggedIn = () => !!sessionStorage.getItem('user')
 
-export { logIn, logOut, getLoggedUser, isLoggedIn }
+const isAdmin = () => (getLoggedUser() as Admin).role_name === 'admin'
+
+export { logIn, logOut, getLoggedUser, isLoggedIn, isAdmin }

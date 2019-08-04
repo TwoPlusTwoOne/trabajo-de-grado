@@ -1,0 +1,15 @@
+:local {
+  .container {
+    .buttonsDiv {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      justify-content: space-evenly;
+      height: 90px;
+
+      & > button {
+        width: 100%;
+      }
+    }
+  }
+}

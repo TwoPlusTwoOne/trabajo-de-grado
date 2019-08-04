@@ -1,5 +1,5 @@
-const baseUri = 'https://mitesis.herokuapp.com'
-// const baseUri = 'http://localhost:3001'
+// const baseUri = 'https://mitesis.herokuapp.com'
+const baseUri = 'http://localhost:3001'
 
 export const getAllUsers = () => {
   return fetch(`${baseUri}/user`, { method: 'get' })
@@ -7,6 +7,16 @@ export const getAllUsers = () => {
 
 export const getUserById = (id: string) => {
   return fetch(`${baseUri}/user/${id}`, { method: 'get' })
+}
+
+export const deleteUser = (userId: number) => {
+  const url = `${baseUri}/user/${userId}`
+
+  const init: RequestInit = {
+    method: 'DELETE',
+  }
+
+  return fetch(url, init)
 }
 
 export const getAllXss = () => {
@@ -63,7 +73,7 @@ export const getProducts = (): Promise<Product[]> => {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-    }
+    },
   }
 
   return fetch(url, init).then(response => response.json())
@@ -76,7 +86,7 @@ export const getPublications = (): Promise<Publication[]> => {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-    }
+    },
   }
 
   return fetch(url, init).then(response => response.json())
@@ -89,7 +99,7 @@ export const getPublicationById = (publicationId: string): Promise<Publication> 
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-    }
+    },
   }
 
   return fetch(url, init).then(response => response.json())
@@ -103,7 +113,7 @@ export const updatePublication = (publication: Publication) => {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(publication)
+    body: JSON.stringify(publication),
   }
 
   return fetch(url, init)
@@ -116,7 +126,7 @@ export const deletePublication = (publicationId: number) => {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
-    }
+    },
   }
 
   return fetch(url, init)
@@ -143,7 +153,7 @@ export const getQuestionsForPublication = (productId: number): Promise<Publicati
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-    }
+    },
   }
 
   return fetch(url, init).then(response => response.json())
@@ -182,7 +192,7 @@ export const getCart = (clientId: number) => {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-    }
+    },
   }
 
   return fetch(url, init)
@@ -194,9 +204,9 @@ export const addItemToCart = (info: { cartId: number, publicationId: number }) =
   const init: RequestInit = {
     method: 'PUT',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
-    body: JSON.stringify(info)
+    body: JSON.stringify(info),
   }
 
   return fetch(url, init)
@@ -209,9 +219,9 @@ export const removeItemFromCart = (info: { cartId: number, publicationId: number
   const init: RequestInit = {
     method: 'PUT',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ ...info, quantity: 1 })
+    body: JSON.stringify({ ...info, quantity: 1 }),
   }
 
   return fetch(url, init)
@@ -230,9 +240,9 @@ export const postCard = (info: { card: any }) => {
   const init: RequestInit = {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
-    body: JSON.stringify(info)
+    body: JSON.stringify(info),
   }
 
   return fetch(url, init)
@@ -244,9 +254,9 @@ export const createSale = (info: { publicationId: number, price: string, buyerId
   const init: RequestInit = {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
-    body: JSON.stringify(info)
+    body: JSON.stringify(info),
   }
 
   return fetch(url, init)
