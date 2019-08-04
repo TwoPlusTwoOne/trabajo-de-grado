@@ -8,14 +8,12 @@ import { getClientByID } from './ClientModule';
 import { Client } from '../entities/Client';
 import { PublicationBuilder } from '../builders/PublicationBuilder';
 
-const marked = require('marked')
 
 export const insertPublication = async (pool: Pool, publication: Publication) => {
     const client = await pool.connect()
-    const description = marked(publication.description)
     const result: Promise<string> = client.query(
         `INSERT INTO ${Publication.tableName} (name, value, description, seller_id, product_id) 
-        VALUES ('${publication.name}', '${publication.value}', '${description}', '${publication.seller.id}', '${publication.product.id}')
+        VALUES ('${publication.name}', '${publication.value}', '${publication.description}', '${publication.seller.id}', '${publication.product.id}')
         RETURNING id`
         ).then((res) => {
             publication.images.forEach(i => insertImagePublication(pool, new PublicationImage(i.id, i.image, res.rows[0].id)))
@@ -30,10 +28,9 @@ export const insertPublication = async (pool: Pool, publication: Publication) =>
 
 export const insertPublication2 = async (pool: Pool, name: string, value: string, description: string, seller_id: string, product_id: string, images: string[]) => {
     const client = await pool.connect()
-    const markdown = marked(description)
     const result: Promise<string> = client.query(
         `INSERT INTO ${Publication.tableName} (name, value, description, seller_id, product_id) 
-        VALUES ('${name}', '${value}', '${markdown}', '${seller_id}', '${product_id}')
+        VALUES ('${name}', '${value}', '${description}', '${seller_id}', '${product_id}')
         RETURNING id`
         ).then((res) => {
             images.forEach(i => insertImagePublication(pool, new PublicationImage("", i, res.rows[0].id)))
