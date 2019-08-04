@@ -53,8 +53,6 @@ export class Login extends React.PureComponent<Props, State> {
     this.setState({ ...this.state, error: error.message, isLoggingIn: false })
   }
 
-  stopLoggingIn = () => this.setState({ ...this.state, isLoggingIn: false })
-
   clearErrors = () => this.setState({ ...this.state, error: '' })
 
   handleClickLogin = () => {
