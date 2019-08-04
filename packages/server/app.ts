@@ -478,8 +478,8 @@ app.get('/card/key', async function (req: Request, res: Response) {
 });
 
 // -----------------------------------------------------------------------
-const port =process.env.PORT || 3001
+const port = process.env.PORT || 3001
 
-app.listen(3001, function () {
+app.listen(port, function () {
   console.log(`Server started on port: ${port}`);
 });
