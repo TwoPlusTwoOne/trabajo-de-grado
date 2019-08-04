@@ -100,16 +100,9 @@ export const loginAdmin = async (pool: Pool, email: string, password: string) =>
         ON ${Admin.tableName}.user_id = ${User.tableName}.id
         FULL OUTER JOIN role_table
         ON ${Role.tableName}.id = ${Admin.tableName}.role_id
-        WHERE ${User.tableName}.email = '${email}'`
+        WHERE ${User.tableName}.email = '${email}' AND ${User.tableName}.password = '${md5Password}'`
     ).then((r) => {
-        if(r.rowCount === 0){
-            throw new Error("Invalid email")
-        }
-        else if(r.rows[0].password === md5Password){
-            return r.rows[0]
-        } else {
-            throw new Error("Invalid password")
-        }
+        return r.rows[0]
     })
     clientDB.release()
     return result

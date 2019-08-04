@@ -82,27 +82,20 @@ export const loginClient = async (pool: Pool, email: string, password: string) =
     const result: Promise<any> = clientDB.query(
     `SELECT 
         ${Client.tableName}.id as client_id,
-        ${User.tableName}.first_name, 
-        ${User.tableName}.last_name, 
-        ${User.tableName}.direction, 
-        ${User.tableName}.dni, 
-        ${User.tableName}.password, 
-        ${User.tableName}.email, 
-        ${User.tableName}.birthdate, 
-        ${Client.tableName}.seller_calification, 
+        ${User.tableName}.first_name,
+        ${User.tableName}.last_name,
+        ${User.tableName}.direction,
+        ${User.tableName}.dni,
+        ${User.tableName}.password,
+        ${User.tableName}.email,
+        ${User.tableName}.birthdate,
+        ${Client.tableName}.seller_calification,
         ${User.tableName}.id as user_id
     FROM client_table  INNER JOIN user_table
     ON client_table.user_id = user_table.id
-    WHERE ${User.tableName}.email = '${email}'`
+    WHERE ${User.tableName}.email = '${email}' AND ${User.tableName}.password = '${md5Password}'`
     ).then((r) => {
-            if(r.rowCount === 0){
-                throw new Error("Invalid email")
-            }
-            else if(r.rows[0].password === md5Password){
-                return r.rows[0]
-            } else {
-                throw new Error("Invalid password")
-            }
+        return r.rows[0]
     })
     clientDB.release()
     return result
