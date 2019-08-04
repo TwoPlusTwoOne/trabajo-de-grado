@@ -1,0 +1,19 @@
+:local {
+  .field {
+    width: 300px;
+  }
+
+  .buttonsDiv {
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+
+    & > button {
+      width: 90px;
+
+      &:not(:last-child) {
+        margin-right: 20px;
+      }
+    }
+  }
+}

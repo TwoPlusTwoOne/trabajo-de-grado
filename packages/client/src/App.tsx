@@ -17,6 +17,7 @@ import { PublicationQuestionsView } from './views/publication-questions-view/pub
 import { RegisterView } from './views/register-view/registerView'
 import { AdminRoute } from './components/admin-route/adminRoute'
 import { AdminPanel } from './views/admin-panel/adminPanel'
+import { CreateUserView } from './views/create-user-view/createUserView'
 
 export const AuthContext = React.createContext<AuthState>({
   logOut: () => null,
@@ -53,7 +54,6 @@ class App extends PureComponent<{}, State> {
     logOut()
   }
 
-
   render() {
     const authContext = {
       loggedUser: this.state.auth.loggedUser,
@@ -77,6 +77,7 @@ class App extends PureComponent<{}, State> {
               <SecuredRoute exact path="/cart" component={CartView} />
               <SecuredRoute exact path="/checkout" component={CheckoutView} />
               <AdminRoute exact path="/admin" component={AdminPanel} />
+              <AdminRoute exact path="/admin/create-user" component={CreateUserView} />
             </Switch>
           </Base>
         </Router>

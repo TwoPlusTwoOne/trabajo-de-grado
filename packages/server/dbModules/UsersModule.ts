@@ -13,7 +13,7 @@ export const insertUser = async (pool: Pool, user: User) => {
     const password = md5(user.password)
     const result: Promise<string> = client.query(
         `INSERT INTO ${User.tableName} (first_name, last_name, direction, dni, password, email, birthdate) 
-        VALUES ('${user.first_name}', '${user.last_name}', '${user.direction}', '${user.dni}', '${password}', '${user.email}', '${user.birthdate.toISOString()}')
+        VALUES ('${user.first_name}', '${user.last_name}', '${user.direction}', '${user.dni}', '${password}', '${user.email}', '${user.birthdate}')
         RETURNING id`
         ).then((res) => {
                 return res.rows[0].id

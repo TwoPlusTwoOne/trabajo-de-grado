@@ -64,7 +64,7 @@ const execQuery = async (query: string) => {
 
 const getUserBirthDate = (json: any) => {
   const locale = json.dateLocale || "en"
-  const format = json.dateFormat || "yyyy-mm-dd"
+  const format = json.dateFormat || "YYYY-MM-DD"
 
   moment.locale(locale)
   return moment(json.birthdate).format(format)

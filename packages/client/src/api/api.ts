@@ -1,4 +1,6 @@
 // const baseUri = 'https://mitesis.herokuapp.com'
+import { UserBase } from '../helpers/auth'
+
 const baseUri = 'http://localhost:3001'
 
 export const getAllUsers = () => {
@@ -7,6 +9,20 @@ export const getAllUsers = () => {
 
 export const getUserById = (id: string) => {
   return fetch(`${baseUri}/user/${id}`, { method: 'get' })
+}
+
+export const createUser = (user: UserBase) => {
+  const url = `${baseUri}/user`
+
+  const init: RequestInit = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ ...user, dateLocale: 'en', dateFormat: 'YYYY-MM-DD' }),
+  }
+
+  return fetch(url, init)
 }
 
 export const deleteUser = (userId: number) => {
