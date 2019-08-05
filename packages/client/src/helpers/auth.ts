@@ -43,4 +43,6 @@ const isLoggedIn = () => !!sessionStorage.getItem('user')
 
 const isAdmin = () => (getLoggedUser() as Admin).role_name === 'admin'
 
-export { logIn, logOut, getLoggedUser, isLoggedIn, isAdmin }
+const getToken = () => sessionStorage.getItem('token') || ''
+
+export { logIn, logOut, getLoggedUser, isLoggedIn, isAdmin, getToken }

@@ -43,7 +43,7 @@ app.use(function(req, res, next) {
 });
 app.use(cors())
 
-const irisNotAuthenticated = ['/client/login', '/admin/login']
+const irisNotAuthenticated = ['/client/login', '/admin/login', '/register']
 
 app.use(function(req,res,next){
   try{
@@ -201,6 +201,12 @@ app.delete('/all', async function (req: Request, res: Response) {
 
 // -------------------------- USER ----------------------------------------
 
+app.post('/register', async function (req: Request, res: Response) {
+  const user = getUserFromRequest(req.body)
+  const userID: string = await insertUser(pool, user)
+  res.send(JSON.stringify({ id: userID }))
+});
+
 app.post('/user', async function (req: Request, res: Response) {
   const user = getUserFromRequest(req.body)
   const userID: string = await insertUser(pool, user)
@@ -258,16 +264,17 @@ app.post('/client/login', async function (req: Request, res: Response) {
   const email = req.body.email
   const password = req.body.password
   loginClient(pool, email, password)
-  .catch((e) => {
-    res.status(401)
-    return e.message
-  })
-  .then((user) => {
-    var token= jwt.sign({userId:user.user_id}, key.tokenKey)
-    res.status(200).json({
-      user,token
+    .then((user) => {
+      console.log({ user })
+      const token = jwt.sign({ userId: user.user_id }, key.tokenKey)
+      res.status(200).json({
+        user, token,
+      })
     })
-  })
+    .catch((e) => {
+      res.status(401)
+      res.send(e.message)
+    })
 })
 
 // ----------------------------------------------------------------------------
@@ -287,16 +294,16 @@ app.post('/admin/login', async function (req: Request, res: Response) {
   const email = req.body.email
   const password = req.body.password
   loginAdmin(pool, email, password)
-  .catch((e) => {
-    res.status(401)
-    return e.message
-  })
-  .then((user) => {
-    var token=jwt.sign({userId:user.user_id},key.tokenKey)
-    res.status(200).json({
-      user,token
+    .then((user) => {
+      const token = jwt.sign({ userId: user.userID }, key.tokenKey)
+      res.status(200).json({
+        user, token,
+      })
     })
-  })
+    .catch((e) => {
+      res.status(401)
+      res.send(e.message)
+    })
 })
 
 app.post('/admin', async function (req: Request, res: Response) {
