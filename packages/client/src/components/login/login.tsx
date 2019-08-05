@@ -10,7 +10,7 @@ import { Redirect } from 'react-router'
 import { Button } from '../button/button'
 
 export type Props = {
-  logIn: (user: User) => void
+  logIn: (user: User, token: string) => void
 }
 
 export type State = {
@@ -29,22 +29,25 @@ export class Login extends React.PureComponent<Props, State> {
     error: '',
   }
 
-  logInSuccess = (user: User) => {
-    this.props.logIn(user)
+  logInSuccess = (user: User, token: string) => {
+    this.props.logIn(user, token)
     this.setState({ redirect: '/' })
   }
 
   handleLogIn = (response: LoginResponse | string) => {
     if (typeof response === 'string') throw Error(response)
 
-    if (response.client_id) {
+    const user = response.user
+    const token = response.token
+
+    if (user.client_id) {
       const client = {
-        ...response,
-        userID: response.client_id,
-        id: response.user_id,
+        ...user,
+        userID: user.client_id,
+        id: user.user_id,
       }
 
-      this.logInSuccess(client)
+      this.logInSuccess(client, token)
     }
     // else handle admin log in
   }

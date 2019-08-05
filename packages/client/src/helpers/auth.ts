@@ -22,11 +22,14 @@ export type UserBase = {
 export type User = Client | Admin
 
 export type AuthState = {
-  logIn: (user: User) => void
+  logIn: (user: User, token: string) => void
   logOut: () => void
 }
 
-const logIn = (user: User) => sessionStorage.setItem('user', JSON.stringify(user))
+const logIn = (user: User, token: string) => {
+  sessionStorage.setItem('user', JSON.stringify(user))
+  sessionStorage.setItem('token', token)
+}
 
 const logOut = () => sessionStorage.clear()
 

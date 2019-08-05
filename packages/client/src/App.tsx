@@ -44,9 +44,9 @@ class App extends PureComponent<{}, State> {
       this.setState({ auth: { loggedUser: getLoggedUser() } })
   }
 
-  logIn = (user: User) => {
+  logIn = (user: User, token: string) => {
     this.setState({ auth: { loggedUser: user } })
-    logIn(user)
+    logIn(user, token)
   }
 
   logOut = () => {

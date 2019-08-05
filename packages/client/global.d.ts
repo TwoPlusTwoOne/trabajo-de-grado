@@ -67,7 +67,10 @@ declare type PublicationWithQnA = Publication & {
   qa: PublicationQnA[]
 }
 
-declare type LoginResponse = ClientLoginResponse
+declare type LoginResponse = {
+  user: ClientLoginResponse
+  token: string
+}
 
 declare type ClientLoginResponse = {
   birthdate: string
