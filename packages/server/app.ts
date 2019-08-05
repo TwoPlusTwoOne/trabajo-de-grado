@@ -1,7 +1,7 @@
 import { UserBuilder } from './builders/UserBuilder'
 
 import { insertAdmin, getAdminByID, loginAdmin, updateAdmin } from './dbModules/AdminModule';
-import { insertUser, loginUser, deleteUser, validateEmail} from './dbModules/UsersModule'
+import { insertUser, loginUser, deleteUser, validateEmail, getUserById} from './dbModules/UsersModule'
 import { insertClient, getClientByID, loginClient, updateClient } from './dbModules/ClientModule'
 import { getAllProducts, getProductByID } from './dbModules/ProductModule'
 import { Request, Response } from 'express';
@@ -30,8 +30,10 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const conString = "postgres://glwiuwlhjwmqqo:474e0f0aaf3f47f6d09b7738232f97430869cac957e16ae8404edd3ea8770c60@ec2-23-21-171-25.compute-1.amazonaws.com:5432/d7qm3v80l8bmvr";
-
 const bodyParser = require('body-parser')
+const jwt=require('jsonwebtoken');
+const key=require("./key");
+
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(function(req, res, next) {
@@ -40,6 +42,33 @@ app.use(function(req, res, next) {
   next();
 });
 app.use(cors())
+
+const irisNotAuthenticated = ['/client/login', '/admin/login']
+
+app.use(function(req,res,next){
+  try{
+    const iri = req.originalUrl
+    if(irisNotAuthenticated.find(x => x === iri) !== undefined){
+      next()
+    } else {
+      const token = req.headers.authorization
+      jwt.verify(token, key.tokenKey, function (err, payload) {
+          if (payload) {
+            getUserById(pool, payload.userId).then(
+                  (doc)=>{
+                      req.user=doc;
+                      next()
+                  }
+              )
+          } else {
+            res.sendStatus(401)
+          }
+      })
+    }
+  }catch(e){
+      res.sendStatus(401)
+  }
+})
 
 const { Pool } = require('pg');
 const pool = new Pool({
@@ -233,7 +262,12 @@ app.post('/client/login', async function (req: Request, res: Response) {
     res.status(401)
     return e.message
   })
-  .then((r) => {res.send(r)})
+  .then((user) => {
+    var token= jwt.sign({userId:user.user_id}, key.tokenKey)
+    res.status(200).json({
+      user,token
+    })
+  })
 })
 
 // ----------------------------------------------------------------------------
@@ -257,7 +291,13 @@ app.post('/admin/login', async function (req: Request, res: Response) {
     res.status(401)
     return e.message
   })
-  .then((r) => {res.send(r)})})
+  .then((user) => {
+    var token=jwt.sign({userId:user.user_id},key.tokenKey)
+    res.status(200).json({
+      user,token
+    })
+  })
+})
 
 app.post('/admin', async function (req: Request, res: Response) {
   const admin = <Admin> getUserFromRequest(req.body)
