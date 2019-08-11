@@ -60,13 +60,13 @@ export const login = (info: { email: string, password: string }): Promise<LoginR
     body: JSON.stringify(info),
   }
 
-  return fetch(adminUrl, init)
-    .then(response => response.status === 401 ? fetch(clientUrl, init) : response)
+  return fetch(clientUrl, init)
+    .then(response => response.status === 401 ? fetch(adminUrl, init) : response)
     .then(response => {
       if (response.status < 400)
         return response.json()
 
-      return response.text()
+      return "Invalid email or password"
     })
 }
 

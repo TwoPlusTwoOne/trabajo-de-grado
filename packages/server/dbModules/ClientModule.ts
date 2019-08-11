@@ -91,11 +91,11 @@ export const loginClient = async (pool: Pool, email: string, password: string) =
         ${User.tableName}.birthdate,
         ${Client.tableName}.seller_calification,
         ${User.tableName}.id as user_id
-    FROM client_table  INNER JOIN user_table
-    ON client_table.user_id = user_table.id
+    FROM ${Client.tableName} INNER JOIN ${User.tableName}
+    ON ${Client.tableName}.user_id = ${User.tableName}.id
     WHERE ${User.tableName}.email = '${email}' AND ${User.tableName}.password = '${md5Password}'`
     ).then((r) => {
-        return r.rows[0]
+        return r.rows
     })
     clientDB.release()
     return result

@@ -82,7 +82,7 @@ export const getAdminByID = async (pool: Pool, id: string) => {
 export const loginAdmin = async (pool: Pool, email: string, password: string) => {
     const clientDB = await pool.connect()
     const md5Password = md5(password)
-    const result: Promise<Admin> = clientDB.query(
+    const result: Promise<any> = clientDB.query(
     `SELECT 
         ${Admin.tableName}.id as admin_id,
         ${User.tableName}.first_name, 
@@ -98,11 +98,11 @@ export const loginAdmin = async (pool: Pool, email: string, password: string) =>
         ${User.tableName}.id as user_id
         FROM ${Admin.tableName} INNER JOIN ${User.tableName}
         ON ${Admin.tableName}.user_id = ${User.tableName}.id
-        FULL OUTER JOIN role_table
+        FULL OUTER JOIN ${Role.tableName}
         ON ${Role.tableName}.id = ${Admin.tableName}.role_id
         WHERE ${User.tableName}.email = '${email}' AND ${User.tableName}.password = '${md5Password}'`
     ).then((r) => {
-        return r.rows[0]
+        return r.rows
     })
     clientDB.release()
     return result

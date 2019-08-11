@@ -68,7 +68,7 @@ declare type PublicationWithQnA = Publication & {
 }
 
 declare type LoginResponse = {
-  user: ClientLoginResponse
+  user: ClientLoginResponse[]
   token: string
 }
 

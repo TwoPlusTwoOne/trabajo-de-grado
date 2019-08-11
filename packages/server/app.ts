@@ -4,7 +4,7 @@ import { insertAdmin, getAdminByID, loginAdmin, updateAdmin } from './dbModules/
 import { insertUser, loginUser, deleteUser, validateEmail, getUserById } from './dbModules/UsersModule'
 import { insertClient, getClientByID, loginClient, updateClient } from './dbModules/ClientModule'
 import { getAllProducts, getProductByID } from './dbModules/ProductModule'
-import { Request, Response } from 'express'
+import { Request, Response, json } from 'express'
 import { Client } from './entities/Client'
 import { Admin } from './entities/Admin'
 import { boot } from './boot'
@@ -47,6 +47,7 @@ const conString = 'postgres://glwiuwlhjwmqqo:474e0f0aaf3f47f6d09b7738232f9743086
 const bodyParser = require('body-parser')
 const jwt = require('jsonwebtoken')
 const key = require('./key')
+const uuidv1 = require('uuid/v1')
 
 app.use(bodyParser.json())
 app.use(express.json())
@@ -58,6 +59,7 @@ app.use(function (req, res, next) {
 app.use(cors())
 
 const irisNotAuthenticated = ['/client/login', '/admin/login', '/register']
+const tokens = []
 
 app.use(function (req, res, next) {
   try {
@@ -67,13 +69,8 @@ app.use(function (req, res, next) {
     } else {
       const token = req.headers.authorization
       jwt.verify(token, key.tokenKey, function (err, payload) {
-        if (payload) {
-          getUserById(pool, payload.userId).then(
-            (doc) => {
-              req.user = doc
-              next()
-            },
-          )
+        if (payload && tokens.indexOf(payload.token) != -1) {
+          next()
         } else {
           res.sendStatus(401)
         }
@@ -186,6 +183,12 @@ const getPublicationFromRequest = (json: any) => {
   return new Publication(json.id, json.name, json.value, seller, images, product, json.description)
 }
 
+const generateToken = () => {
+  const token = uuidv1()
+  tokens.push(token)
+  return jwt.sign({ token: token }, key.tokenKey)
+}
+
 app.post('/login', async function (req: Request, res: Response) {
   const userEmail = req.body.email
   const userPassword = req.body.password
@@ -279,8 +282,7 @@ app.post('/client/login', async function (req: Request, res: Response) {
   const password = req.body.password
   loginClient(pool, email, password)
     .then((user) => {
-      console.log({ user })
-      const token = jwt.sign({ userId: user.user_id }, key.tokenKey)
+      const token = generateToken()
       res.status(200).json({
         user, token,
       })
@@ -308,7 +310,7 @@ app.post('/admin/login', async function (req: Request, res: Response) {
   const password = req.body.password
   loginAdmin(pool, email, password)
     .then((user) => {
-      const token = jwt.sign({ userId: user.userID }, key.tokenKey)
+      const token = generateToken()
       res.status(200).json({
         user, token,
       })
@@ -450,7 +452,6 @@ app.get('/sale/:id', async function (req: Request, res: Response) {
   getSale(pool, id).then((sale) => res.send(sale))
 })
 
-const uuidv1 = require('uuid/v1')
 
 app.post('/sale', async function (req: Request, res: Response) {
   const publication_id = req.body.publicationId
