@@ -37,8 +37,7 @@ export class Login extends React.PureComponent<Props, State> {
   handleLogIn = (response: LoginResponse | string) => {
     if (typeof response === 'string') throw Error(response)
 
-    console.log(JSON.stringify(response.user))
-    const user = response.user[0]
+    const user = response.user
     const token = response.token
 
     if (user.client_id) {
