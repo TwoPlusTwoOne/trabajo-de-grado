@@ -282,10 +282,14 @@ app.post('/client/login', async function (req: Request, res: Response) {
   const password = req.body.password
   loginClient(pool, email, password)
     .then((user) => {
-      const token = generateToken()
-      res.status(200).json({
-        user, token,
-      })
+      if(user.length > 0 ){
+        const token = generateToken()
+        res.status(200).json({
+          user, token,
+        })
+      }else{
+        res.sendStatus(401)
+      }
     })
     .catch((e) => {
       res.status(401)
@@ -310,10 +314,14 @@ app.post('/admin/login', async function (req: Request, res: Response) {
   const password = req.body.password
   loginAdmin(pool, email, password)
     .then((user) => {
-      const token = generateToken()
-      res.status(200).json({
-        user, token,
-      })
+      if(user.length > 0 ){
+          const token = generateToken()
+          res.status(200).json({
+            user, token,
+          })
+        }else{
+          res.sendStatus(401)
+        }
     })
     .catch((e) => {
       res.status(401)
