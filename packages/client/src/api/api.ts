@@ -1,7 +1,7 @@
-// const baseUri = 'https://mitesis.herokuapp.com'
+const baseUri = 'https://mitesis.herokuapp.com'
 import { getToken, UserBase } from '../helpers/auth'
 
-const baseUri = 'http://localhost:3001'
+// const baseUri = 'http://localhost:3001'
 
 export const getAllUsers = (): Promise<GetUsersResponse> => {
   const token = getToken()
