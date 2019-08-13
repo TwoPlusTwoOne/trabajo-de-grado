@@ -42,9 +42,7 @@ export class PublicationComponent extends React.PureComponent<Props> {
         </div>
         <div className={styles.description}>
           <div className={styles.title}>Description</div>
-          <div
-            dangerouslySetInnerHTML={{ __html: description }}
-          />
+          <a>${description}</a>
         </div>
         <div className={styles.questionsAndAnswers}>
           <div className={styles.title}>
