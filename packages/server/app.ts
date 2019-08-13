@@ -186,7 +186,7 @@ const getPublicationFromRequest = (json: any) => {
 const generateToken = () => {
   const token = uuidv1()
   tokens.push(token)
-  return jwt.sign({ token: token }, key.tokenKey)
+  return jwt.sign({ token: token }, key.tokenKey, { expiresIn: '1h' })
 }
 
 app.post('/login', async function (req: Request, res: Response) {
@@ -199,6 +199,10 @@ app.post('/login', async function (req: Request, res: Response) {
       res.sendStatus(401)
     }
   })
+    .catch(e => {
+      res.status(500)
+      res.send(e.message)
+    })
 })
 
 app.post('/boot', async function (req: Request, res: Response) {

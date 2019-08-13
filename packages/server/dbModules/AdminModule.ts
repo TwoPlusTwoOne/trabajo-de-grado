@@ -4,9 +4,7 @@ import { User } from '../entities/User'
 import { Pool } from 'pg'
 import { Role } from '../entities/Role'
 
-
-const md5 = require('md5')
-
+const bcrypt = require('bcrypt')
 
 export const insertAdmin = async (pool: Pool, client: Admin) => {
   const clientDB = await pool.connect()
@@ -106,7 +104,6 @@ export const getAdminByUserId = async (pool: Pool, id: string) => {
 
 export const loginAdmin = async (pool: Pool, email: string, password: string) => {
   const clientDB = await pool.connect()
-  const md5Password = md5(password)
   const result: Promise<any> = clientDB.query(
     `SELECT 
         ${Admin.tableName}.id as admin_id,
@@ -125,9 +122,14 @@ export const loginAdmin = async (pool: Pool, email: string, password: string) =>
         ON ${Admin.tableName}.user_id = ${User.tableName}.id
         FULL OUTER JOIN ${Role.tableName}
         ON ${Role.tableName}.id = ${Admin.tableName}.role_id
-        WHERE ${User.tableName}.email = '${email}' AND ${User.tableName}.password = '${md5Password}'`,
-  ).then((r) => {
-    return r.rows
+        WHERE ${User.tableName}.email = '${email}'`,
+  ).then(r => {
+    const user = r.rows[0]
+    if (!user) return null
+
+    const result = bcrypt.compareSync(password, user.password)
+    if (result) return user
+    else return null
   })
   clientDB.release()
   return result

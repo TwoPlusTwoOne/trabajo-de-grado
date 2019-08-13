@@ -4,6 +4,8 @@ import { QuestionsAndAnswersContainer } from '../questionsAndAnswers/questionsAn
 import { Button } from '../button/button'
 import { Loader } from '../loader/loader'
 
+const ReactSafeHtml = require('react-safe-html');
+
 export type Props = {
   publication: PublicationWithQnA
   isAddingToCart: boolean
@@ -42,9 +44,7 @@ export class PublicationComponent extends React.PureComponent<Props> {
         </div>
         <div className={styles.description}>
           <div className={styles.title}>Description</div>
-          <div
-            dangerouslySetInnerHTML={{ __html: description }}
-          />
+          <ReactSafeHtml html={description} />
         </div>
         <div className={styles.questionsAndAnswers}>
           <div className={styles.title}>
