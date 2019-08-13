@@ -1,7 +1,22 @@
-const baseUri = 'https://mitesis.herokuapp.com'
+// const baseUri = 'https://mitesis.herokuapp.com'
 import { getToken, UserBase } from '../helpers/auth'
 
-// const baseUri = 'http://localhost:3001'
+const baseUri = 'http://localhost:3001'
+
+export const fetchIsAdmin = (userId: number) => {
+  const url = `${baseUri}/is-admin/${userId}`
+
+  const token = getToken()
+
+  const init: RequestInit = {
+    method: 'get',
+    headers: {
+      Authorization: token,
+    },
+  }
+
+  return fetch(url, init)
+}
 
 export const getAllUsers = (): Promise<GetUsersResponse> => {
   const token = getToken()
@@ -66,7 +81,7 @@ export const login = (info: { email: string, password: string }): Promise<LoginR
       if (response.status < 400)
         return response.json()
 
-      return "Invalid email or password"
+      return 'Invalid email or password'
     })
 }
 
@@ -79,14 +94,14 @@ export const registerUser = (info: {
   email: string,
   birthdate: Date,
 }) => {
-  const url = `${baseUri}/client`
+  const url = `${baseUri}/register`
 
   const init: RequestInit = {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(info),
+    body: JSON.stringify({ ...info, dateLocale: 'en', dateFormat: 'YYYY-MM-DD' }),
   }
 
   return fetch(url, init)

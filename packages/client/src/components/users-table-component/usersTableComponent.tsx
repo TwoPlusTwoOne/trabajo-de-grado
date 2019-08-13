@@ -7,7 +7,7 @@ import * as styles from './usersTableComponent.scss'
 
 
 export type Props = {
-  userBases: UserBase[]
+  userBases: (UserBase & { isAdmin: boolean })[]
   onClickEdit: (userId: number) => void
   onClickDelete: (userId: number) => void
 }
@@ -25,10 +25,8 @@ export class UsersTableComponent extends React.Component<Props> {
           <TableCell>Full name</TableCell>
           <TableCell>Email</TableCell>
           <TableCell>User ID</TableCell>
-          <TableCell>Admin ID</TableCell>
-          <TableCell>Client ID</TableCell>
           <TableCell>Is Admin</TableCell>
-          <TableCell/>
+          <TableCell />
         </TableRow>
       </TableHead>
       <TableBody>
@@ -37,9 +35,7 @@ export class UsersTableComponent extends React.Component<Props> {
             <TableCell>{user.first_name} {user.last_name}</TableCell>
             <TableCell>{user.email}</TableCell>
             <TableCell>{user.userID}</TableCell>
-            <TableCell>{(user as Admin).admin_id}</TableCell>
-            <TableCell>{(user as Client).client_id}</TableCell>
-            <TableCell>{!!(user as Admin).admin_id ? <Done/> : null}</TableCell>
+            <TableCell>{user.isAdmin ? <Done /> : null}</TableCell>
             <TableCell>
               <div className={styles.buttonsDiv}>
                 <Button kind={'primary'} onClick={this.handleClickEdit(user.id)}>Edit</Button>

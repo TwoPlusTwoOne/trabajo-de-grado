@@ -1,6 +1,6 @@
 import { UserBuilder } from './builders/UserBuilder'
 
-import { insertAdmin, getAdminByID, loginAdmin, updateAdmin } from './dbModules/AdminModule'
+import { insertAdmin, getAdminByID, loginAdmin, updateAdmin, getAdminByUserId } from './dbModules/AdminModule'
 import { insertUser, loginUser, deleteUser, validateEmail, getUserById } from './dbModules/UsersModule'
 import { insertClient, getClientByID, loginClient, updateClient } from './dbModules/ClientModule'
 import { getAllProducts, getProductByID } from './dbModules/ProductModule'
@@ -282,12 +282,12 @@ app.post('/client/login', async function (req: Request, res: Response) {
   const password = req.body.password
   loginClient(pool, email, password)
     .then((user) => {
-      if(user.length > 0 ){
+      if (user.length > 0) {
         const token = generateToken()
         res.status(200).json({
           user, token,
         })
-      }else{
+      } else {
         res.sendStatus(401)
       }
     })
@@ -314,14 +314,14 @@ app.post('/admin/login', async function (req: Request, res: Response) {
   const password = req.body.password
   loginAdmin(pool, email, password)
     .then((user) => {
-      if(user.length > 0 ){
-          const token = generateToken()
-          res.status(200).json({
-            user, token,
-          })
-        }else{
-          res.sendStatus(401)
-        }
+      if (user.length > 0) {
+        const token = generateToken()
+        res.status(200).json({
+          user, token,
+        })
+      } else {
+        res.sendStatus(401)
+      }
     })
     .catch((e) => {
       res.status(401)
@@ -333,6 +333,24 @@ app.post('/admin', async function (req: Request, res: Response) {
   const admin = <Admin>getUserFromRequest(req.body)
   const userID: string = await insertAdmin(pool, admin)
   res.send(JSON.stringify({ id: userID }))
+})
+
+app.get('/is-admin/:userId', async function (req, res) {
+  const adminId = req.params.userId
+  try {
+    const admin = await getAdminByUserId(pool, adminId)
+
+    if (admin) {
+      res.status(200)
+      res.send('Is admin')
+    } else {
+      res.status(404)
+      res.send('Not admin')
+    }
+  } catch (e) {
+    res.status(500)
+    res.send(e.message)
+  }
 })
 
 

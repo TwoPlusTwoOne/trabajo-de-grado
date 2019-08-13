@@ -5,7 +5,7 @@ import { TextField } from '@material-ui/core'
 import { login } from '../../api/api'
 import { LoginButton } from './loginButton'
 import { Loader } from '../loader/loader'
-import { User } from '../../helpers/auth'
+import { Admin, Client, User } from '../../helpers/auth'
 import { Redirect } from 'react-router'
 import { Button } from '../button/button'
 
@@ -37,19 +37,28 @@ export class Login extends React.PureComponent<Props, State> {
   handleLogIn = (response: LoginResponse | string) => {
     if (typeof response === 'string') throw Error(response)
 
-    const user = response.user
+    const user = response.user[0]
     const token = response.token
 
-    if (user.client_id) {
-      const client = {
-        ...user,
-        userID: user.client_id,
-        id: user.user_id,
+    if (user.hasOwnProperty('client_id')) {
+      const userClient = user as ClientLoginResponse
+      const client: Client = {
+        ...userClient,
+        userID: userClient.client_id,
+        id: userClient.user_id,
       }
 
       this.logInSuccess(client, token)
+    } else {
+      const userAdmin = user as AdminLoginResponse
+      const admin: Admin = {
+        ...userAdmin,
+        userID: userAdmin.admin_id,
+        id: userAdmin.user_id,
+      }
+
+      this.logInSuccess(admin, token)
     }
-    // else handle admin log in
   }
 
   handleError = (error: Error) => {

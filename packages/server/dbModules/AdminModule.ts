@@ -1,59 +1,57 @@
 import { Admin } from '../entities/Admin'
 import { insertUser, updateUser } from './UsersModule'
 import { User } from '../entities/User'
-import { Pool } from 'pg';
-import { Role } from '../entities/Role';
-import { AdminBuilder } from '../builders/AdminBuilder';
-import { updateRole } from './RoleModule';
+import { Pool } from 'pg'
+import { Role } from '../entities/Role'
 
 
-const md5 = require('md5');
+const md5 = require('md5')
 
 
 export const insertAdmin = async (pool: Pool, client: Admin) => {
-    const clientDB = await pool.connect()
-    const result: Promise<string> = insertUser(pool, <User>client)
-        .then(async (userID) => {
-            const result: Promise<string> = clientDB.query(
-            `INSERT INTO ${Admin.tableName} (user_id) 
+  const clientDB = await pool.connect()
+  const result: Promise<string> = insertUser(pool, <User>client)
+    .then(async (userID) => {
+      const result: Promise<string> = clientDB.query(
+        `INSERT INTO ${Admin.tableName} (user_id) 
             VALUES ('${userID}')
-            RETURNING id`
-            ).then((res) => {
-                    return res.rows[0].id
-            }).catch(e => {
-                console.error(e.stack)
-                return ""
-            })
-        return result
-        })
-    clientDB.release()
-    return result
+            RETURNING id`,
+      ).then((res) => {
+        return res.rows[0].id
+      }).catch(e => {
+        console.error(e.stack)
+        return ''
+      })
+      return result
+    })
+  clientDB.release()
+  return result
 }
 
 export const updateAdmin = async (pool: Pool, admin: Admin) => {
-    const clientDB = await pool.connect()
-    const result: Promise<string> = updateUser(pool, <User>admin)
-        .then((userID) => {
-            return clientDB.query(
-            `UPDATE ${Admin.tableName} SET 
+  const clientDB = await pool.connect()
+  const result: Promise<string> = updateUser(pool, <User>admin)
+    .then((userID) => {
+      return clientDB.query(
+        `UPDATE ${Admin.tableName} SET 
             user_id = '${userID}',
             role_id = '${admin.role.id}'
             WHERE id = ${admin.id}
-            RETURNING id`
-            ).then((res) => {
-                    return res.rows[0].id
-            }).catch(e => {
-                console.error(e.stack)
-                return ""
-            })
-        })
-    clientDB.release()
-    return result
+            RETURNING id`,
+      ).then((res) => {
+        return res.rows[0].id
+      }).catch(e => {
+        console.error(e.stack)
+        return ''
+      })
+    })
+  clientDB.release()
+  return result
 }
 
 export const getAdminByID = async (pool: Pool, id: string) => {
-    const clientDB = await pool.connect()
-    const result: Promise<string> = clientDB.query(
+  const clientDB = await pool.connect()
+  const result: Promise<string> = clientDB.query(
     `SELECT 
     first_name, 
     last_name, 
@@ -68,21 +66,48 @@ export const getAdminByID = async (pool: Pool, id: string) => {
     ON client_table.user_id = user_table.id
     INNER JOIN role_table
     ON role_table.id = admin_table.role_id
-    WHERE client_table.id = ${id}`
-    ).then((res) => {
-            return res.rows[0]
-    }).catch(e => {
-        console.error(e.stack)
-        return ""
-    })
-    clientDB.release()
-    return result
+    WHERE client_table.id = ${id}`,
+  ).then((res) => {
+    return res.rows[0]
+  }).catch(e => {
+    console.error(e.stack)
+    return ''
+  })
+  clientDB.release()
+  return result
+}
+
+export const getAdminByUserId = async (pool: Pool, id: string) => {
+  const clientDB = await pool.connect()
+  const result: boolean = await clientDB.query(
+    `SELECT 
+      ${Admin.tableName}.id as admin_id,
+      ${User.tableName}.first_name, 
+      ${User.tableName}.last_name, 
+      ${User.tableName}.direction, 
+      ${User.tableName}.dni, 
+      ${User.tableName}.password, 
+      ${User.tableName}.email, 
+      ${User.tableName}.birthdate, 
+      ${User.tableName}.id as user_id
+      FROM ${Admin.tableName} INNER JOIN ${User.tableName}
+      ON ${Admin.tableName}.user_id = ${User.tableName}.id
+      WHERE ${User.tableName}.id = ${id}`,
+  ).then((res) => {
+    return res.rows.length !== 0
+  }).catch(e => {
+    console.error(e.stack)
+    return false
+  })
+
+  clientDB.release()
+  return result
 }
 
 export const loginAdmin = async (pool: Pool, email: string, password: string) => {
-    const clientDB = await pool.connect()
-    const md5Password = md5(password)
-    const result: Promise<any> = clientDB.query(
+  const clientDB = await pool.connect()
+  const md5Password = md5(password)
+  const result: Promise<any> = clientDB.query(
     `SELECT 
         ${Admin.tableName}.id as admin_id,
         ${User.tableName}.first_name, 
@@ -100,10 +125,10 @@ export const loginAdmin = async (pool: Pool, email: string, password: string) =>
         ON ${Admin.tableName}.user_id = ${User.tableName}.id
         FULL OUTER JOIN ${Role.tableName}
         ON ${Role.tableName}.id = ${Admin.tableName}.role_id
-        WHERE ${User.tableName}.email = '${email}' AND ${User.tableName}.password = '${md5Password}'`
-    ).then((r) => {
-        return r.rows
-    })
-    clientDB.release()
-    return result
+        WHERE ${User.tableName}.email = '${email}' AND ${User.tableName}.password = '${md5Password}'`,
+  ).then((r) => {
+    return r.rows
+  })
+  clientDB.release()
+  return result
 }

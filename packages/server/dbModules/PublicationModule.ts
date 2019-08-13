@@ -30,8 +30,8 @@ export const insertPublication2 = async (pool: Pool, name: string, value: string
     const client = await pool.connect()
     const result: Promise<string> = client.query(
         `INSERT INTO ${Publication.tableName} (name, value, description, seller_id, product_id) 
-        VALUES ('${name}', '${value}', '${description}', '${seller_id}', '${product_id}')
-        RETURNING id`
+        VALUES ('${name}', '${value}', $1, '${seller_id}', '${product_id}')
+        RETURNING id`, [description]
         ).then((res) => {
             images.forEach(i => insertImagePublication(pool, new PublicationImage("", i, res.rows[0].id)))
             return res.rows[0].id
@@ -49,11 +49,11 @@ export const updatePublication = async (pool: Pool, publication: Publication) =>
         `UPDATE ${Publication.tableName} 
         SET name = '${publication.name}', 
         value = '${publication.value}', 
-        description = '${publication.description}', 
+        description = $1, 
         seller_id = '${publication.seller.id}', 
         product_id = '${publication.product.id}'
         WHERE id = ${publication.id}
-        RETURNING id`
+        RETURNING id`, [publication.description]
         ).then((res) => {
             publication.images.forEach(i => insertImagePublication(pool, new PublicationImage(i.id, i.image, res.rows[0].id)))
             return res.rows[0].id

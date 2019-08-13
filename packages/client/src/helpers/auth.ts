@@ -4,6 +4,8 @@ export type Client = UserBase & {
 
 export type Admin = UserBase & {
   role_name: string
+  role_id: number
+  role_level: string
   admin_id: number
 }
 

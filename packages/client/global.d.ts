@@ -68,7 +68,7 @@ declare type PublicationWithQnA = Publication & {
 }
 
 declare type LoginResponse = {
-  user: ClientLoginResponse
+  user: ClientLoginResponse[] | AdminLoginResponse[]
   token: string
 }
 
@@ -82,6 +82,21 @@ declare type ClientLoginResponse = {
   last_name: string
   password: string
   seller_calification: string
+  user_id: number
+}
+
+declare type AdminLoginResponse =  {
+  admin_id: number
+  birthdate: string
+  direction: string
+  dni: string
+  email: string
+  first_name: string
+  last_name: string
+  password: string
+  role_id: number
+  role_level: string
+  role_name: string
   user_id: number
 }
 
