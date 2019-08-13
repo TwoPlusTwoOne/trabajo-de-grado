@@ -296,7 +296,7 @@ app.post('/client/login', async function (req: Request, res: Response) {
       }
     })
     .catch((e) => {
-      res.status(401)
+      res.status(500)
       res.send(e.message)
     })
 })
