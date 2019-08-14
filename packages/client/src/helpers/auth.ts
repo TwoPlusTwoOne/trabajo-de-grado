@@ -43,8 +43,6 @@ const getLoggedUser = (): User => {
 
 const isLoggedIn = () => !!sessionStorage.getItem('user')
 
-const isAdmin = () => (getLoggedUser() as Admin).role_name === 'admin'
-
 const getToken = () => sessionStorage.getItem('token') || ''
 
-export { logIn, logOut, getLoggedUser, isLoggedIn, isAdmin, getToken }
+export { logIn, logOut, getLoggedUser, isLoggedIn, getToken }
