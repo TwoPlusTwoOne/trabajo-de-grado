@@ -4,15 +4,17 @@ import { getToken, UserBase } from '../helpers/auth'
 const baseUri = 'http://localhost:3001'
 
 export const fetchIsAdmin = (userId: number) => {
-  const url = `${baseUri}/is-admin/${userId}`
+  const url = `${baseUri}/is-admin`
 
   const token = getToken()
 
   const init: RequestInit = {
-    method: 'get',
+    method: 'POST',
     headers: {
+      'Content-Type': 'application/json',
       Authorization: token,
     },
+    body: JSON.stringify({ userId: userId}),
   }
 
   return fetch(url, init)

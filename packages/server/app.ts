@@ -61,6 +61,7 @@ app.use(cors())
 const irisNotAuthenticated = ['/client/login', '/admin/login', '/register', '/boot', '/all']
 const tokens = []
 
+
 app.use(function (req, res, next) {
   try {
     const iri = req.originalUrl
@@ -183,10 +184,9 @@ const getPublicationFromRequest = (json: any) => {
   return new Publication(json.id, json.name, json.value, seller, images, product, json.description)
 }
 
-const generateToken = () => {
-  const token = uuidv1()
-  tokens.push(token)
-  return jwt.sign({ token: token }, key.tokenKey, { expiresIn: '1h' })
+const generateToken = (id) => {
+  tokens.push(id)
+  return jwt.sign({ token: id }, key.tokenKey, { expiresIn: '1h' })
 }
 
 app.post('/login', async function (req: Request, res: Response) {
@@ -287,7 +287,7 @@ app.post('/client/login', async function (req: Request, res: Response) {
   loginClient(pool, email, password)
     .then((user) => {
       if (user) {
-        const token = generateToken()
+        const token = generateToken(user.id)
         res.status(200).json({
           user, token,
         })
@@ -318,8 +318,9 @@ app.post('/admin/login', async function (req: Request, res: Response) {
   const password = req.body.password
   loginAdmin(pool, email, password)
     .then((user) => {
+      console.log(JSON.stringify(user))
       if (user) {
-        const token = generateToken()
+        const token = generateToken(user.id)
         res.status(200).json({
           user, token,
         })
@@ -339,18 +340,21 @@ app.post('/admin', async function (req: Request, res: Response) {
   res.send(JSON.stringify({ id: userID }))
 })
 
-app.get('/is-admin/:userId', async function (req, res) {
-  const adminId = req.params.userId
+app.post('/is-admin', async function (req, res) {
+  const adminId = req.body.userId
+  const token   = req.headers.authorization
+
   try {
     const admin = await getAdminByUserId(pool, adminId)
-
-    if (admin) {
-      res.status(200)
-      res.send('Is admin')
-    } else {
-      res.status(404)
-      res.send('Not admin')
-    }
+    jwt.verify(token, key.tokenKey, function (err, payload) {
+      if (payload.token == adminId && admin) {
+        res.status(200)
+        res.send('Is admin')
+      } else {
+        res.status(404)
+        res.send('Not admin')
+      }
+    })
   } catch (e) {
     res.status(500)
     res.send(e.message)
