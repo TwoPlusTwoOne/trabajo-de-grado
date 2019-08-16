@@ -43,7 +43,7 @@ const moment = require('moment')
 const express = require('express')
 const cors = require('cors')
 const app = express()
-const conString = 'postgres://glwiuwlhjwmqqo:474e0f0aaf3f47f6d09b7738232f97430869cac957e16ae8404edd3ea8770c60@ec2-23-21-171-25.compute-1.amazonaws.com:5432/d7qm3v80l8bmvr'
+const conString = 'postgres://nijfsyvqxmsiaa:d594ac31f10a4f9d02cf6622c4db475e3ead98662b5e004e766bd8010c94653f@ec2-54-243-197-120.compute-1.amazonaws.com:5432/de0v9gd9q8nd3v'
 const bodyParser = require('body-parser')
 const jwt = require('jsonwebtoken')
 const key = require('./key')
@@ -58,7 +58,7 @@ app.use(function (req, res, next) {
 })
 app.use(cors())
 
-const irisNotAuthenticated = ['/client/login', '/admin/login', '/register']
+const irisNotAuthenticated = ['/client/login', '/admin/login', '/register', '/boot', '/all']
 const tokens = []
 
 app.use(function (req, res, next) {
@@ -286,7 +286,7 @@ app.post('/client/login', async function (req: Request, res: Response) {
   const password = req.body.password
   loginClient(pool, email, password)
     .then((user) => {
-      if (user.length > 0) {
+      if (user) {
         const token = generateToken()
         res.status(200).json({
           user, token,
@@ -318,7 +318,7 @@ app.post('/admin/login', async function (req: Request, res: Response) {
   const password = req.body.password
   loginAdmin(pool, email, password)
     .then((user) => {
-      if (user.length > 0) {
+      if (user) {
         const token = generateToken()
         res.status(200).json({
           user, token,

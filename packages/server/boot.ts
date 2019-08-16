@@ -117,7 +117,7 @@ const userTableInsert =
         dni text,
         password text,
         email text,
-        birthdate date 
+        birthdate text 
     );`
 
 const clientTableInsert =
