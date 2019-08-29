@@ -4,7 +4,7 @@ import { QuestionsAndAnswersContainer } from '../questionsAndAnswers/questionsAn
 import { Button } from '../button/button'
 import { Loader } from '../loader/loader'
 
-const ReactSafeHtml = require('react-safe-html');
+const ReactSafeHtml = require('react-safe-html')
 
 export type Props = {
   publication: PublicationWithQnA
@@ -26,7 +26,6 @@ export class PublicationComponent extends React.PureComponent<Props> {
         <div className={styles.mainInfo}>
           <div className={styles.image}>
             {images[0] && <img src={images[0].image} alt={images[0].id.toString()} key={images[0].id} />}
-            {/*{images.map(image => <img src={image.image} alt={image.id.toString()} key={image.id} />)}*/}
           </div>
           <div className={styles.nameAndPrice}>
             <div className={styles.name}>{name}</div>

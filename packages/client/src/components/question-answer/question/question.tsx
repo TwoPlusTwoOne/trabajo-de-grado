@@ -4,6 +4,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faReply } from '@fortawesome/free-solid-svg-icons'
 import { faComment } from '@fortawesome/free-regular-svg-icons'
 
+const ReactSafeHtml = require('react-safe-html')
+
 export type Props = {
   question: string,
   answer: string
@@ -20,13 +22,13 @@ export class Question extends React.PureComponent<Props, State> {
       <div className={styles.question}>
         <div>
           <FontAwesomeIcon icon={faComment} flip="horizontal" />
-          <span dangerouslySetInnerHTML={{ __html: question }} />
+          <ReactSafeHtml html={question} />
         </div>
         {
           answer &&
           <div>
-            <FontAwesomeIcon icon={faReply} flip="horizontal" />
-            <span dangerouslySetInnerHTML={{ __html: answer }} />
+              <FontAwesomeIcon icon={faReply} flip="horizontal" />
+              <ReactSafeHtml html={answer} />
           </div>
         }
       </div>
