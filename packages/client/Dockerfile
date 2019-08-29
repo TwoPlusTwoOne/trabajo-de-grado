@@ -8,6 +8,4 @@ RUN npm install -g serve
 
 RUN cd /usr/src/app
 
-RUN ls
-
 CMD serve -s build 

@@ -1,4 +1,4 @@
-// const baseUri = 'https://mitesis.herokuapp.com'
+// const baseUri = 'https://mitesis-secure.herokuapp.com/'
 import { getToken, UserBase } from '../helpers/auth'
 
 const baseUri = 'http://localhost:3001'
