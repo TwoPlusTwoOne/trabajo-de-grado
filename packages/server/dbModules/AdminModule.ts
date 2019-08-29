@@ -122,7 +122,7 @@ export const loginAdmin = async (pool: Pool, email: string, password: string) =>
         ON ${Admin.tableName}.user_id = ${User.tableName}.id
         FULL OUTER JOIN ${Role.tableName}
         ON ${Role.tableName}.id = ${Admin.tableName}.role_id
-        WHERE ${User.tableName}.email = '${email}'`,
+        WHERE ${User.tableName}.email = '$1'`, [email]
   ).then(r => {
     const user = r.rows[0]
     if (!user) return null

@@ -91,7 +91,7 @@ export const loginClient = async (pool: Pool, email: string, password: string) =
         ${User.tableName}.id as user_id
     FROM ${Client.tableName} INNER JOIN ${User.tableName}
     ON ${Client.tableName}.user_id = ${User.tableName}.id
-    WHERE ${User.tableName}.email = '${email}'`,
+    WHERE ${User.tableName}.email = '$1'`,[email]
   ).then(r => {
     const user = r.rows[0]
     if (!user) return null
