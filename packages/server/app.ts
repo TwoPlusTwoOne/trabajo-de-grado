@@ -287,9 +287,9 @@ app.post('/client/login', async function (req: Request, res: Response) {
   loginClient(pool, email, password)
     .then((user) => {
       if (user) {
-        const token = generateToken(user.id)
+        const token = generateToken(user.user_id)
         res.status(200).json({
-          user, token,
+          user, token
         })
       } else {
         res.sendStatus(401)
@@ -316,21 +316,18 @@ app.get('/admin/:adminId', async function (req: Request, res: Response) {
 app.post('/admin/login', async function (req: Request, res: Response) {
   const email = req.body.email
   const password = req.body.password
-  console.log("holaaa")
   loginAdmin(pool, email, password)
     .then((user) => {
-      console.log(JSON.stringify(user))
       if (user) {
-        const token = generateToken(user.id)
+        const token = generateToken(user.user_id)
         res.status(200).json({
-          user, token,
+          user, token
         })
       } else {
         res.sendStatus(401)
       }
     })
     .catch((e) => {
-      console.log(e)
       res.status(401)
       res.send(e.message)
     })

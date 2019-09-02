@@ -122,11 +122,10 @@ export const loginAdmin = async (pool: Pool, email: string, password: string) =>
     FULL OUTER JOIN ${Role.tableName}
     ON ${Role.tableName}.id = ${Admin.tableName}.role_id
     WHERE ${User.tableName}.email = $1`
-  console.log(`email: ${email}`)
   const result: Promise<any> = clientDB.query(query, [email])
   .then(r => {
     const user = r.rows[0]
-    console.log(user)
+  
     if (!user) return null
 
     const result = bcrypt.compareSync(password, user.password)
