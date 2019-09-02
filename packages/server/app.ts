@@ -316,6 +316,7 @@ app.get('/admin/:adminId', async function (req: Request, res: Response) {
 app.post('/admin/login', async function (req: Request, res: Response) {
   const email = req.body.email
   const password = req.body.password
+  console.log("holaaa")
   loginAdmin(pool, email, password)
     .then((user) => {
       console.log(JSON.stringify(user))
@@ -329,6 +330,7 @@ app.post('/admin/login', async function (req: Request, res: Response) {
       }
     })
     .catch((e) => {
+      console.log(e)
       res.status(401)
       res.send(e.message)
     })

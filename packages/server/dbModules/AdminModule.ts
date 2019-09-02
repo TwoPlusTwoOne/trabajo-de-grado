@@ -104,27 +104,29 @@ export const getAdminByUserId = async (pool: Pool, id: string) => {
 
 export const loginAdmin = async (pool: Pool, email: string, password: string) => {
   const clientDB = await pool.connect()
-  const result: Promise<any> = clientDB.query(
-    `SELECT 
-        ${Admin.tableName}.id as admin_id,
-        ${User.tableName}.first_name, 
-        ${User.tableName}.last_name, 
-        ${User.tableName}.direction, 
-        ${User.tableName}.dni, 
-        ${User.tableName}.password, 
-        ${User.tableName}.email, 
-        ${User.tableName}.birthdate, 
-        ${Role.tableName}.id as role_id,
-        ${Role.tableName}.name as role_name,
-        ${Role.tableName}.level as role_level,
-        ${User.tableName}.id as user_id
-        FROM ${Admin.tableName} INNER JOIN ${User.tableName}
-        ON ${Admin.tableName}.user_id = ${User.tableName}.id
-        FULL OUTER JOIN ${Role.tableName}
-        ON ${Role.tableName}.id = ${Admin.tableName}.role_id
-        WHERE ${User.tableName}.email = '$1'`, [email]
-  ).then(r => {
+  const query = `SELECT 
+    ${Admin.tableName}.id as admin_id,
+    ${User.tableName}.first_name, 
+    ${User.tableName}.last_name, 
+    ${User.tableName}.direction, 
+    ${User.tableName}.dni, 
+    ${User.tableName}.password, 
+    ${User.tableName}.email, 
+    ${User.tableName}.birthdate, 
+    ${Role.tableName}.id as role_id,
+    ${Role.tableName}.name as role_name,
+    ${Role.tableName}.level as role_level,
+    ${User.tableName}.id as user_id
+    FROM ${Admin.tableName} INNER JOIN ${User.tableName}
+    ON ${Admin.tableName}.user_id = ${User.tableName}.id
+    FULL OUTER JOIN ${Role.tableName}
+    ON ${Role.tableName}.id = ${Admin.tableName}.role_id
+    WHERE ${User.tableName}.email = $1`
+  console.log(`email: ${email}`)
+  const result: Promise<any> = clientDB.query(query, [email])
+  .then(r => {
     const user = r.rows[0]
+    console.log(user)
     if (!user) return null
 
     const result = bcrypt.compareSync(password, user.password)

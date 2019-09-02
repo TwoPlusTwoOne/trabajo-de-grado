@@ -83,7 +83,7 @@ export const getUserById = async (pool: Pool, id: string) => {
 export const loginUser = async (pool: Pool, email: string, password: string) => {
   const client = await pool.connect()
   const result: Promise<User> = client.query(
-    `SELECT * FROM ${User.tableName} WHERE ${User.tableName}.email = '$1'`,
+    `SELECT * FROM ${User.tableName} WHERE ${User.tableName}.email = $1`,
     [email],
   )
     .then(r => {
