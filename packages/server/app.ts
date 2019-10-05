@@ -186,7 +186,7 @@ const getPublicationFromRequest = (json: any) => {
 
 const generateToken = (id) => {
   tokens.push(id)
-  return jwt.sign({ token: id }, key.tokenKey, { expiresIn: '1h' })
+  return jwt.sign({ token: id }, key.tokenKey, { expiresIn: '300000' })
 }
 
 app.post('/login', async function (req: Request, res: Response) {
