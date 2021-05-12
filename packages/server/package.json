@@ -5,7 +5,7 @@
   "dependencies": {
     "@babel/core": "7.1.6",
     "@tsed/common": "^5.1.0",
-    "@tsed/core": "^5.1.0",
+    "@tsed/core": "^5.65.7",
     "@types/md5": "^2.1.33",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "9.0.0",
